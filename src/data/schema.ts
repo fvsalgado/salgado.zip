@@ -1,15 +1,9 @@
 import { z } from 'zod'
 
-/**
- * Texto bilingue.
- *
- * `en` é opcional na fase 5. Na fase 6 remove-se o `.optional()` e o `build`
- * enumera, com caminho exato, todas as chaves por traduzir. O EN nunca é um
- * refactor — é uma lista de erros a resolver.
- */
+/** Texto bilingue. As duas línguas são obrigatórias: chave em falta = erro de build. */
 export const Lang = z.object({
   pt: z.string().min(1),
-  en: z.string().min(1).optional(),
+  en: z.string().min(1),
 })
 export type Lang = z.infer<typeof Lang>
 

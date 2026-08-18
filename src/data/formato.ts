@@ -1,11 +1,7 @@
 import type { Lang, Periodo, Idioma } from './index.ts'
 
-/**
- * Na fase 6 o `.optional()` sai do esquema e o `?? v.pt` passa a código morto,
- * porque o build deixa de aceitar uma chave `en` em falta.
- */
 export function t(v: Lang, idioma: Idioma): string {
-  return (idioma === 'en' ? v.en : v.pt) ?? v.pt
+  return idioma === 'en' ? v.en : v.pt
 }
 
 const EM_CURSO: Record<Idioma, string> = { pt: 'em curso', en: 'ongoing' }

@@ -366,3 +366,6 @@ summary { padding-bottom: 0.35rem; }
 .cabecalho--simples { display: block; }
 
 
+
+.marca a { color: var(--ink-soft); text-decoration-color: var(--rule-forte); }
+.marca a:hover { color: var(--accent); }

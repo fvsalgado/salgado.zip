@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro'
 import { CANONICO, datas } from '../data'
 
-/** Escrito à mão porque é uma rota. Uma dependência a menos. */
-const rotas = ['/']
+/** Escrito à mão porque são duas rotas. Uma dependência a menos. */
+const rotas = ['/', '/en/']
 
 export const GET: APIRoute = () => {
   const lastmod = Object.values(datas).sort().at(-1)

@@ -12,10 +12,14 @@ const titulo = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}`
 const descricao = `${cabecalho.nome}. ${t(cabecalho.linhas[0]!, idioma)}`
 ---
 
-<Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/">
+<Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/" alternos={{ pt: '/', en: '/en/' }}>
   <main class="folha" id="conteudo">
     <div class="barra">
-      <span class="marca">salgado.zip</span>
+      <span class="marca">
+        salgado.zip
+        <span aria-hidden="true"> · </span>
+        <a href="/en/" hreflang="en">english</a>
+      </span>
       <Controlos idioma={idioma} />
     </div>
     <Header idioma={idioma} />
