@@ -318,17 +318,6 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
   gap: 0.4rem 1.5rem;
   justify-content: space-between;
 }
-
-.aviso {
-  font-family: var(--mono);
-  font-size: var(--t-meta);
-  color: var(--ink-soft);
-  padding: 0.55rem 0.8rem;
-  border: 1px dashed var(--rule-forte);
-  border-radius: 3px;
-  margin-top: 0.8rem;
-}
-
 /* ── Marca, totais, descrição visível ────────────────────────────────────── */
 .marca {
   font-family: var(--mono);

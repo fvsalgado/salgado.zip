@@ -167,8 +167,8 @@ export const projetos = parse(Projeto.array().min(1), [
     // Data de registo do domínio, via RDAP. Derivada, não inventada.
     periodo: { inicio: '2026-05', fim: null },
     linha: {
-      pt: 'O fado em Lisboa, escolhido por um local: seis recomendações honestas para uma noite de fado, escritas de Alfama.',
-      en: 'Fado in Lisbon, chosen by a local: six honest recommendations for a fado night, written from Alfama.',
+      pt: 'Venda de experiências de fado em Lisboa: seis casas, escolhidas por quem vive em Alfama.',
+      en: 'Selling fado experiences in Lisbon: six houses, chosen by someone who lives in Alfama.',
     },
     detalhe: [],
     stack: [],
@@ -187,10 +187,6 @@ export const projetos = parse(Projeto.array().min(1), [
       en: 'Multi-tenant point of sale for events and fundraising: order slips, tables, consumption cards and kitchen tickets.',
     },
     detalhe: [
-      {
-        pt: 'Feito para o balcão de um arraial: rápido, offline quando é preciso, e com contas certas no fim da noite.',
-        en: 'Built for a street-party counter: fast, offline when needed, and with the books balanced at the end of the night.',
-      },
       {
         pt: 'Aplicação privada, atrás de autenticação — sem ligação pública.',
         en: 'Private application, behind authentication — no public link.',

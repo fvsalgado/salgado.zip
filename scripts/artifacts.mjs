@@ -51,10 +51,6 @@ if (!(await esperar(BASE + '/', 1))) {
 
 const browser = await abrirBrowser()
 
-/** DEBUG_TEMPO=1 imprime quanto demora cada passo de uma captura. */
-const t0 = Date.now()
-const marca = process.env.DEBUG_TEMPO ? (m) => console.log(`    ${((Date.now() - t0) / 1000).toFixed(1)}s ${m}`) : () => {}
-
 /**
  * O Chromium não atravessa o proxy deste ambiente, mas o `fetch` do Node
  * atravessa — e verifica o certificado contra o mesmo bundle. Relaia-se cada
@@ -127,7 +123,6 @@ if (semShots) {
     try {
       await p.goto(proj.url, { waitUntil: 'domcontentloaded', timeout: 60000 })
       await p.waitForLoadState('networkidle', { timeout: 20000 }).catch(() => {})
-      marca('goto+idle')
 
       // Recusar o banner de cookies, quando existe: uma captura com banner por
       // cima lê-se como descuido. Recusa-se, não se aceita.
@@ -139,7 +134,6 @@ if (semShots) {
         }
       }
 
-      marca('banner')
       // Descer um pouco e voltar a subir dispara carregamento diferido e
       // animações de entrada. Limitado a 8 passos: há páginas muito longas e
       // uma captura do topo não precisa de percorrer a página toda.
@@ -151,9 +145,7 @@ if (semShots) {
         }
         window.scrollTo(0, 0)
       })
-      marca('scroll')
       await p.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {})
-      marca('idle2')
       // As animações de entrada destes sites demoram alguns segundos.
       await p.waitForTimeout(5000)
       // Esperar que as imagens do primeiro ecrã estejam descodificadas — com
@@ -171,9 +163,7 @@ if (semShots) {
           ])
         )
         .catch(() => {})
-      marca('settle+decode')
       const png = await p.screenshot({ type: 'png' })
-      marca('screenshot')
       writeFileSync(pub + 'shots/' + proj.shot, await paraWebp(png, 1440, 900))
       console.log(`· captura ${proj.shot}`)
     } catch (e) {
