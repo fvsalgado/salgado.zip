@@ -422,6 +422,35 @@ function html(rota) {
       problemas.push('o resume.json dentro do .zip não abre')
     }
   }
+  // O contador de linhas congelado tem de bater certo com o código: se
+  // divergir, alguém mexeu no código sem correr `npm run pack`.
+  {
+    const contaveis = []
+    const apanhar = (dir, aceita) => {
+      for (const e of readdirSync(dir, { withFileTypes: true })) {
+        const c = dir + e.name
+        if (e.isDirectory()) apanhar(c + '/', aceita)
+        else if (aceita(c)) contaveis.push(c)
+      }
+    }
+    apanhar(raiz + 'src/', (f) => /\.(astro|ts|css)$/.test(f) && !f.includes('/generated/') && !f.endsWith('fonts.css'))
+    apanhar(raiz + 'scripts/', (f) => f.endsWith('.mjs'))
+    for (const f of ['public/tema.js', 'astro.config.mjs', 'tsconfig.json', 'vercel.json', 'package.json', '.github/workflows/verify.yml']) {
+      if (existsSync(raiz + f)) contaveis.push(raiz + f)
+    }
+    let frescas = 0
+    for (const f of contaveis) {
+      const texto = readFileSync(f, 'utf8')
+      frescas += texto.split('\n').length - (texto.endsWith('\n') ? 1 : 0)
+    }
+    const congeladas = JSON.parse(readFileSync(raiz + 'src/generated/linhas.json', 'utf8'))
+    if (congeladas.total !== frescas || congeladas.ficheiros !== contaveis.length) {
+      problemas.push(
+        `linhas.json diz ${congeladas.total} linhas em ${congeladas.ficheiros} ficheiros; a recontagem dá ${frescas} em ${contaveis.length} — corre npm run pack`
+      )
+    }
+  }
+
   // Nenhum número é escrito à mão: o que a listagem publica tem de bater
   // certo com o ficheiro em disco, byte a byte.
   const publicados = JSON.parse(readFileSync(raiz + 'src/generated/tamanhos.json', 'utf8'))
