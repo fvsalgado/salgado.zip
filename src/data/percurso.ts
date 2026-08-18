@@ -81,8 +81,55 @@ export const posicoes = parse(Posicao.array(), [
 ], 'percurso.posicoes')
 
 /**
- * Vazio: o que o LinkedIn traz é a secção de licenças e certificados, não a
- * de formação académica. São vinte e nove, e escolher quais entram é decisão
- * do Fábio, não minha.
+ * Uma seleção curta das vinte e nove licenças e certificados do LinkedIn: as
+ * que dizem respeito a assuntos públicos, política pública e comunicação.
+ * Uma lista curta lê-se; uma lista de vinte e nove enterra as que contam
+ * entre cursos de turismo sustentável e de Linux.
  */
-export const formacao = parse(Formacao.array(), [], 'percurso.formacao')
+export const formacao = parse(Formacao.array(), [
+  {
+    id: 'yale-moral-foundations',
+    curso: { pt: 'Moral Foundations of Politics', en: 'Moral Foundations of Politics' },
+    instituicao: 'Yale University',
+    periodo: { inicio: '2024-11', fim: '2024-11' },
+  },
+  {
+    id: 'uci-corporate-communications',
+    curso: {
+      pt: 'Corporate Communications (especialização)',
+      en: 'Corporate Communications (specialization)',
+    },
+    instituicao: 'University of California, Irvine',
+    periodo: { inicio: '2024-11', fim: '2024-11' },
+  },
+  {
+    id: 'efset-c2',
+    curso: { pt: 'EF SET English Certificate — C2 Proficient', en: 'EF SET English Certificate — C2 Proficient' },
+    instituicao: 'EF SET',
+    periodo: { inicio: '2024-11', fim: '2024-11' },
+  },
+  {
+    id: 'microsoft-pr',
+    curso: {
+      pt: 'Public Relations and Communications Associate',
+      en: 'Public Relations and Communications Associate',
+    },
+    instituicao: 'Microsoft',
+    periodo: { inicio: '2024-10', fim: '2024-10' },
+  },
+  {
+    id: 'itcilo-lobbying',
+    curso: { pt: 'Lobbying and Advocacy', en: 'Lobbying and Advocacy' },
+    instituicao: 'Centro Internacional de Formação da OIT (ITCILO)',
+    periodo: { inicio: '2024-09', fim: '2024-09' },
+  },
+  {
+    id: 'michigan-public-policy',
+    curso: {
+      pt: 'Using Public Policy for Social Change',
+      en: 'Using Public Policy for Social Change',
+    },
+    instituicao: 'University of Michigan',
+    periodo: { inicio: '2024-09', fim: '2024-09' },
+  },
+], 'percurso.formacao')
