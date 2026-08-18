@@ -1,9 +1,16 @@
 name: verify
 
+# Um ramo com PR aberto disparava duas corridas por envio, uma por `push` e
+# outra por `pull_request`. O `push` fica só para o ramo principal.
 on:
   push:
-    branches: ['**']
+    branches: [main]
   pull_request:
+
+# Envios seguidos cancelam a corrida anterior do mesmo ramo.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verify:
