@@ -203,13 +203,13 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2026-08', fim: null },
     linha: {
-      pt: 'Este site. Uma fonte de dados, várias saídas, e uma bateria de verificações antes de cada publicação. O código é público.',
-      en: 'This site. One data source, several outputs, and a battery of checks before every release. The code is public.',
+      pt: 'Sítio pessoal e arquivo de projetos: uma fonte de dados e várias saídas — página, PDF, resume.json e um zip —, com uma bateria de verificações antes de cada publicação.',
+      en: 'Personal site and project archive: one data source and several outputs — page, PDFs, resume.json and a zip — with a battery of checks before every release.',
     },
     detalhe: [
       {
-        pt: 'Construído a meias com o Claude. O colofão conta o resto.',
-        en: 'Built together with Claude. The colophon tells the rest.',
+        pt: 'Código aberto. Construído a meias com o Claude.',
+        en: 'Open source. Built together with Claude.',
       },
     ],
     stack: ['Astro', 'TypeScript', 'Claude Code'],

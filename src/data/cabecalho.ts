@@ -23,8 +23,10 @@ export const cabecalho = parse(Cabecalho, {
       en: 'I split my time between Alfama, in Lisbon, and Ribeira Branca, in Torres Novas. I was born in Nazaré.',
     },
     {
-      pt: 'Construo a meias com o Claude — este site incluído. Está tudo listado em baixo.',
-      en: 'I build together with Claude — this site included. Everything is listed below.',
+      // «isto» e não «este site»: a mesma linha sai em página e em PDF, e quem
+      // tem o papel na mão pode nem saber de onde o papel veio.
+      pt: 'Construo a meias com o Claude — isto incluído. Está tudo listado em baixo.',
+      en: 'I build together with Claude — this included. Everything is listed below.',
     },
   ],
 }, 'cabecalho')
