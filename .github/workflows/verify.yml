@@ -21,6 +21,13 @@ jobs:
       # O ambiente de desenvolvimento já traz o Chromium; um runner do GitHub
       # não. scripts/browser.mjs usa CHROMIUM_PATH ou /opt/pw-browsers/chromium
       # quando existem, e cai na resolução do próprio Playwright caso contrário.
+      # Sem cache são 104 MB descarregados a cada corrida.
+      - name: Cache do Chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Instalar o Chromium (só no runner)
         run: npx playwright install --with-deps chromium
 
@@ -35,3 +42,5 @@ jobs:
           name: revisao-a-vista
           path: .verify/
           retention-days: 14
+          # .verify/ começa por ponto: sem isto o upload não encontra nada.
+          include-hidden-files: true
