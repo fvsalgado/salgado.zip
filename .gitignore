@@ -12,3 +12,4 @@ dist/
 public/salgado.zip
 public/resume.json
 .verify/
+public/qr.svg

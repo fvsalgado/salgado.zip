@@ -1,35 +1,110 @@
-/* Recurso para quem imprima sem JS. O trabalho a sério é feito em
-   beforeprint/afterprint: o CSS não abre um <details> fechado de forma
-   fiável — `[open]` é seletor, não atribuidor. */
+/* O documento impresso.
+ *
+ * Duas saídas passam por aqui: o PDF de cada língua, gerado pelo
+ * scripts/artifacts.mjs sobre /cv/ e /en/cv/, e a impressão direta do site
+ * por quem carrega em Ctrl+P. A numeração de página e a linha de rodapé são
+ * do Chromium (`displayHeaderFooter`), porque as caixas de margem do @page
+ * não existem em motores WebKit; tudo o resto é daqui.
+ */
 @media print {
   :root {
     --paper: #fff;
     --paper-fundo: #fff;
-    --ink: #000;
-    --ink-soft: #333;
-    --rule: #bbb;
-    --rule-forte: #999;
-    --accent: #000;
+    --ink: #101010;
+    --ink-soft: #4a4a4a;
+    --rule: #c9c4b8;
+    --guia: #c9c4b8;
+    --rule-forte: #8c8577;
+    --accent: #101010;
   }
 
-  .vista, .totais__controlos, .tema, .shot, .salta, .rodape__ecra { display: none !important; }
+  @page { size: A4; margin: 17mm 16mm 16mm; }
 
+  .vista, .totais__controlos, .tema, .shot, .salta, .rodape__ecra, .barra {
+    display: none !important;
+  }
+
+  /* Sem JS o <details> fechado não abre sozinho: [open] é seletor, não
+     atribuidor. O trabalho a sério é feito em beforeprint/afterprint. */
   details > *:not(summary) { display: block !important; }
 
-  body { font-size: 10.5pt; line-height: 1.4; background: #fff; }
-  .folha { max-width: none; padding: 0; }
-  .dossie h2 { margin-top: 1.4rem; }
-  .entrada, .no { break-inside: avoid; }
-  h1, h2, h3 { break-after: avoid; }
-
-  a { text-decoration: none; color: #000; }
-  .no__texto a[href^='http']::after,
-  .dossie a[href^='http']::after {
-    content: ' (' attr(href) ')';
-    font-family: var(--mono);
-    font-size: 0.85em;
-    color: #444;
+  body {
+    background: #fff;
+    font-size: 9.9pt;
+    line-height: 1.42;
   }
+  .folha, .dossie .folha { max-width: none; padding: 0; }
 
-  @page { margin: 16mm 15mm 18mm; }
+  /* Nada de viúvas nem órfãs, e nenhum título separado do que titula.
+     A entrada inteira NÃO é indivisível: proibir o corte a meio de um projeto
+     com quatro parágrafos deixava um terço de página em branco a cada mudança.
+     O que se cola é a cabeça ao corpo — título, papel e as primeiras linhas. */
+  p { orphans: 3; widows: 3; }
+  h1, h2, h3 { break-after: avoid; }
+  .entrada__cabeca { break-inside: avoid; break-after: avoid; }
+  /* O `:not(:last-child)` não é cosmética. Numa entrada sem corpo — um mandato,
+     um certificado — o `break-after: avoid` encadeava-se na entrada seguinte e
+     daí na secção a seguir, e o motor acabava a empurrar meio documento junto
+     para a página de baixo. Estas fecham-se por dentro e deixam quebrar. */
+  .entrada__onde:not(:last-child) { break-after: avoid; }
+  .entrada--linha, .no, .captura { break-inside: avoid; }
+
+  /* Ligações a preto e sem sublinhado: o endereço já é o texto visível, e
+     repeti-lo entre parênteses depois de cada uma sujava a página inteira. */
+  a { color: inherit; text-decoration: none; }
+
+  /* ── Cabeça do documento ───────────────────────────────────────────────── */
+  .dossie__cabeca { gap: 10mm; align-items: flex-start; }
+  .dossie h1 { font-size: 26pt; letter-spacing: -0.02em; }
+  .dossie .cabecalho__areas { font-size: 8pt; margin-top: 2mm; }
+  .dossie .cabecalho--dossie { margin-top: 4mm; max-width: 128mm; }
+  .cabecalho--dossie p { font-size: 10.4pt; line-height: 1.45; }
+  .cabecalho--dossie p + p { margin-top: 1.6mm; }
+  .retrato--dossie { width: 26mm; height: 26mm; border-radius: 2px; }
+
+  .tarja { margin-top: 6mm; padding: 2.6mm 0; font-size: 8.2pt; }
+  .tarja__campos p { gap: 1mm 7mm; }
+  .tarja__qr { width: 16mm; height: 16mm; }
+
+  /* ── Secções ───────────────────────────────────────────────────────────── */
+  /* O rótulo à esquerda e um filete a atravessar o resto da linha: separa as
+     secções sem gastar o peso de um título grande. */
+  .dossie h2 {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    font-size: 7.6pt;
+    letter-spacing: 0.14em;
+    color: #101010;
+    margin: 6.5mm 0 3mm;
+    padding: 0;
+    border: 0;
+  }
+  .dossie h2::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid var(--rule);
+  }
+  section:first-of-type h2 { margin-top: 6mm; }
+
+  .dossie h3 { font-size: 11pt; }
+  .entrada + .entrada { margin-top: 4mm; }
+  .entrada--linha + .entrada--linha { margin-top: 2.6mm; }
+  .entrada__quando { font-size: 8pt; }
+  .entrada__onde { font-size: 9.4pt; }
+  .entrada__corpo { margin-top: 1.2mm; }
+  .dossie p + p { margin-top: 1.4mm; }
+  .nota { font-size: 8.6pt; }
+
+  /* ── As capturas ───────────────────────────────────────────────────────── */
+  /* Sem quebra forçada: uma folha própria só para elas deixava a anterior a
+     meio. Cada figura é que não parte. */
+  /* Três por linha: uma folha de contacto, não uma galeria. Poupa uma
+     linha de grelha e fecha o documento uma página mais cedo. */
+  .capturas { grid-template-columns: repeat(3, 1fr); gap: 5mm; }
+  .captura img { border-color: var(--rule); }
+  .captura figcaption { font-size: 8pt; margin-top: 1.2mm; }
+
+  /* O colofão fecha o documento: é o mesmo texto, um corpo abaixo. */
+  [data-seccao='colofao'] p { font-size: 9.2pt; color: var(--ink-soft); }
 }
