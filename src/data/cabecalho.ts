@@ -15,8 +15,8 @@ export const cabecalho = parse(Cabecalho, {
   // cartão social já fazia bem. As linhas abaixo são a prosa, não o título.
   linhas: [
     {
-      pt: 'Acompanho processos legislativos, produzo espetáculos de fado e faço os sites e os produtos que assino.',
-      en: 'I follow legislative processes, produce fado shows, and make the sites and products I put my name to.',
+      pt: 'Trabalho em três salas ao mesmo tempo: onde se decide, onde se canta o fado e onde se escreve o código.',
+      en: 'I work in three rooms at once: where decisions are made, where fado is sung, and where the code is written.',
     },
     {
       pt: 'Divido-me entre Alfama, em Lisboa, e Ribeira Branca, em Torres Novas. Nasci na Nazaré.',
