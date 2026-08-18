@@ -30,24 +30,6 @@ function idadeEm(iso: string): number {
   return ano - anoN - (mes < mesN ? 1 : 0)
 }
 
-/** Mandatos autárquicos completos, de quatro anos cada. */
-function mandatosEntre(inicio: string, fim: string): number {
-  const meses =
-    (Number(fim.slice(0, 4)) - Number(inicio.slice(0, 4))) * 12 +
-    (Number(fim.slice(5, 7)) - Number(inicio.slice(5, 7)))
-  return Math.round(meses / 48)
-}
-
-/**
- * Um número derivado continua derivado escrito por extenso, e «dois mandatos»
- * é português onde «2 mandatos» é um formulário.
- */
-const EXTENSO: Record<'pt' | 'en', readonly string[]> = {
-  pt: ['zero', 'um', 'dois', 'três', 'quatro', 'cinco'],
-  en: ['zero', 'one', 'two', 'three', 'four', 'five'],
-}
-const extenso = (n: number, l: 'pt' | 'en') => EXTENSO[l][n] ?? String(n)
-
 const NAZARE = { inicio: '2007-10', fim: '2015-09' }
 
 export const mandatos = parse(Mandato.array(), [
@@ -69,9 +51,19 @@ export const mandatos = parse(Mandato.array(), [
     organizacao: 'Assembleia Municipal da Nazaré',
     periodo: NAZARE,
     linhas: [
+      /**
+       * Só a idade, e «tomou posse» em vez de «eleito».
+       *
+       * As autárquicas foram em 2005, 2009 e 2013: outubro de 2007 não é
+       * eleição nenhuma, e setembro de 2015 também não. O período confirmado
+       * — 2007-10 a 2015-09 — começa e acaba a meio de mandatos e sobrepõe-se
+       * a três, não a dois. Dizer «eleito» ou contar mandatos era acrescentar
+       * duas afirmações por cima de uma data, e ambas convidavam à
+       * verificação que falha. A idade é aritmética e aguenta-se sozinha.
+       */
       {
-        pt: `Eleito aos ${idadeEm(NAZARE.inicio)} anos, para ${extenso(mandatosEntre(NAZARE.inicio, NAZARE.fim), 'pt')} mandatos consecutivos.`,
-        en: `Elected at ${idadeEm(NAZARE.inicio)}, for ${extenso(mandatosEntre(NAZARE.inicio, NAZARE.fim), 'en')} consecutive terms.`,
+        pt: `Tomou posse aos ${idadeEm(NAZARE.inicio)} anos.`,
+        en: `Took office at ${idadeEm(NAZARE.inicio)}.`,
       },
     ],
   },
