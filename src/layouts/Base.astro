@@ -11,9 +11,10 @@ interface Props {
   descricao: string
   caminho: string
   classe?: string
+  robots?: string
 }
 
-const { idioma, titulo, descricao, caminho, classe = '' } = Astro.props
+const { idioma, titulo, descricao, caminho, classe = '', robots } = Astro.props
 const canonical = CANONICO + caminho
 
 const sameAs = [
@@ -42,6 +43,7 @@ const jsonLd = {
     <title>{titulo}</title>
     <meta name="description" content={descricao} />
     <link rel="canonical" href={canonical} />
+    {robots && <meta name="robots" content={robots} />}
 
     <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)" />

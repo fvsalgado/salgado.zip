@@ -16,8 +16,8 @@ export const definicoes = [
     nome: 'Fabio-Salgado-CV-PT.pdf',
     caminho: 'docs/Fabio-Salgado-CV-PT.pdf',
     descricao: {
-      pt: 'O dossiê impresso. Com QR para este endereço.',
-      en: 'The dossier, printed. With a QR code back to this address.',
+      pt: 'O percurso completo, pronto a enviar. Com QR de volta a este endereço.',
+      en: 'The full track record, ready to send. With a QR code back to this address.',
     },
   },
   {

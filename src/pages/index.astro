@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
 import Header from '../components/Header.astro'
-import ViewSwitch from '../components/ViewSwitch.astro'
 import Controlos from '../components/Controlos.astro'
 import Archive from '../components/Archive.astro'
 import Rodape from '../components/Rodape.astro'
@@ -16,7 +15,7 @@ const descricao = `${cabecalho.nome}. ${t(cabecalho.linhas[0]!, idioma)}`
 <Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/">
   <main class="folha" id="conteudo">
     <div class="barra">
-      <ViewSwitch idioma={idioma} atual="arquivo" />
+      <span class="marca">salgado.zip</span>
       <Controlos idioma={idioma} arvore={true} />
     </div>
     <Header idioma={idioma} />

@@ -9,25 +9,13 @@ interface Props { idioma: Idioma; arvore?: boolean }
 const { idioma, arvore = false } = Astro.props
 const rot =
   idioma === 'en'
-    ? { abrir: 'expand all', fechar: 'collapse all', tema: 'Toggle theme', filtrar: 'filter the tree' }
-    : { abrir: 'abrir tudo', fechar: 'fechar tudo', tema: 'Alternar tema', filtrar: 'filtrar a árvore' }
+    ? { abrir: 'expand all', fechar: 'collapse all', tema: 'Toggle theme' }
+    : { abrir: 'abrir tudo', fechar: 'fechar tudo', tema: 'Alternar tema' }
 ---
 
 <div class="controlos" data-controlos hidden>
   {arvore && (
     <>
-      <input
-        type="search"
-        class="filtro"
-        data-filtro
-        placeholder={idioma === 'en' ? 'filter' : 'filtrar'}
-        title={idioma === 'en' ? 'Shortcut: /' : 'Atalho: /'}
-        aria-keyshortcuts="/"
-        aria-label={rot.filtrar}
-        autocomplete="off"
-        spellcheck="false"
-      />
-      <span aria-hidden="true">·</span>
       <button type="button" data-abrir-tudo>{rot.abrir}</button>
       <span aria-hidden="true">·</span>
       <button type="button" data-fechar-tudo>{rot.fechar}</button>

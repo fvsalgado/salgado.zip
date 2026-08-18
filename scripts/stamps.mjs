@@ -8,7 +8,7 @@
  * as datas referem-se ao commit anterior, que é o comportamento correto.
  */
 import { execFileSync } from 'node:child_process'
-import { writeFileSync, mkdirSync } from 'node:fs'
+import { writeFileSync, readFileSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
@@ -36,3 +36,27 @@ for (const alvo of alvos) {
 mkdirSync(raiz + 'src/generated', { recursive: true })
 writeFileSync(raiz + 'src/generated/stamps.json', JSON.stringify(stamps, null, 2) + '\n')
 console.log(`stamps: ${Object.keys(stamps).length} entradas`)
+
+/* O número de espetáculos do Primeira Plateia vem do próprio site, que o
+   publica no cabeçalho. Congelado aqui como as datas: lido da fonte quando
+   este script corre, nunca escrito à mão. Se a leitura falhar, fica o valor
+   anterior — um número antigo verdadeiro vale mais do que um atual inventado. */
+const numerosPath = raiz + 'src/generated/numeros.json'
+let numeros = {}
+try {
+  numeros = JSON.parse(readFileSync(numerosPath, 'utf8'))
+} catch {}
+try {
+  const r = await fetch('https://primeiraplateia.pt', { redirect: 'follow' })
+  const html = await r.text()
+  const m = html.match(/>([\d\s.,]{2,9})<\/span>\s*(?:<[^>]+>)*\s*espet[áa]culos/i)
+  if (m) {
+    const n = parseInt(m[1].replace(/[^\d]/g, ''), 10)
+    if (Number.isFinite(n) && n > 0) {
+      numeros.primeiraplateiaEspetaculos = n
+      numeros.lidoEm = stamps[alvos[0]] ?? null
+    }
+  }
+} catch {}
+writeFileSync(numerosPath, JSON.stringify(numeros, null, 2) + '\n')
+console.log(`numeros: espetáculos = ${numeros.primeiraplateiaEspetaculos ?? '—'}`)

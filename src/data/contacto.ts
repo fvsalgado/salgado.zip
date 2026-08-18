@@ -9,6 +9,10 @@ export const contacto = parse(Contacto, {
   },
   naturalidade: { pt: 'natural da Nazaré', en: 'born in Nazaré' },
   regiao: 'Lisboa e Torres Novas',
+  nota: {
+    pt: 'Projetos, parcerias e conversas começam por aqui.',
+    en: 'Projects, partnerships and conversations start here.',
+  },
   idiomas: [
     { lingua: { pt: 'Português', en: 'Portuguese' }, nivel: { pt: 'nativo', en: 'native' } },
     { lingua: { pt: 'Inglês', en: 'English' }, nivel: { pt: 'avançado, EF SET C2', en: 'advanced, EF SET C2' } },

@@ -90,7 +90,7 @@ if (!(await esperar(BASE + '/', 1))) {
 }
 
 const browser = await abrirBrowser()
-const paginas = ['/', '/dossie/']
+const paginas = ['/']
 
 function html(rota) {
   return readFileSync(dist + (rota === '/' ? 'index.html' : rota.slice(1) + 'index.html'), 'utf8')
@@ -168,18 +168,12 @@ function html(rota) {
 
   if (nos === 0) problemas.push('não encontrei nós na árvore')
 
-  // O alternador de vista é um link, não um botão: tem de navegar sem JS.
-  await p.goto(BASE + '/', { waitUntil: 'domcontentloaded' })
-  await p.locator('.vista a', { hasText: 'dossiê' }).click()
-  await p.waitForLoadState('domcontentloaded')
-  if (!p.url().includes('/dossie')) problemas.push(`alternador não navegou sem JS (ficou em ${p.url()})`)
-
   // Os controlos que só funcionam com JS não podem aparecer sem JS.
   if (await p.locator('[data-controlos]').first().isVisible().catch(() => false)) {
     problemas.push('os controlos de JS estão visíveis sem JS')
   }
   await ctx.close()
-  decide('tudo abre, fecha e navega sem JavaScript', problemas, `${nos} nós`)
+  decide('tudo abre e fecha sem JavaScript', problemas, `${nos} nós`)
 }
 
 /* ══ 5. Contraste WCAG calculado a partir dos tokens ════════════════════ */
@@ -340,11 +334,28 @@ function html(rota) {
     total += statSync(dist + 'tema.js').size
     ficheiros.push(`tema.js ${statSync(dist + 'tema.js').size}B`)
   }
-  decide(
-    `orçamento de JS abaixo de ${LIMITE / 1024} kB`,
-    total > LIMITE ? [`${total} B em ${ficheiros.length} ficheiros: ${ficheiros.join(', ')}`] : [],
-    `${total} B`
-  )
+  // Scripts executáveis inline são incompatíveis com a CSP (`script-src 'self'`
+  // sem 'unsafe-inline'): morreriam em produção sem erro visível. Os blocos
+  // JSON-LD não contam — não são executáveis.
+  const problemas9 = []
+  const varrerHtml = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      if (e.isDirectory()) varrerHtml(dir + e.name + '/')
+      else if (e.name.endsWith('.html')) {
+        const h = readFileSync(dir + e.name, 'utf8')
+        for (const m of h.matchAll(/<script(?![^>]*\bsrc=)([^>]*)>/g)) {
+          const attrs = m[1]
+          const tipo = /type="([^"]*)"/.exec(attrs)?.[1] ?? 'text/javascript'
+          if (tipo === 'module' || /javascript/.test(tipo)) {
+            problemas9.push(`${(dir + e.name).replace(dist, 'dist/')}: <script> inline (${tipo}) — a CSP vai bloqueá-lo`)
+          }
+        }
+      }
+    }
+  }
+  varrerHtml(dist)
+  if (total > LIMITE) problemas9.push(`${total} B em ${ficheiros.length} ficheiros: ${ficheiros.join(', ')}`)
+  decide(`orçamento de JS abaixo de ${LIMITE / 1024} kB, sem scripts inline`, problemas9, `${total} B`)
 }
 
 /* ══ 10. hreflang ═══════════════════════════════════════════════════════ */
@@ -354,7 +365,7 @@ function html(rota) {
     aviso('hreflang e x-default', ['/en/ ainda não existe: fase EN por fazer'])
   } else {
     const problemas = []
-    for (const rota of [...paginas, '/en/', '/en/dossier/']) {
+    for (const rota of [...paginas, '/en/']) {
       const h = html(rota)
       for (const esperado of ['hreflang="pt-PT"', 'hreflang="en"', 'hreflang="x-default"']) {
         if (!h.includes(esperado)) problemas.push(`${rota} sem ${esperado}`)
@@ -441,7 +452,7 @@ function html(rota) {
 {
   mkdirSync(revisao, { recursive: true })
   let feitas = 0
-  for (const [rota, nome] of [['/', 'arquivo'], ['/dossie/', 'dossie']]) {
+  for (const [rota, nome] of [['/', 'arquivo'], ['/cv/', 'cv']]) {
     for (const [w, h, ecra] of [[1440, 900, 'largo'], [390, 844, 'estreito']]) {
       for (const tema of ['light', 'dark']) {
         const ctx = await browser.newContext({ viewport: { width: w, height: h }, colorScheme: tema })

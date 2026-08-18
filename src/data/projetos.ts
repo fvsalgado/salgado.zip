@@ -1,4 +1,17 @@
 import { Projeto, parse } from './schema.ts'
+import numeros from '../generated/numeros.json' with { type: 'json' }
+
+/**
+ * O número de espetáculos vem do próprio primeiraplateia.pt, lido por
+ * scripts/stamps.mjs e congelado em numeros.json. Publica-se por baixo,
+ * arredondado à centena: «mais de 1 500» continua verdadeiro enquanto o
+ * catálogo cresce, e nunca finge precisão que já não tem.
+ */
+const espetaculos = (numeros as { primeiraplateiaEspetaculos?: number }).primeiraplateiaEspetaculos
+const centena =
+  espetaculos && espetaculos >= 100
+    ? (Math.floor(espetaculos / 100) * 100).toLocaleString('pt-PT')
+    : null
 
 /**
  * Regra de enquadramento: descreve-se o que o produto faz, não quem o usa.
@@ -25,8 +38,12 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2016-11', fim: null },
     linha: {
-      pt: 'A agenda cultural de Portugal num sítio só: teatros, salas de concerto, museus e cinemas.',
-      en: "Portugal's cultural agenda in one place: theatres, concert halls, museums and cinemas.",
+      pt: centena
+        ? `A agenda cultural de Portugal num sítio só: mais de ${centena} espetáculos em cartaz, de teatros, salas de concerto, museus e cinemas.`
+        : 'A agenda cultural de Portugal num sítio só: teatros, salas de concerto, museus e cinemas.',
+      en: centena
+        ? `Portugal's cultural agenda in one place: over ${centena.replace(/\u00a0|\s/g, ',')} events on show, from theatres, concert halls, museums and cinemas.`
+        : "Portugal's cultural agenda in one place: theatres, concert halls, museums and cinemas.",
     },
     detalhe: [
       {
@@ -38,12 +55,13 @@ export const projetos = parse(Projeto.array().min(1), [
         en: 'Born in 2016 as EmCena.pt, a Lisbon theatre listing. Renamed and relaunched in 2026, now nationwide.',
       },
       {
-        pt: 'Fundei-o, giro-o e construí-o. Código público.',
-        en: 'I founded it, I run it, I built it. Public source code.',
+        pt: 'Fundei-o, giro-o e construí-o.',
+        en: 'I founded it, I run it, I built it.',
       },
     ],
-    stack: [],
+    stack: ['Next.js', 'Supabase', 'pipeline Python'],
     url: 'https://primeiraplateia.pt',
+    codigo: 'https://github.com/fvsalgado/primeiraplateia',
     shot: 'primeiraplateia.webp',
   },
   {

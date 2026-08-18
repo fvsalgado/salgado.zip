@@ -1,7 +1,7 @@
 ---
 import Node from './Node.astro'
 import { projetos, posicoes, mandatos, formacao, contacto, ficheiros } from '../data'
-import { leiaMe, colofao } from '../data/textos.ts'
+import { colofao, codigoDoSite } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
 
@@ -9,33 +9,32 @@ interface Props { idioma: Idioma }
 const { idioma } = Astro.props
 const en = idioma === 'en'
 
-// O tamanho do leia-me é o tamanho real do texto que se lê. Nenhum número é
-// escrito à mão — nem este.
-const leiaMeBytes = Buffer.byteLength(leiaMe.map((l) => t(l, idioma)).join('\n'), 'utf8')
 
 const rot = en
-  ? { projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/', contacto: 'contact/', ficheiros: 'files/', leiame: 'read-me.txt', colofao: 'colophon/',
+  ? { projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/', contacto: 'contact/', ficheiros: 'files/', colofao: 'colophon/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
       papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
       privado: 'private, behind authentication', abrir: 'Open' }
-  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/', leiame: 'leia-me.txt', colofao: 'colofao/',
+  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/', colofao: 'colofao/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
       papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
       privado: 'privado, atrás de autenticação', abrir: 'Abrir' }
+const anoInicio = Math.min(
+  ...[...posicoes, ...mandatos, ...projetos.filter((p) => p.periodo)].map((x) =>
+    parseInt((x.periodo as { inicio: string }).inicio.slice(0, 4), 10)
+  )
+)
+const totais = [
+  `${projetos.length} ${en ? 'products' : 'produtos'}`,
+  `${posicoes.length} ${en ? 'positions' : 'posições'}`,
+  `${mandatos.length} ${en ? 'mandates' : 'mandatos'}`,
+  en ? `since ${anoInicio}` : `desde ${anoInicio}`,
+]
 ---
 
-<ul class="arvore" role="list" data-arvore>
-  <Node
-    id="leia-me"
-    nome={rot.leiame}
-    aberto={true}
-    colunas={[{ classe: 'tam', valor: tamanho(leiaMeBytes) }]}
-  >
-    <div class="no__texto">
-      {leiaMe.map((l) => <p>{t(l, idioma)}</p>)}
-    </div>
-  </Node>
+<p class="totais">{totais.join(' · ')}</p>
 
+<ul class="arvore" role="list" data-arvore>
   <Node
     id="projetos"
     nome={rot.projetos}
@@ -54,8 +53,18 @@ const rot = en
               { classe: 'estado', valor: estado(p.estado, idioma), dataEstado: p.estado },
             ]}
           >
+            <Fragment slot="resumo">
+              <span class="linha__desc">{t(p.linha, idioma)}</span>
+              {(p.url !== null || p.codigo !== null) && (
+                <span class="linha__ligacoes">
+                  {p.url !== null && <a href={p.url} rel="noopener">{en ? 'visit' : 'visitar'} ↗</a>}
+                  {p.codigo !== null && (
+                    <a href={p.codigo} rel="noopener">{en ? 'open source' : 'código aberto'} ↗</a>
+                  )}
+                </span>
+              )}
+            </Fragment>
             <div class="no__texto">
-              <p>{t(p.linha, idioma)}</p>
               {p.detalhe.map((d) => <p>{t(d, idioma)}</p>)}
             </div>
             <dl class="no__campos">
@@ -71,6 +80,14 @@ const rot = en
                 <>
                   <dt>{rot.stack}</dt>
                   <dd>{p.stack.join(' · ')}</dd>
+                </>
+              )}
+              {p.codigo !== null && (
+                <>
+                  <dt>{en ? 'source' : 'código'}</dt>
+                  <dd>
+                    <a href={p.codigo} rel="noopener">{p.codigo.replace('https://', '')}</a>
+                  </dd>
                 </>
               )}
               {p.url !== null ? (
@@ -185,7 +202,8 @@ const rot = en
     )
   }
 
-  <Node id="contacto" nome={rot.contacto}>
+  <Node id="contacto" nome={rot.contacto} aberto={true}>
+    <p class="no__texto no__texto--nota">{t(contacto.nota, idioma)}</p>
     <dl class="no__campos">
       {contacto.email && (
         <>
@@ -203,6 +221,10 @@ const rot = en
       <dd>{t(contacto.concelho, idioma)}</dd>
       <dt>{en ? 'from' : 'de onde'}</dt>
       <dd>{t(contacto.naturalidade, idioma)}</dd>
+      <dt>cv</dt>
+      <dd>
+        <a href="/docs/Fabio-Salgado-CV-PT.pdf">Fabio-Salgado-CV-PT.pdf</a>
+      </dd>
       {contacto.idiomas.length > 0 && (
         <>
           <dt>{en ? 'languages' : 'idiomas'}</dt>
@@ -242,5 +264,9 @@ const rot = en
     <div class="no__texto">
       {colofao.map((l) => <p>{t(l, idioma)}</p>)}
     </div>
+    <dl class="no__campos">
+      <dt>{en ? 'source' : 'código'}</dt>
+      <dd><a href={codigoDoSite} rel="noopener">{codigoDoSite.replace('https://', '')}</a></dd>
+    </dl>
   </Node>
 </ul>

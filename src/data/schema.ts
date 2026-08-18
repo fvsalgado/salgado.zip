@@ -31,7 +31,7 @@ export const Cabecalho = z.object({
   /** Os ofícios numa linha, para o <title>. */
   areas: Lang,
   /** Três linhas em prosa. Quem és → o que fazes → onde estás e o que procuras. */
-  linhas: z.array(Lang).min(3).max(3),
+  linhas: z.array(Lang).min(3).max(4),
   cargo: Lang,
 })
 export type Cabecalho = z.infer<typeof Cabecalho>
@@ -59,6 +59,8 @@ export const Projeto = z.object({
   stack: z.array(z.string().min(1)).default([]),
   /** `null` em projetos privados. Sem ligação, sem captura. */
   url: HttpsUrl.nullable(),
+  /** Repositório público, quando o código é aberto. */
+  codigo: HttpsUrl.nullable().default(null),
   /** Ficheiro em public/shots/, ou `null`. */
   shot: z.string().regex(/^[a-z0-9-]+\.webp$/).nullable(),
 })
@@ -110,6 +112,8 @@ export const Contacto = z.object({
   concelho: Lang,
   /** De onde se é. Não é a mesma pergunta. */
   naturalidade: Lang,
+  /** A linha que abre o nó de contacto. É o convite, sem o dizer. */
+  nota: Lang,
   /**
    * Região em forma canónica, só para o JSON-LD e o resume.json. Os dados
    * estruturados querem um nome de região, não a frase que se lê no ecrã.

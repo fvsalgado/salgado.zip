@@ -7,6 +7,7 @@ export const GET: APIRoute = () =>
       'User-agent: *',
       'Allow: /',
       'Disallow: /og/',
+      'Disallow: /cv/',
       '',
       `Sitemap: ${CANONICO}/sitemap.xml`,
       '',
