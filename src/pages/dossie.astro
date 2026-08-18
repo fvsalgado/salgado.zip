@@ -8,7 +8,7 @@ import { cabecalho } from '../data'
 import { t } from '../data/formato'
 
 const idioma = 'pt' as const
-const titulo = `${cabecalho.nome} — ${t(cabecalho.cargo, idioma)}`
+const titulo = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}`
 const descricao = `${cabecalho.nome}. ${t(cabecalho.linhas[0]!, idioma)}`
 ---
 

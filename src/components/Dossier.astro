@@ -5,6 +5,7 @@
  * URL que se cola numa candidatura.
  */
 import { cabecalho, projetos, posicoes, mandatos, formacao, contacto } from '../data'
+import { colofao } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodoLongo, estado } from '../data/formato'
 
@@ -13,15 +14,27 @@ const { idioma } = Astro.props
 const en = idioma === 'en'
 
 const rot = en
-  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates', formacao: 'Certificates', contacto: 'Contact' }
-  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais', formacao: 'Certificados', contacto: 'Contacto' }
+  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates', formacao: 'Certificates', contacto: 'Contact', colofao: 'Colophon' }
+  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais', formacao: 'Certificados', contacto: 'Contacto', colofao: 'Colofão' }
 ---
 
 <article>
-  <h1>{cabecalho.nome}</h1>
-  <div class="cabecalho cabecalho--dossie">
-    {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
-  </div>
+  <header class="dossie__cabeca">
+    <div>
+      <h1>{cabecalho.nome}</h1>
+      <div class="cabecalho cabecalho--dossie">
+        {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+      </div>
+    </div>
+    <img
+      class="retrato retrato--dossie"
+      src="/fabio-salgado.jpg"
+      alt=""
+      width="200"
+      height="200"
+      decoding="async"
+    />
+  </header>
 
   <section data-seccao="projetos">
     <h2>{rot.projetos}</h2>
@@ -123,5 +136,10 @@ const rot = en
       )}
       <li><a href="https://salgado.zip">salgado.zip</a></li>
     </ul>
+  </section>
+
+  <section data-seccao="colofao">
+    <h2>{rot.colofao}</h2>
+    {colofao.map((l) => <p>{t(l, idioma)}</p>)}
   </section>
 </article>

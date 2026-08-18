@@ -65,15 +65,46 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
 }
 
 /* ── Cabeçalho em prosa ──────────────────────────────────────────────────── */
-.cabecalho { max-width: 34rem; }
-.cabecalho p {
+.cabecalho {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem 2.5rem;
+}
+.cabecalho__texto { max-width: 34rem; }
+
+/* O retrato segue a regra das capturas: cinzento em repouso, cor ao passar. */
+.retrato {
+  width: clamp(4.5rem, 3.5rem + 4vw, 6.5rem);
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  filter: grayscale(1) contrast(0.95);
+  opacity: 0.85;
+  transition: filter var(--transicao), opacity var(--transicao);
+}
+.retrato:hover { filter: none; opacity: 1; }
+
+@media (max-width: 46rem) {
+  .cabecalho { flex-direction: column; }
+}
+
+.dossie__cabeca {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+.retrato--dossie { width: 6rem; flex: 0 0 auto; }
+.cabecalho__texto p, .cabecalho--dossie p {
   font-size: clamp(1.02rem, 0.95rem + 0.45vw, 1.2rem);
   line-height: 1.5;
   text-wrap: pretty;
 }
-.cabecalho p + p { margin-top: 0.5rem; }
-.cabecalho p:first-child { font-weight: 600; }
-.cabecalho p:last-child { color: var(--ink-soft); }
+.cabecalho__texto p + p, .cabecalho--dossie p + p { margin-top: 0.5rem; }
+.cabecalho__texto p:first-child, .cabecalho--dossie p:first-child { font-weight: 600; }
+.cabecalho__texto p:last-child, .cabecalho--dossie p:last-child { color: var(--ink-soft); }
 
 /* ── Alternador arquivo ↔ dossiê (dois links, não um botão) ──────────────── */
 .vista {
@@ -320,3 +351,23 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
 .cabecalho + .arvore { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
 .cabecalho--dossie { margin-top: 0.9rem; }
 .no__texto--nota { margin-top: 0.7rem; color: var(--ink-soft); }
+
+/* ── Filtro da árvore: a tecla / foca, Esc limpa ─────────────────────────── */
+.filtro {
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper-fundo);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.25rem 0.55rem;
+  width: 5.5ch;
+  transition: width var(--transicao), border-color var(--transicao);
+}
+.filtro::placeholder { color: var(--ink-soft); }
+.filtro:focus { width: 14ch; border-color: var(--accent); outline: none; }
+.filtro:not(:placeholder-shown) { width: 14ch; }
+.filtro::-webkit-search-cancel-button { display: none; }
+
+.no--oculto { display: none; }
+
+.cabecalho--dossie { display: block; max-width: 34rem; }
