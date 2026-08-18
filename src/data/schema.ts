@@ -20,7 +20,7 @@ export const Periodo = z.object({
 })
 export type Periodo = z.infer<typeof Periodo>
 
-export const Estado = z.enum(['ativo', 'arquivado', 'privado'])
+export const Estado = z.enum(['ativo', 'privado'])
 export type Estado = z.infer<typeof Estado>
 
 const Slug = z.string().regex(/^[a-z0-9-]+$/, 'slug em minúsculas, sem acentos')

@@ -18,7 +18,6 @@ interface Props {
   colunas?: Coluna[]
   aberto?: boolean
   href?: string
-  externo?: boolean
   /**
    * Linha sem corpo: nem `<details>` nem marcador. Um nó que abre para dentro
    * e não mostra nada é uma promessa falhada — a seta diz que há mais e não há.
@@ -26,7 +25,7 @@ interface Props {
   folha?: boolean
 }
 
-const { id, nome, colunas = [], aberto = false, href, externo = false, folha = false } = Astro.props
+const { id, nome, colunas = [], aberto = false, href, folha = false } = Astro.props
 const ehFicheiro = href !== undefined
 ---
 
@@ -42,12 +41,7 @@ const ehFicheiro = href !== undefined
         ))}
       </span>
     ) : ehFicheiro ? (
-      <a
-        class="linha"
-        id={id}
-        href={href}
-        {...externo ? { rel: 'noopener' } : {}}
-      >
+      <a class="linha" id={id} href={href}>
         <span class="linha__nome">{nome}</span>
         {colunas.map((c) => (
           <span class={`linha__col linha__col--${c.classe}`} data-estado={c.dataEstado}>

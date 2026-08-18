@@ -43,7 +43,6 @@ export function dataCurta(iso: string | undefined, idioma: Idioma): string | nul
 
 const ESTADOS: Record<string, Record<Idioma, string>> = {
   ativo: { pt: 'ativo', en: 'live' },
-  arquivado: { pt: 'arquivado', en: 'archived' },
   privado: { pt: 'privado', en: 'private' },
 }
 export function estado(e: string, idioma: Idioma): string {
