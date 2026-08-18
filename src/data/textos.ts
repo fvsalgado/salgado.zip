@@ -11,8 +11,8 @@ export const leiaMe = parse(z.array(Lang).min(1), [
     en: 'This is an archive, not a business card. Each line says what it is, since when, and in what state. File sizes are real, dates come from the repository, counts are computed.',
   },
   {
-    pt: 'Faço três coisas que parecem distantes e não são: aconselho quem lida com regulação, produzo fado, construo sites e aplicações. O que as junta é o mesmo gesto — perceber um sistema, encontrar-lhe as regras e fazer alguma coisa com isso.',
-    en: 'I do three things that look far apart and are not: I advise people who deal with regulation, I produce fado, I build sites and applications. What joins them is the same move — understand a system, find its rules, and make something with it.',
+    pt: 'Faço três coisas que parecem distantes e não são: aconselho quem lida com regulação, produzo eventos de fado, construo sites e aplicações. O que as junta é o mesmo gesto — perceber um sistema, encontrar-lhe as regras e fazer alguma coisa com isso.',
+    en: 'I do three things that look far apart and are not: I advise people who deal with regulation, I produce fado events, I build sites and applications. What joins them is the same move — understand a system, find its rules, and make something with it.',
   },
   {
     pt: 'O resto explica-se sozinho.',
