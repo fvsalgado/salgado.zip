@@ -152,11 +152,14 @@ await zip.finalize()
 await pronto
 
 /* ── linhas.json ──────────────────────────────────────────────────────────
-   O contador de linhas do colofão. Conta-se aqui, antes de cada build, para
-   o número publicado ser sempre o do código que está no ar: ficheiros
-   autorados (componentes, dados, estilos, scripts, configuração), excluindo
-   o gerado e os assets. Contagem à maneira do wc -l, reproduzível por
-   qualquer pessoa com o repositório à frente. */
+   O contador de linhas do colofão: ficheiros autorados (componentes, dados,
+   estilos, scripts, configuração), excluindo o gerado e os assets, contados
+   à maneira do wc -l.
+
+   Conta-se LOCALMENTE e congela-se no commit — no build da Vercel usa-se o
+   valor congelado, porque o ambiente de lá produziu contagens diferentes da
+   mesma árvore. A verificação 12 reconta e falha se o valor congelado não
+   bater certo com o código: o número publicado é sempre um número auditado. */
 const contaveis = []
 const apanhar = (dir, aceita) => {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -175,11 +178,13 @@ for (const f of contaveis) {
   const texto = readFileSync(f, 'utf8')
   linhas += texto.split('\n').length - (texto.endsWith('\n') ? 1 : 0)
 }
-mkdirSync(raiz + 'src/generated', { recursive: true })
-writeFileSync(
-  raiz + 'src/generated/linhas.json',
-  JSON.stringify({ total: linhas, ficheiros: contaveis.length }, null, 2) + '\n'
-)
+if (!process.env.VERCEL) {
+  mkdirSync(raiz + 'src/generated', { recursive: true })
+  writeFileSync(
+    raiz + 'src/generated/linhas.json',
+    JSON.stringify({ total: linhas, ficheiros: contaveis.length }, null, 2) + '\n'
+  )
+}
 
 /* ── tamanhos.json ────────────────────────────────────────────────────────
    Nenhum número é escrito à mão: os tamanhos da listagem saem daqui, de um
