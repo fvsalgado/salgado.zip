@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro'
 import Header from '../../components/Header.astro'
-import Controlos from '../../components/Controlos.astro'
+import Tema from '../../components/Tema.astro'
 import Archive from '../../components/Archive.astro'
 import Rodape from '../../components/Rodape.astro'
 import { cabecalho } from '../../data'
@@ -18,9 +18,9 @@ const descricao = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}. ${t(cabe
       <span class="marca">
         salgado.zip
         <span aria-hidden="true"> · </span>
-        <a href="/" hreflang="pt-PT">português</a>
+        <a href="/" hreflang="pt-PT" lang="pt-PT">português</a>
       </span>
-      <Controlos idioma={idioma} />
+      <Tema idioma={idioma} />
     </div>
     <Header idioma={idioma} />
     <Archive idioma={idioma} />

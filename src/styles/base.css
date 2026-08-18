@@ -126,16 +126,14 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
 .cabecalho__texto p + p, .cabecalho--dossie p + p { margin-top: 0.5rem; }
 .cabecalho__texto p:last-child, .cabecalho--dossie p:last-child { color: var(--ink-soft); }
 
-.controlos {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+.tema {
   font-family: var(--mono);
   font-size: var(--t-meta);
   color: var(--ink-soft);
+  padding: 0.3rem 0.55rem;
+  border-radius: 4px;
 }
-.controlos button { padding: 0.3rem 0.55rem; border-radius: 4px; }
-.controlos button:hover { color: var(--accent); background: var(--paper-fundo); }
+.tema:hover { color: var(--accent); background: var(--paper-fundo); }
 
 /* ── A árvore ────────────────────────────────────────────────────────────── */
 .arvore { list-style: none; padding: 0; font-family: var(--mono); font-size: var(--t-mono); }
@@ -230,8 +228,7 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
     padding-top: 0.55rem;
     padding-bottom: 0.6rem;
   }
-  .controlos button { padding: 0.5rem 0.5rem; }
-  .controlos { gap: 0.25rem; }
+  .tema { padding: 0.5rem; }
   .barra { gap: 0.5rem 1rem; }
   .linha__marca { top: 0.95em; }
   .linha__nome { flex: 1 0 100%; }
@@ -336,7 +333,14 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
   letter-spacing: 0.02em;
 }
 
+/* A contagem e os controlos da árvore partilham a linha imediatamente acima
+   dela: um controlo longe do que controla não se percebe. */
 .totais {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
   font-family: var(--mono);
   font-size: var(--t-meta);
   color: var(--ink-soft);
@@ -344,6 +348,19 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
   padding-top: 0.9rem;
   border-top: 1px solid var(--rule);
 }
+.totais__controlos { display: flex; align-items: baseline; gap: 0.4rem; }
+.totais__controlos button {
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 0.06em;
+  text-decoration-color: var(--rule-forte);
+}
+.totais__controlos button:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+/* Um nó de secção é um cabeçalho, mas lê-se como linha de listagem. */
+h2.linha, h3.linha { font: inherit; }
 
 /* A descrição visível é o que se lê sem abrir nada: serifa, dentro do summary. */
 .linha__desc {
@@ -379,9 +396,3 @@ summary { padding-bottom: 0.35rem; }
 
 .marca a { color: var(--ink-soft); text-decoration-color: var(--rule-forte); }
 .marca a:hover { color: var(--accent); }
-
-/* Em ecrã estreito o rótulo encurta para a barra caber numa linha. O nome
-   completo fica no aria-label, portanto quem ouve não perde nada. */
-@media (max-width: 46rem) {
-  .so-largo { display: none; }
-}

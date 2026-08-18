@@ -12,7 +12,7 @@
     --accent: #000;
   }
 
-  .vista, .controlos, .tema, .shot, .salta, .rodape__ecra { display: none !important; }
+  .vista, .totais__controlos, .tema, .shot, .salta, .rodape__ecra { display: none !important; }
 
   details > *:not(summary) { display: block !important; }
 
