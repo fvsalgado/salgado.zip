@@ -23,34 +23,28 @@ export const cabecalho = parse(Cabecalho, {
    * do PDF ao lado do retrato, o `summary` do resume.json (concatenadas) e o
    * LEIA-ME.txt do zip. Têm de se ler como um parágrafo, não como tópicos.
    *
-   * A voz é a do arquivo, não a do candidato: começa por dizer o que isto é, e
-   * só depois quem o mantém. Um arquivo não anda à procura de nada — é a
-   * diferença entre um percurso contado e um percurso arquivado, e é ela que
-   * deixa a cronologia entrar sem que a página passe a carta de candidatura.
-   *
-   * A geografia saiu daqui e não se perdeu: está na tarja de contacto do PDF,
-   * no nó `contacto/` e, em coordenadas, no rodapé. Dizê-la aqui era dizê-la
-   * duas vezes na mesma página de papel.
+   * Pessoa, percurso, método — por esta ordem, e a ordem é o argumento. A
+   * versão anterior abria por «isto é um arquivo de trabalho»: punha o objeto
+   * à frente de quem o fez, e quem lia ficava a saber o que a página era antes
+   * de saber quem lá estava. Um arquivo continua a ser a moldura — é ela que
+   * deixa entrar a cronologia sem que a página se leia como candidatura — mas
+   * chega na terceira linha, depois do corpo e do percurso, não antes.
    */
   linhas: [
     {
-      // «Começa em 2007» e não «a entrada mais antiga é de 2007»: a linha de
-      // totais, seis linhas abaixo, já diz a segunda versão, e contada pelo
-      // build. Dizer as duas era a mesma frase duas vezes à distância de um
-      // parágrafo.
-      pt: 'Isto é um arquivo de trabalho, e sou eu que o mantenho. Começa em 2007, quando fui eleito para a Assembleia Municipal da Nazaré, aos 21 anos.',
-      en: "This is a working archive, and I'm the one who keeps it. It starts in 2007, when I was elected to the Nazaré municipal assembly, at 21.",
+      pt: 'Nasci na Nazaré e foi lá que fui eleito pela primeira vez, em 2007, aos 21 anos. Divido-me hoje entre Alfama, em Lisboa, e Ribeira Branca, em Torres Novas.',
+      en: 'I was born in Nazaré, and it was there that I was first elected, in 2007, at 21. Today I split my time between Alfama, in Lisbon, and Ribeira Branca, in Torres Novas.',
     },
     {
       pt: 'Desde então: uma loja minha, o balcão e o palco de uma sala de espetáculos, quatro anos num gabinete da Câmara de Lisboa, e hoje consultoria de assuntos públicos. Pelo meio comecei a construir software, e há pouco a produzir fado — sem largar nada.',
-      en: "Since then: a shop of my own, the counter and the stage of a small venue, four years in a Lisbon City Hall office, and today public affairs consulting. Somewhere in there I started building software, and more recently producing fado — without letting go of anything.",
+      en: 'Since then: a shop of my own, the counter and the stage of a small venue, four years in a Lisbon City Hall office, and today public affairs consulting. Somewhere in there I started building software, and more recently producing fado — without letting go of anything.',
     },
     {
-      // A regra do arquivo é verdade a sério: a verificação 14 bloqueia a
-      // publicação enquanto houver um período por confirmar. Diz mais sobre
-      // quem escreve do que qualquer adjetivo que se pudesse pôr aqui.
-      pt: 'Cada entrada diz o que é, quando foi e o que eu lá fiz. O que não está confirmado não entra.',
-      en: "Every entry says what it is, when it was, and what I did there. What isn't confirmed doesn't go in.",
+      // Antes dizia «o que não está confirmado não entra», que soa a regra de
+      // um sistema e não a uma pessoa: quem confirma sou eu, e a frase tem de
+      // dizer isso. O método detalhado vive no colofão, que é o lugar dele.
+      pt: 'Isto é o arquivo desse trabalho. Sou eu que o mantenho, e cada entrada diz o que é, quando foi e o que eu lá fiz.',
+      en: 'This is the archive of that work. I keep it myself, and every entry says what it is, when it was, and what I did there.',
     },
     {
       // «isto» e não «este site»: a mesma linha sai em página e em PDF, e quem

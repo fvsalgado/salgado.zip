@@ -64,8 +64,11 @@ export const posicoes = parse(Posicao.array(), [
     periodo: { inicio: '2015-01', fim: '2017-12' },
     linhas: [
       {
-        pt: 'No Bartô, o bar e sala de espetáculos que fica no Chapitô, em Lisboa. Ao balcão, e apoio de palco na própria sala.',
-        en: 'At Bartô, the bar and small venue inside Chapitô, in Lisbon. Behind the counter, and stage-hand work in the room itself.',
+        // A terceira frase é a única do percurso inteiro que diz um ponto de
+        // vista em vez de uma tarefa. Tinha-se perdido numa reescrita que
+        // estava a corrigir outra coisa; volta, porque era o que humanizava.
+        pt: 'No Bartô, o bar e sala de espetáculos que fica no Chapitô, em Lisboa. Ao balcão, e apoio de palco na própria sala. A cultura vista do lado de quem monta e desmonta.',
+        en: 'At Bartô, the bar and small venue inside Chapitô, in Lisbon. Behind the counter, and stage-hand work in the room itself. Culture seen from the side that sets up and tears down.',
       },
     ],
   },
