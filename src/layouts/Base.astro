@@ -27,7 +27,7 @@ const jsonLd = {
   name: cabecalho.nome,
   jobTitle: t(cabecalho.cargo, idioma),
   url: CANONICO,
-  address: { '@type': 'PostalAddress', addressRegion: t(contacto.concelho, idioma), addressCountry: 'PT' },
+  address: { '@type': 'PostalAddress', addressRegion: contacto.regiao, addressCountry: 'PT' },
   ...(contacto.email ? { email: `mailto:${contacto.email}` } : {}),
   ...(sameAs.length ? { sameAs } : {}),
 }

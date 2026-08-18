@@ -4,7 +4,7 @@
  * mono, sem árvore, sem metáfora. É o que se imprime, é o que vira PDF, e é o
  * URL que se cola numa candidatura.
  */
-import { cabecalho, projetos, posicoes, formacao, contacto } from '../data'
+import { cabecalho, projetos, posicoes, mandatos, formacao, contacto } from '../data'
 import type { Idioma } from '../data'
 import { t, periodoLongo, estado } from '../data/formato'
 
@@ -13,8 +13,8 @@ const { idioma } = Astro.props
 const en = idioma === 'en'
 
 const rot = en
-  ? { percurso: 'Career', projetos: 'Projects', formacao: 'Education', contacto: 'Contact' }
-  : { percurso: 'Percurso', projetos: 'Projetos', formacao: 'Formação', contacto: 'Contacto' }
+  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates', formacao: 'Certificates', contacto: 'Contact' }
+  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais', formacao: 'Certificados', contacto: 'Contacto' }
 ---
 
 <article>
@@ -33,7 +33,7 @@ const rot = en
               {p.url !== null ? <a href={p.url} rel="noopener">{p.dominio}</a> : p.dominio}
             </h3>
             <span class="entrada__quando">
-              {periodoLongo(p.periodo, idioma)} · {estado(p.estado, idioma)}
+              {p.periodo ? `${periodoLongo(p.periodo, idioma)} · ` : ''}{estado(p.estado, idioma)}
             </span>
           </div>
           <p class="entrada__onde">{t(p.papel, idioma)}</p>
@@ -67,6 +67,28 @@ const rot = en
   }
 
   {
+    mandatos.length > 0 && (
+      <section data-seccao="mandatos">
+        <h2>{rot.mandatos}</h2>
+        {mandatos.map((m) => (
+          <div class="entrada" id={`d-${m.id}`}>
+            <div class="entrada__cabeca">
+              <h3>{t(m.cargo, idioma)}</h3>
+              <span class="entrada__quando">{periodoLongo(m.periodo, idioma)}</span>
+            </div>
+            <p class="entrada__onde">{m.organizacao}</p>
+            {m.linhas.length > 0 && (
+              <div class="entrada__corpo">
+                {m.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+              </div>
+            )}
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  {
     formacao.length > 0 && (
       <section data-seccao="formacao">
         <h2>{rot.formacao}</h2>
@@ -93,6 +115,12 @@ const rot = en
         <li><a href={contacto.linkedin} rel="noopener">{contacto.linkedin.replace(/^https:\/\//, '')}</a></li>
       )}
       <li>{t(contacto.concelho, idioma)}</li>
+      <li>{t(contacto.naturalidade, idioma)}</li>
+      {contacto.idiomas.length > 0 && (
+        <li>
+          {contacto.idiomas.map((i) => `${t(i.lingua, idioma)} (${t(i.nivel, idioma)})`).join(' · ')}
+        </li>
+      )}
       <li><a href="https://salgado.zip">salgado.zip</a></li>
     </ul>
   </section>

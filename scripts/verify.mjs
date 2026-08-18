@@ -120,7 +120,14 @@ function html(rota) {
   }
   const mortas = []
   for (const url of externas) {
-    const r = await fetch(url, { method: 'HEAD', redirect: 'follow' }).catch(() => null)
+    let r = await fetch(url, { method: 'HEAD', redirect: 'follow' }).catch(() => null)
+    // Nem toda a gente responde a HEAD: 405 pede uma segunda tentativa com GET.
+    if (r && r.status === 405) {
+      r = await fetch(url, { redirect: 'follow' }).catch(() => null)
+    }
+    // 999 é o bloqueio a leitura automática do LinkedIn e 403 é o equivalente
+    // noutros sítios. Significam "não falo com robôs", não "estou morto".
+    if (r && (r.status === 999 || r.status === 403)) continue
     if (!r || r.status >= 400) mortas.push(`${url} → ${r ? r.status : 'sem resposta'}`)
   }
   if (mortas.length) aviso('ligações externas vivas', mortas)
@@ -436,6 +443,10 @@ function html(rota) {
 {
   const problemas = []
   if (posicoes.length === 0) problemas.push('src/data/percurso.ts: sem posições')
+  const semPeriodo = projetos.filter((p) => p.periodo === null).map((p) => p.dominio)
+  if (semPeriodo.length) {
+    problemas.push(`src/data/projetos.ts: período por confirmar em ${semPeriodo.join(', ')}`)
+  }
   if (contacto.email === null) problemas.push('src/data/contacto.ts: email por confirmar')
   if (contacto.linkedin === null) problemas.push('src/data/contacto.ts: linkedin por confirmar')
   decide('conteúdo confirmado (percurso e contacto)', problemas)

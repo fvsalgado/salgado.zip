@@ -1,6 +1,6 @@
 ---
 import Node from './Node.astro'
-import { projetos, posicoes, formacao, contacto, ficheiros } from '../data'
+import { projetos, posicoes, mandatos, formacao, contacto, ficheiros } from '../data'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
 
@@ -9,11 +9,11 @@ const { idioma } = Astro.props
 const en = idioma === 'en'
 
 const rot = en
-  ? { projetos: 'projects/', percurso: 'career/', formacao: 'education/', contacto: 'contact/', ficheiros: 'files/',
+  ? { projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/', contacto: 'contact/', ficheiros: 'files/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
       papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
       privado: 'private, behind authentication', abrir: 'Open' }
-  : { projetos: 'projetos/', percurso: 'percurso/', formacao: 'formacao/', contacto: 'contacto/', ficheiros: 'ficheiros/',
+  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
       papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
       privado: 'privado, atrás de autenticação', abrir: 'Abrir' }
@@ -34,7 +34,7 @@ const rot = en
             nome={p.dominio}
             colunas={[
               { classe: 'papel', valor: t(p.papel, idioma) },
-              { classe: 'periodo', valor: periodo(p.periodo) },
+              ...(p.periodo ? [{ classe: 'periodo' as const, valor: periodo(p.periodo) }] : []),
               { classe: 'estado', valor: estado(p.estado, idioma), dataEstado: p.estado },
             ]}
           >
@@ -45,8 +45,12 @@ const rot = en
             <dl class="no__campos">
               <dt>{rot.papel}</dt>
               <dd>{t(p.papel, idioma)}</dd>
-              <dt>{rot.periodo}</dt>
-              <dd>{periodoLongo(p.periodo, idioma)}</dd>
+              {p.periodo && (
+                <>
+                  <dt>{rot.periodo}</dt>
+                  <dd>{periodoLongo(p.periodo, idioma)}</dd>
+                </>
+              )}
               {p.stack.length > 0 && (
                 <>
                   <dt>{rot.stack}</dt>
@@ -112,6 +116,31 @@ const rot = en
   }
 
   {
+    mandatos.length > 0 && (
+      <Node
+        id="mandatos"
+        nome={rot.mandatos}
+        colunas={[{ classe: 'nota', valor: rot.entradas(mandatos.length) }]}
+      >
+        <ul class="arvore arvore--filha" role="list">
+          {mandatos.map((m) => (
+            <Node
+              id={m.id}
+              nome={`${t(m.cargo, idioma)} · ${m.organizacao}`}
+              colunas={[{ classe: 'periodo', valor: periodo(m.periodo) }]}
+              folha={m.linhas.length === 0}
+            >
+              <div class="no__texto">
+                {m.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+              </div>
+            </Node>
+          ))}
+        </ul>
+      </Node>
+    )
+  }
+
+  {
     formacao.length > 0 && (
       <Node
         id="formacao"
@@ -122,15 +151,20 @@ const rot = en
           {formacao.map((f) => (
             <Node
               id={f.id}
-              nome={`${t(f.curso, idioma)} · ${f.instituicao}`}
-              colunas={[{ classe: 'periodo', valor: periodo(f.periodo) }]}
-            >
-              <div class="no__texto">
-                <p>{f.instituicao}</p>
-              </div>
-            </Node>
+              nome={t(f.curso, idioma)}
+              colunas={[
+                { classe: 'papel', valor: f.instituicao },
+                { classe: 'periodo', valor: periodo(f.periodo) },
+              ]}
+              folha
+            />
           ))}
         </ul>
+        <p class="no__texto no__texto--nota">
+          {en
+            ? 'Online courses, taken independently. Not degrees from these institutions.'
+            : 'Cursos online, feitos por conta própria. Não são graus destas instituições.'}
+        </p>
       </Node>
     )
   }
@@ -151,6 +185,16 @@ const rot = en
       )}
       <dt>{en ? 'where' : 'onde'}</dt>
       <dd>{t(contacto.concelho, idioma)}</dd>
+      <dt>{en ? 'from' : 'de onde'}</dt>
+      <dd>{t(contacto.naturalidade, idioma)}</dd>
+      {contacto.idiomas.length > 0 && (
+        <>
+          <dt>{en ? 'languages' : 'idiomas'}</dt>
+          <dd>
+            {contacto.idiomas.map((i) => `${t(i.lingua, idioma)} (${t(i.nivel, idioma)})`).join(' · ')}
+          </dd>
+        </>
+      )}
     </dl>
   </Node>
 

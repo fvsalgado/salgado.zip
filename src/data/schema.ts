@@ -40,7 +40,12 @@ export const Projeto = z.object({
   dominio: z.string().min(1),
   papel: Lang,
   estado: Estado,
-  periodo: Periodo,
+  /**
+   * `null` enquanto não estiver confirmado. Um período não confirmado não se
+   * publica: é informação sobre o percurso de uma pessoa real, e uma data
+   * errada num site que vai para candidaturas custa mais do que a data vale.
+   */
+  periodo: Periodo.nullable(),
   linha: Lang,
   /** Parágrafos extra, só visíveis no nó expandido e no dossiê. */
   detalhe: z.array(Lang).default([]),
@@ -67,6 +72,20 @@ export const Posicao = z.object({
 })
 export type Posicao = z.infer<typeof Posicao>
 
+/**
+ * Mandatos institucionais. Nó próprio, e não misturado com `percurso/`: são
+ * cargos eletivos e não remunerados, e apresentá-los ao lado de empregos sem
+ * os distinguir lê-se como currículo inflacionado.
+ */
+export const Mandato = z.object({
+  id: Slug,
+  cargo: Lang,
+  organizacao: z.string().min(1),
+  periodo: Periodo,
+  linhas: z.array(Lang).max(2).default([]),
+})
+export type Mandato = z.infer<typeof Mandato>
+
 export const Formacao = z.object({
   id: Slug,
   curso: Lang,
@@ -75,11 +94,26 @@ export const Formacao = z.object({
 })
 export type Formacao = z.infer<typeof Formacao>
 
+export const Idioma = z.object({
+  lingua: Lang,
+  nivel: Lang,
+})
+export type IdiomaFalado = z.infer<typeof Idioma>
+
 export const Contacto = z.object({
   /** `null` até estar confirmado. `verify.mjs` falha enquanto o for. */
   email: z.email().nullable(),
   linkedin: HttpsUrl.nullable(),
+  /** Onde se está, para ler. Pode ser mais do que um sítio. */
   concelho: Lang,
+  /** De onde se é. Não é a mesma pergunta. */
+  naturalidade: Lang,
+  /**
+   * Região em forma canónica, só para o JSON-LD e o resume.json. Os dados
+   * estruturados querem um nome de região, não a frase que se lê no ecrã.
+   */
+  regiao: z.string().min(1),
+  idiomas: z.array(Idioma).default([]),
 })
 export type Contacto = z.infer<typeof Contacto>
 

@@ -16,6 +16,7 @@ import { ZipArchive } from 'archiver'
 import { cabecalho } from '../src/data/cabecalho.ts'
 import { projetos } from '../src/data/projetos.ts'
 import { posicoes, formacao } from '../src/data/percurso.ts'
+import { mandatos } from '../src/data/mandatos.ts'
 import { contacto } from '../src/data/contacto.ts'
 import { definicoes } from '../src/data/ficheiros.ts'
 
@@ -43,11 +44,27 @@ const resume = {
     ...(contacto.email ? { email: contacto.email } : {}),
     url: CANONICO,
     summary: cabecalho.linhas.map((l) => l.en ?? l.pt).join(' '),
-    location: { region: contacto.concelho.en ?? contacto.concelho.pt, countryCode: 'PT' },
+    location: { region: contacto.regiao, countryCode: 'PT' },
     profiles: contacto.linkedin
       ? [{ network: 'LinkedIn', url: contacto.linkedin, username: cabecalho.nome }]
       : [],
   },
+  languages: contacto.idiomas.map((i) => ({
+    language: i.lingua.en ?? i.lingua.pt,
+    fluency: i.nivel.en ?? i.nivel.pt,
+  })),
+  volunteer: mandatos.map((m) => ({
+    organization: m.organizacao,
+    position: m.cargo.en ?? m.cargo.pt,
+    startDate: m.periodo.inicio,
+    ...(m.periodo.fim ? { endDate: m.periodo.fim } : {}),
+    ...(m.linhas.length ? { highlights: m.linhas.map((l) => l.en ?? l.pt) } : {}),
+  })),
+  certificates: formacao.map((f) => ({
+    name: f.curso.en ?? f.curso.pt,
+    issuer: f.instituicao,
+    date: f.periodo.inicio,
+  })),
   work: posicoes.map((p) => ({
     name: p.organizacao,
     position: p.cargo.en ?? p.cargo.pt,
@@ -55,19 +72,14 @@ const resume = {
     ...(p.periodo.fim ? { endDate: p.periodo.fim } : {}),
     highlights: p.linhas.map((l) => l.en ?? l.pt),
   })),
-  education: formacao.map((f) => ({
-    institution: f.instituicao,
-    studyType: f.curso.en ?? f.curso.pt,
-    startDate: f.periodo.inicio,
-    ...(f.periodo.fim ? { endDate: f.periodo.fim } : {}),
-  })),
+  education: [],
   projects: projetos.map((p) => ({
     name: p.dominio,
     description: p.linha.en ?? p.linha.pt,
     highlights: p.detalhe.map((d) => d.en ?? d.pt),
     keywords: p.stack,
-    startDate: p.periodo.inicio,
-    ...(p.periodo.fim ? { endDate: p.periodo.fim } : {}),
+    ...(p.periodo ? { startDate: p.periodo.inicio } : {}),
+    ...(p.periodo?.fim ? { endDate: p.periodo.fim } : {}),
     roles: [p.papel.en ?? p.papel.pt],
     // Projetos privados entram sem `url`. A entrada é legítima; o endereço não sai.
     ...(p.url ? { url: p.url } : {}),
