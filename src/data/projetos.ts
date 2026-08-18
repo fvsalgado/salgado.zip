@@ -8,8 +8,9 @@ import { Projeto, parse } from './schema.ts'
  * invenção: o papel continua a ser autor e em lado nenhum se afirma ou
  * insinua um cliente que não existe.
  *
- * `periodo: null` em todos: os anos ainda não estão confirmados e não se
- * publicam por adivinhação. Entram quando o percurso entrar.
+ * `periodo: null` significa ano por confirmar. Não se publica por adivinhação:
+ * são datas do percurso de uma pessoa real, num site que vai para
+ * candidaturas. A verificação 14 bloqueia enquanto houver algum por confirmar.
  */
 export const projetos = parse(Projeto.array().min(1), [
   {
@@ -17,7 +18,7 @@ export const projetos = parse(Projeto.array().min(1), [
     dominio: 'primeiraplateia.pt',
     papel: { pt: 'fundador, criador', en: 'founder, maker' },
     estado: 'ativo',
-    periodo: null,
+    periodo: { inicio: '2016-11', fim: null },
     linha: {
       pt: 'Agregador de eventos culturais em Portugal: teatros, salas de concerto, museus, cinemas.',
       en: 'Aggregator of cultural events in Portugal: theatres, concert halls, museums, cinemas.',
@@ -26,6 +27,10 @@ export const projetos = parse(Projeto.array().min(1), [
       {
         pt: 'Filtros por dia, por eventos gratuitos e por acessibilidade; seguir artistas e salas; newsletter semanal.',
         en: 'Filters by day, by free admission and by accessibility; follow artists and venues; weekly newsletter.',
+      },
+      {
+        pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa. Renomeado e reanimado em 2026, agora de âmbito nacional.',
+        en: 'Started in 2016 as EmCena.pt, a Lisbon theatre listing. Renamed and relaunched in 2026, now nationwide.',
       },
       { pt: 'Código público.', en: 'Public source code.' },
     ],
@@ -38,7 +43,7 @@ export const projetos = parse(Projeto.array().min(1), [
     dominio: 'onofriana.pt',
     papel: { pt: 'cofundador, produtor', en: 'co-founder, producer' },
     estado: 'ativo',
-    periodo: null,
+    periodo: { inicio: '2026-07', fim: null },
     linha: {
       pt: 'Curadoria, produção e programação de fado.',
       en: 'Fado curation, production and programming.',
