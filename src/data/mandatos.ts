@@ -11,6 +11,45 @@ import { Mandato, parse } from './schema.ts'
  * corta para os dois lados. Estes dois entram porque mostram experiência do
  * lado de quem decide, que é o que o cargo pede.
  */
+/**
+ * Nascimento, com a granularidade mínima que serve o cálculo: ano e mês, a
+ * mesma de todos os períodos deste sítio.
+ *
+ * O dia não acrescenta nada ao que se publica — a idade sai igual sem ele — e
+ * acrescenta bastante a quem queira passar por outra pessoa: nome completo mais
+ * data de nascimento exata é o par que abre contas. Guarda-se o mínimo,
+ * publica-se o derivado, e a verificação 16 confirma que nem esta linha nem o
+ * ano em bruto chegam a sair para lado nenhum.
+ */
+const NASCIMENTO = '1986-04'
+
+/** Anos completos à data indicada. */
+function idadeEm(iso: string): number {
+  const [anoN, mesN] = NASCIMENTO.split('-').map(Number) as [number, number]
+  const [ano, mes] = iso.split('-').map(Number) as [number, number]
+  return ano - anoN - (mes < mesN ? 1 : 0)
+}
+
+/** Mandatos autárquicos completos, de quatro anos cada. */
+function mandatosEntre(inicio: string, fim: string): number {
+  const meses =
+    (Number(fim.slice(0, 4)) - Number(inicio.slice(0, 4))) * 12 +
+    (Number(fim.slice(5, 7)) - Number(inicio.slice(5, 7)))
+  return Math.round(meses / 48)
+}
+
+/**
+ * Um número derivado continua derivado escrito por extenso, e «dois mandatos»
+ * é português onde «2 mandatos» é um formulário.
+ */
+const EXTENSO: Record<'pt' | 'en', readonly string[]> = {
+  pt: ['zero', 'um', 'dois', 'três', 'quatro', 'cinco'],
+  en: ['zero', 'one', 'two', 'three', 'four', 'five'],
+}
+const extenso = (n: number, l: 'pt' | 'en') => EXTENSO[l][n] ?? String(n)
+
+const NAZARE = { inicio: '2007-10', fim: '2015-09' }
+
 export const mandatos = parse(Mandato.array(), [
   {
     id: 'santa-maria-maior',
@@ -28,13 +67,11 @@ export const mandatos = parse(Mandato.array(), [
     id: 'assembleia-nazare',
     cargo: { pt: 'Deputado Municipal', en: 'Municipal Assembly Deputy' },
     organizacao: 'Assembleia Municipal da Nazaré',
-    periodo: { inicio: '2007-10', fim: '2015-09' },
+    periodo: NAZARE,
     linhas: [
-      // A idade é derivada do ano de nascimento, confirmado pelo Fábio; a data
-      // completa fica de fora, que é dado de identidade e não de percurso.
       {
-        pt: 'Eleito aos 21 anos, para dois mandatos consecutivos.',
-        en: 'Elected at 21, for two consecutive terms.',
+        pt: `Eleito aos ${idadeEm(NAZARE.inicio)} anos, para ${extenso(mandatosEntre(NAZARE.inicio, NAZARE.fim), 'pt')} mandatos consecutivos.`,
+        en: `Elected at ${idadeEm(NAZARE.inicio)}, for ${extenso(mandatosEntre(NAZARE.inicio, NAZARE.fim), 'en')} consecutive terms.`,
       },
     ],
   },
