@@ -1,0 +1,35 @@
+/* Recurso para quem imprima sem JS. O trabalho a sério é feito em
+   beforeprint/afterprint: o CSS não abre um <details> fechado de forma
+   fiável — `[open]` é seletor, não atribuidor. */
+@media print {
+  :root {
+    --paper: #fff;
+    --paper-fundo: #fff;
+    --ink: #000;
+    --ink-soft: #333;
+    --rule: #bbb;
+    --rule-forte: #999;
+    --accent: #000;
+  }
+
+  .vista, .controlos, .tema, .shot, .salta, .rodape__ecra { display: none !important; }
+
+  details > *:not(summary) { display: block !important; }
+
+  body { font-size: 10.5pt; line-height: 1.4; background: #fff; }
+  .folha { max-width: none; padding: 0; }
+  .dossie h2 { margin-top: 1.4rem; }
+  .entrada, .no { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+
+  a { text-decoration: none; color: #000; }
+  .no__texto a[href^='http']::after,
+  .dossie a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-family: var(--mono);
+    font-size: 0.85em;
+    color: #444;
+  }
+
+  @page { margin: 16mm 15mm 18mm; }
+}

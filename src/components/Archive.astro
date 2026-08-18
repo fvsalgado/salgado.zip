@@ -1,0 +1,180 @@
+---
+import Node from './Node.astro'
+import { projetos, posicoes, formacao, contacto, ficheiros } from '../data'
+import type { Idioma } from '../data'
+import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props
+const en = idioma === 'en'
+
+const rot = en
+  ? { projetos: 'projects/', percurso: 'career/', formacao: 'education/', contacto: 'contact/', ficheiros: 'files/',
+      entradas: (n: number) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
+      papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
+      privado: 'private, behind authentication', abrir: 'Open' }
+  : { projetos: 'projetos/', percurso: 'percurso/', formacao: 'formacao/', contacto: 'contacto/', ficheiros: 'ficheiros/',
+      entradas: (n: number) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
+      papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
+      privado: 'privado, atrás de autenticação', abrir: 'Abrir' }
+---
+
+<ul class="arvore" role="list" data-arvore>
+  <Node
+    id="projetos"
+    nome={rot.projetos}
+    aberto={true}
+    colunas={[{ classe: 'nota', valor: rot.entradas(projetos.length) }]}
+  >
+    <ul class="arvore arvore--filha" role="list">
+      {
+        projetos.map((p) => (
+          <Node
+            id={p.id}
+            nome={p.dominio}
+            colunas={[
+              { classe: 'papel', valor: t(p.papel, idioma) },
+              { classe: 'periodo', valor: periodo(p.periodo) },
+              { classe: 'estado', valor: estado(p.estado, idioma), dataEstado: p.estado },
+            ]}
+          >
+            <div class="no__texto">
+              <p>{t(p.linha, idioma)}</p>
+              {p.detalhe.map((d) => <p>{t(d, idioma)}</p>)}
+            </div>
+            <dl class="no__campos">
+              <dt>{rot.papel}</dt>
+              <dd>{t(p.papel, idioma)}</dd>
+              <dt>{rot.periodo}</dt>
+              <dd>{periodoLongo(p.periodo, idioma)}</dd>
+              {p.stack.length > 0 && (
+                <>
+                  <dt>{rot.stack}</dt>
+                  <dd>{p.stack.join(' · ')}</dd>
+                </>
+              )}
+              {p.url !== null ? (
+                <>
+                  <dt>{rot.endereco}</dt>
+                  <dd>
+                    <a href={p.url} rel="noopener">{p.dominio}</a>
+                  </dd>
+                </>
+              ) : (
+                <>
+                  <dt>{rot.acesso}</dt>
+                  <dd>{rot.privado}</dd>
+                </>
+              )}
+            </dl>
+            {p.shot !== null && p.url !== null && (
+              <figure class="shot">
+                <a href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
+                  <img
+                    src={`/shots/${p.shot}`}
+                    alt=""
+                    width="1440"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              </figure>
+            )}
+          </Node>
+        ))
+      }
+    </ul>
+  </Node>
+
+  {
+    posicoes.length > 0 && (
+      <Node
+        id="percurso"
+        nome={rot.percurso}
+        colunas={[{ classe: 'nota', valor: rot.entradas(posicoes.length) }]}
+      >
+        <ul class="arvore arvore--filha" role="list">
+          {posicoes.map((p) => (
+            <Node
+              id={p.id}
+              nome={`${t(p.cargo, idioma)} · ${p.organizacao}`}
+              colunas={[{ classe: 'periodo', valor: periodo(p.periodo) }]}
+            >
+              <div class="no__texto">
+                {p.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+              </div>
+            </Node>
+          ))}
+        </ul>
+      </Node>
+    )
+  }
+
+  {
+    formacao.length > 0 && (
+      <Node
+        id="formacao"
+        nome={rot.formacao}
+        colunas={[{ classe: 'nota', valor: rot.entradas(formacao.length) }]}
+      >
+        <ul class="arvore arvore--filha" role="list">
+          {formacao.map((f) => (
+            <Node
+              id={f.id}
+              nome={`${t(f.curso, idioma)} · ${f.instituicao}`}
+              colunas={[{ classe: 'periodo', valor: periodo(f.periodo) }]}
+            >
+              <div class="no__texto">
+                <p>{f.instituicao}</p>
+              </div>
+            </Node>
+          ))}
+        </ul>
+      </Node>
+    )
+  }
+
+  <Node id="contacto" nome={rot.contacto}>
+    <dl class="no__campos">
+      {contacto.email && (
+        <>
+          <dt>email</dt>
+          <dd><a href={`mailto:${contacto.email}`}>{contacto.email}</a></dd>
+        </>
+      )}
+      {contacto.linkedin && (
+        <>
+          <dt>linkedin</dt>
+          <dd><a href={contacto.linkedin} rel="noopener">{contacto.linkedin.replace(/^https:\/\//, '')}</a></dd>
+        </>
+      )}
+      <dt>{en ? 'where' : 'onde'}</dt>
+      <dd>{t(contacto.concelho, idioma)}</dd>
+    </dl>
+  </Node>
+
+  <Node
+    id="ficheiros"
+    nome={rot.ficheiros}
+    colunas={[{ classe: 'nota', valor: rot.entradas(ficheiros.length) }]}
+  >
+    <ul class="arvore arvore--filha" role="list">
+      {
+        ficheiros.map((f) => (
+          <Node
+            id={f.id}
+            nome={f.nome}
+            href={f.href}
+            colunas={[{ classe: 'tam', valor: tamanho(f.bytes) }]}
+          />
+        ))
+      }
+    </ul>
+    <p class="no__texto no__texto--nota">
+      {en
+        ? 'Every size above is read from the real file at build time. Nothing here is typed by hand.'
+        : 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.'}
+    </p>
+  </Node>
+</ul>

@@ -1,0 +1,10 @@
+/* AUTOR */
+Fábio Salgado
+Médio Tejo, Portugal
+https://salgado.zip
+
+/* SITE */
+Astro estático, sem CMS, sem analytics, sem cookies.
+Tipografia: IBM Plex Mono e IBM Plex Serif, auto-alojadas (OFL).
+Fonte única em src/data/, cinco saídas: arquivo, dossiê, PDF, resume.json e salgado.zip.
+Nenhum número desta página é escrito à mão.

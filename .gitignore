@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+.DS_Store
+*.log
+
+# Gerados por scripts/pack.mjs antes de cada build, a partir do que está
+# commitado. Ficam fora do histórico para não repetir conteúdo nem meter
+# binários no repositório; o pack.mjs lê-lhes o tamanho e escreve-o em
+# src/generated/tamanhos.json, que esse sim é commitado.
+public/salgado.zip
+public/resume.json
+.verify/

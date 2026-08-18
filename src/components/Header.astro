@@ -1,0 +1,14 @@
+---
+import { cabecalho } from '../data'
+import type { Idioma } from '../data'
+import { t } from '../data/formato'
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props
+const [primeira, ...resto] = cabecalho.linhas
+---
+
+<header class="cabecalho">
+  <p>{cabecalho.nome}. {t(primeira!, idioma)}</p>
+  {resto.map((l) => <p>{t(l, idioma)}</p>)}
+</header>

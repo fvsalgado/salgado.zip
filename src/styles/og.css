@@ -1,0 +1,27 @@
+/* Cartão social, 1200×630. A imagem social é a própria listagem. */
+.og {
+  width: 1200px;
+  height: 630px;
+  padding: 78px 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+}
+.og__nome { font-family: var(--serif); font-size: 60px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.05; }
+.og__cargo { font-family: var(--serif); font-size: 27px; color: var(--ink-soft); margin-top: 14px; }
+.og__arvore { font-family: var(--mono); font-size: 23px; line-height: 2.05; color: var(--ink); }
+.og__linha { display: flex; gap: 18px; align-items: baseline; }
+.og__guia { color: var(--rule-forte); }
+.og__meta { margin-left: auto; font-size: 18px; color: var(--ink-soft); }
+.og__pe {
+  font-family: var(--mono);
+  font-size: 21px;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}

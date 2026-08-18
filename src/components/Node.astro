@@ -1,0 +1,63 @@
+---
+/**
+ * Uma linha de listagem. É o elemento assinatura do site: nome à esquerda em
+ * mono, metadados alinhados à direita, guias da árvore desenhadas em CSS.
+ *
+ * Dois modos: pasta (`<details>` nativo, com corpo no slot) e ficheiro
+ * (`<a>` simples). Ambos funcionam sem JS.
+ */
+export interface Coluna {
+  classe: 'papel' | 'periodo' | 'estado' | 'tam' | 'nota'
+  valor: string
+  dataEstado?: string
+}
+
+interface Props {
+  id?: string
+  nome: string
+  colunas?: Coluna[]
+  aberto?: boolean
+  href?: string
+  externo?: boolean
+}
+
+const { id, nome, colunas = [], aberto = false, href, externo = false } = Astro.props
+const ehFicheiro = href !== undefined
+---
+
+<li class:list={['no', ehFicheiro && 'no--ficheiro']}>
+  {
+    ehFicheiro ? (
+      <a
+        class="linha"
+        id={id}
+        href={href}
+        {...externo ? { rel: 'noopener' } : {}}
+      >
+        <span class="linha__nome">{nome}</span>
+        {colunas.map((c) => (
+          <span class={`linha__col linha__col--${c.classe}`} data-estado={c.dataEstado}>
+            {c.valor}
+          </span>
+        ))}
+      </a>
+    ) : (
+      <details id={id} open={aberto}>
+        <summary>
+          <span class="linha">
+            <span class="linha__marca" aria-hidden="true" />
+            <span class="linha__nome">{nome}</span>
+            {colunas.map((c) => (
+              <span class={`linha__col linha__col--${c.classe}`} data-estado={c.dataEstado}>
+                {c.valor}
+              </span>
+            ))}
+          </span>
+        </summary>
+        <div class="no__corpo">
+          <slot />
+        </div>
+      </details>
+    )
+  }
+</li>

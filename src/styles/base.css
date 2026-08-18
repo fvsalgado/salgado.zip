@@ -1,0 +1,322 @@
+@import './tokens.css';
+@import './fonts.css';
+
+/* ── Reset curto ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+* { margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--t-base);
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Foco ────────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: var(--foco) solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+.salta {
+  position: absolute;
+  left: -100vw;
+  top: 0;
+  background: var(--paper);
+  padding: 0.5rem 0.9rem;
+  z-index: 10;
+}
+.salta:focus { left: 0.5rem; top: 0.5rem; }
+
+/* ── Ligações: sublinhado em repouso, acento só na interação ─────────────── */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 0.06em;
+  text-decoration-color: var(--rule-forte);
+  transition: color var(--transicao), text-decoration-color var(--transicao);
+}
+a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentColor; }
+
+/* ── Estrutura ───────────────────────────────────────────────────────────── */
+.folha {
+  max-width: var(--larg);
+  margin-inline: auto;
+  padding: clamp(2rem, 1rem + 4vw, 4.5rem) var(--esp) 4rem;
+}
+.dossie .folha { max-width: 42rem; }
+
+.barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: clamp(2rem, 1rem + 3vw, 3.25rem);
+}
+
+/* ── Cabeçalho em prosa ──────────────────────────────────────────────────── */
+.cabecalho { max-width: 34rem; }
+.cabecalho p {
+  font-size: clamp(1.02rem, 0.95rem + 0.45vw, 1.2rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.cabecalho p + p { margin-top: 0.5rem; }
+.cabecalho p:first-child { font-weight: 600; }
+.cabecalho p:last-child { color: var(--ink-soft); }
+
+/* ── Alternador arquivo ↔ dossiê (dois links, não um botão) ──────────────── */
+.vista {
+  display: inline-flex;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 2px;
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: 0.02em;
+}
+.vista a {
+  display: block;
+  padding: 0.32rem 0.85rem;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--ink-soft);
+}
+.vista a:hover { color: var(--accent); }
+.vista a[aria-current='page'] {
+  background: var(--paper-fundo);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.controlos {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  color: var(--ink-soft);
+}
+.controlos button { padding: 0.3rem 0.55rem; border-radius: 4px; }
+.controlos button:hover { color: var(--accent); background: var(--paper-fundo); }
+
+/* ── A árvore ────────────────────────────────────────────────────────────── */
+.arvore { list-style: none; padding: 0; font-family: var(--mono); font-size: var(--t-mono); }
+.arvore--filha { margin-left: var(--recuo); }
+
+.no { position: relative; }
+
+/* Guias `├` e `└` desenhadas com bordas, nunca em texto: não sujam o
+   copiar-colar nem o leitor de ecrã. */
+.arvore--filha > .no::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--recuo) * -1);
+  top: 0;
+  width: calc(var(--recuo) - 0.45rem);
+  height: 1.05em;
+  border-left: 1px solid var(--guia);
+  border-bottom: 1px solid var(--guia);
+  border-bottom-left-radius: 3px;
+}
+.arvore--filha > .no::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--recuo) * -1);
+  top: 1.05em;
+  bottom: 0;
+  border-left: 1px solid var(--guia);
+}
+.arvore--filha > .no:last-child::after { display: none; }
+
+/* ── A linha de listagem: o elemento assinatura ──────────────────────────── */
+summary { display: block; list-style: none; cursor: pointer; }
+summary::-webkit-details-marker { display: none; }
+summary::marker { content: ''; }
+
+.linha {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: baseline;
+  column-gap: 1.25rem;
+  padding: 0.3rem 0.4rem 0.3rem 1.1rem;
+  border-radius: 3px;
+  position: relative;
+  transition: background var(--transicao);
+}
+summary:hover .linha, a.linha:hover { background: var(--paper-fundo); }
+a.linha { text-decoration: none; }
+
+/* Marcador próprio: triângulo em CSS que roda ao abrir. É aqui, e só aqui,
+   que o acento aparece em repouso — num nó já aberto. */
+.linha__marca {
+  position: absolute;
+  left: 0.15rem;
+  top: 0.72em;
+  width: 0.42rem;
+  height: 0.42rem;
+  background: var(--rule-forte);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  transition: transform var(--transicao), background var(--transicao);
+}
+[open] > summary .linha__marca { transform: rotate(90deg); background: var(--accent); }
+summary:hover .linha__marca { background: var(--accent); }
+
+.linha__nome {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 500;
+}
+.no--ficheiro .linha__nome { font-weight: 400; }
+a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; text-underline-offset: 0.18em; }
+
+.linha__col {
+  font-size: var(--t-meta);
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.linha__col--estado { min-width: 5.5ch; text-align: right; }
+.linha__col--estado[data-estado='privado'] { font-style: italic; }
+.linha__col--tam { min-width: 7ch; text-align: right; }
+
+/* Em ecrã estreito os metadados passam para baixo do nome.
+   A árvore nunca faz scroll horizontal. */
+@media (max-width: 46rem) {
+  .linha {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.5rem;
+    padding-bottom: 0.45rem;
+  }
+  .linha__nome { flex: 1 0 100%; }
+  .linha__col { text-align: left; min-width: 0; white-space: normal; }
+  .linha__col + .linha__col::before {
+    content: '·';
+    margin-right: 0.5rem;
+    color: var(--guia);
+  }
+}
+
+/* ── Corpo de um nó aberto ───────────────────────────────────────────────── */
+.no__corpo { padding: 0.15rem 0 0.9rem 1.1rem; }
+.arvore--filha .no__corpo { padding-left: 1.1rem; }
+
+.no__texto {
+  font-family: var(--serif);
+  font-size: var(--t-base);
+  max-width: 40rem;
+  padding-left: 0.35rem;
+}
+.no__texto p + p { margin-top: 0.5rem; }
+.no__texto p:last-of-type { margin-bottom: 0; }
+
+.no__campos {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 1rem;
+  margin-top: 0.7rem;
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  padding-left: 0.35rem;
+}
+.no__campos dt { color: var(--ink-soft); }
+.no__campos dd { margin: 0; overflow-wrap: anywhere; }
+
+/* ── Capturas: cinzento em repouso, cor no hover e no foco ───────────────── */
+.shot { margin-top: 0.85rem; padding-left: 0.35rem; }
+.shot a { display: inline-block; text-decoration: none; line-height: 0; }
+.shot img {
+  width: 100%;
+  max-width: 26rem;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  filter: grayscale(1) contrast(0.95);
+  opacity: 0.68;
+  transition: filter var(--transicao), opacity var(--transicao);
+}
+.shot a:hover img, .shot a:focus-visible img { filter: none; opacity: 1; }
+
+/* ── Dossiê ──────────────────────────────────────────────────────────────── */
+.dossie h1 {
+  font-size: var(--t-titulo);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.dossie h2 {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 2.6rem 0 0.9rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+.dossie h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+.dossie p { text-wrap: pretty; }
+.dossie p + p { margin-top: 0.55rem; }
+
+.entrada + .entrada { margin-top: 1.6rem; }
+.entrada__cabeca {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.2rem 1rem;
+}
+.entrada__quando {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.entrada__onde { color: var(--ink-soft); font-style: italic; }
+.entrada__corpo { margin-top: 0.35rem; }
+
+.lista-limpa { list-style: none; padding: 0; }
+
+/* ── Rodapé ──────────────────────────────────────────────────────────────── */
+.rodape {
+  margin-top: 4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  justify-content: space-between;
+}
+
+.aviso {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  color: var(--ink-soft);
+  padding: 0.55rem 0.8rem;
+  border: 1px dashed var(--rule-forte);
+  border-radius: 3px;
+  margin-top: 0.8rem;
+}
+
+/* ── Utilitários de espaçamento (sem style= inline: a CSP é `style-src 'self'`,
+   sem 'unsafe-inline' e sem hashes a manter à mão) ───────────────────────── */
+.cabecalho + .arvore { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
+.cabecalho--dossie { margin-top: 0.9rem; }
+.no__texto--nota { margin-top: 0.7rem; color: var(--ink-soft); }

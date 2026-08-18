@@ -1,0 +1,26 @@
+---
+/**
+ * Camada JS progressiva. Nada disto é necessário para a página funcionar, por
+ * isso os controlos nascem escondidos e só o script os revela.
+ */
+import type { Idioma } from '../data'
+
+interface Props { idioma: Idioma; arvore?: boolean }
+const { idioma, arvore = false } = Astro.props
+const rot =
+  idioma === 'en'
+    ? { abrir: 'expand all', fechar: 'collapse all', tema: 'Toggle theme' }
+    : { abrir: 'abrir tudo', fechar: 'fechar tudo', tema: 'Alternar tema' }
+---
+
+<div class="controlos" data-controlos hidden>
+  {arvore && (
+    <>
+      <button type="button" data-abrir-tudo>{rot.abrir}</button>
+      <span aria-hidden="true">·</span>
+      <button type="button" data-fechar-tudo>{rot.fechar}</button>
+      <span aria-hidden="true">·</span>
+    </>
+  )}
+  <button type="button" class="tema" data-tema aria-label={rot.tema} title={rot.tema}>◐</button>
+</div>
