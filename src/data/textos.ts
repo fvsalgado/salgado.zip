@@ -34,8 +34,8 @@ export const colofao = parse(z.array(Lang).min(1), [
     en: 'One data source, five outputs: this archive, the dossier, two PDFs, the resume.json and salgado.zip itself.',
   },
   {
-    pt: 'Catorze verificações correm antes de cada publicação: contraste, ligações, navegação sem JavaScript, fugas de conteúdo privado.',
-    en: 'Fourteen checks run before every release: contrast, links, JavaScript-free navigation, private-content leaks.',
+    pt: 'Uma bateria de verificações corre antes de cada publicação: contraste, ligações, navegação sem JavaScript, fugas de conteúdo privado.',
+    en: 'A battery of checks runs before every release: contrast, links, JavaScript-free navigation, private-content leaks.',
   },
   {
     pt: 'Desenhado, escrito e construído a meias com o Claude — Claude Code, da Anthropic. Do primeiro plano ao deploy.',

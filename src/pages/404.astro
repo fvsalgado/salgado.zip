@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro'
+import Node from '../components/Node.astro'
+import { cabecalho } from '../data'
+import { t } from '../data/formato'
+
+const idioma = 'pt' as const
+const titulo = `404 — ${cabecalho.nome}`
+const descricao = t(cabecalho.linhas[0]!, idioma)
+---
+
+<Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/404/">
+  <main class="folha" id="conteudo">
+    <header class="cabecalho cabecalho--simples">
+      <div class="cabecalho__texto">
+        <h1>404. Não há nada neste caminho.</h1>
+        <p>O que existe está listado em baixo.</p>
+      </div>
+    </header>
+    <ul class="arvore" role="list">
+      <Node nome="arquivo/" href="/" colunas={[{ classe: 'nota', valor: 'a listagem completa' }]} />
+      <Node nome="dossie/" href="/dossie/" colunas={[{ classe: 'nota', valor: 'o mesmo, em prosa' }]} />
+      <Node nome="salgado.zip" href="/salgado.zip" colunas={[{ classe: 'nota', valor: 'tudo, num arquivo' }]} />
+    </ul>
+  </main>
+</Base>

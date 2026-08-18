@@ -17,9 +17,12 @@ const visiveis = projetos.slice(0, 5)
   </head>
   <body>
     <div class="og">
-      <div>
-        <div class="og__nome">{cabecalho.nome}</div>
-        <div class="og__cargo">{t(cabecalho.cargo, idioma)}</div>
+      <div class="og__cabeca">
+        <div>
+          <div class="og__nome">{cabecalho.nome}</div>
+          <div class="og__cargo">{t(cabecalho.areas, idioma)}</div>
+        </div>
+        <img class="og__foto" src="/fabio-salgado.jpg" alt="" width="200" height="200" />
       </div>
       <div class="og__arvore">
         <div class="og__linha"><span>projetos/</span></div>
@@ -35,7 +38,7 @@ const visiveis = projetos.slice(0, 5)
       </div>
       <div class="og__pe">
         <span>salgado.zip</span>
-        <span>{t(cabecalho.linhas[1]!, idioma)}</span>
+        <span>arquivo · dossiê · cv · resume.json</span>
       </div>
     </div>
   </body>

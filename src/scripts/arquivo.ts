@@ -91,6 +91,32 @@ const arvore = document.querySelector<HTMLElement>('[data-arvore]')
 if (filtro && arvore) {
   const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
   let antes: Map<HTMLDetailsElement, boolean> | null = null
+  const en = document.documentElement.lang.startsWith('en')
+
+  // O resultado do filtro é anunciado — a quem vê e a quem ouve. Sem isto,
+  // uma pesquisa sem resultados deixava a página aparentemente vazia.
+  const estado = document.createElement('p')
+  estado.className = 'filtro-estado'
+  estado.setAttribute('aria-live', 'polite')
+  estado.hidden = true
+  arvore.after(estado)
+
+  const anunciar = (q: string, n: number) => {
+    if (!q) {
+      estado.hidden = true
+      estado.textContent = ''
+      return
+    }
+    estado.hidden = false
+    estado.textContent =
+      n === 0
+        ? en
+          ? `nothing matches “${q}” — Esc clears`
+          : `nada corresponde a «${q}» — Esc limpa`
+        : en
+          ? `${n} ${n === 1 ? 'result' : 'results'} for “${q}”`
+          : `${n} ${n === 1 ? 'resultado' : 'resultados'} para «${q}»`
+  }
 
   const aplicar = (bruto: string) => {
     const q = norm(bruto.trim())
@@ -99,9 +125,10 @@ if (filtro && arvore) {
     if (!q) {
       nos.forEach((li) => li.classList.remove('no--oculto'))
       if (antes) {
-        antes.forEach((estado, d) => (d.open = estado))
+        antes.forEach((aberto, d) => (d.open = aberto))
         antes = null
       }
+      anunciar('', 0)
       return
     }
 
@@ -122,8 +149,10 @@ if (filtro && arvore) {
         .join(' ')
 
     nos.forEach((li) => li.classList.add('no--oculto'))
+    let acertos = 0
     for (const li of nos) {
       if (!norm(textoProprio(li)).includes(q)) continue
+      acertos++
       li.classList.remove('no--oculto')
       // Descendentes visíveis, ascendentes visíveis e abertos.
       li.querySelectorAll('li.no').forEach((filho) => filho.classList.remove('no--oculto'))
@@ -132,6 +161,7 @@ if (filtro && arvore) {
         if (n instanceof HTMLDetailsElement) n.open = true
       }
     }
+    anunciar(bruto.trim(), acertos)
   }
 
   filtro.addEventListener('input', () => aplicar(filtro.value))

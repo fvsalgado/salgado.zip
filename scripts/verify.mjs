@@ -421,6 +421,22 @@ function html(rota) {
   decide('o .zip abre e os tamanhos publicados batem certo com o disco', problemas)
 }
 
+/* ══ 15. A página 404 é nossa ═══════════════════════════════════════════
+   Sem 404.astro, um URL errado servia a página do Astro em dev e a da Vercel
+   em produção — logótipos alheios, inglês, tema alheio. Qualquer caminho
+   errado quebrava o site inteiro. */
+{
+  const problemas = []
+  if (!existsSync(dist + '404.html')) {
+    problemas.push('dist/404.html não existe')
+  } else {
+    const h = readFileSync(dist + '404.html', 'utf8')
+    if (!h.includes('salgado.zip')) problemas.push('a 404 não parece ser a nossa')
+    if (!/href="\/"/.test(h)) problemas.push('a 404 não liga de volta ao arquivo')
+  }
+  decide('a página 404 é a do site, com caminho de volta', problemas)
+}
+
 /* ══ 13. Oito capturas para revisão à vista ═════════════════════════════ */
 {
   mkdirSync(revisao, { recursive: true })

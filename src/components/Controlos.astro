@@ -20,7 +20,9 @@ const rot =
         type="search"
         class="filtro"
         data-filtro
-        placeholder="/"
+        placeholder={idioma === 'en' ? 'filter' : 'filtrar'}
+        title={idioma === 'en' ? 'Shortcut: /' : 'Atalho: /'}
+        aria-keyshortcuts="/"
         aria-label={rot.filtrar}
         autocomplete="off"
         spellcheck="false"
