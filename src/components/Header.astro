@@ -9,6 +9,16 @@ const [primeira, ...resto] = cabecalho.linhas
 ---
 
 <header class="cabecalho">
-  <p>{cabecalho.nome}. {t(primeira!, idioma)}</p>
-  {resto.map((l) => <p>{t(l, idioma)}</p>)}
+  <img
+    class="retrato"
+    src="/fabio-salgado.jpg"
+    alt={idioma === 'en' ? `Portrait of ${cabecalho.nome}` : `Retrato de ${cabecalho.nome}`}
+    width="200"
+    height="200"
+    decoding="async"
+  />
+  <div class="cabecalho__texto">
+    <p>{cabecalho.nome}. {t(primeira!, idioma)}</p>
+    {resto.map((l) => <p>{t(l, idioma)}</p>)}
+  </div>
 </header>

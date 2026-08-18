@@ -38,7 +38,7 @@ export const colofao = parse(z.array(Lang).min(1), [
     en: 'Fourteen checks run before every release: contrast, links, JavaScript-free navigation, private-content leaks.',
   },
   {
-    pt: 'Desenhado, escrito e construído em par com o Claude — Claude Code, da Anthropic. Do primeiro plano ao deploy.',
-    en: 'Designed, written and built in pair with Claude — Claude Code, by Anthropic. From first plan to deploy.',
+    pt: 'Desenhado, escrito e construído a meias com o Claude — Claude Code, da Anthropic. Do primeiro plano ao deploy.',
+    en: 'Designed, written and built together with Claude — Claude Code, by Anthropic. From first plan to deploy.',
   },
 ], 'textos.colofao')

@@ -27,6 +27,7 @@ const jsonLd = {
   name: cabecalho.nome,
   jobTitle: t(cabecalho.cargo, idioma),
   url: CANONICO,
+  image: CANONICO + '/fabio-salgado.jpg',
   address: { '@type': 'PostalAddress', addressRegion: contacto.regiao, addressCountry: 'PT' },
   ...(contacto.email ? { email: `mailto:${contacto.email}` } : {}),
   ...(sameAs.length ? { sameAs } : {}),

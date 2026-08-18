@@ -379,11 +379,15 @@ function html(rota) {
     const paginas = conta(buf, /\/Type\s*\/Page[^s]/g)
     if (paginas < 1) problemas.push(`${nome} sem páginas`)
     const imagens = conta(buf, /\/Subtype\s*\/Image/g)
-    // No CV as capturas são ruído; no ficheiro de projetos são o conteúdo.
-    if (nome.includes('CV') && imagens > 0) problemas.push(`${nome} tem ${imagens} imagens e não devia ter nenhuma`)
-    if (nome.includes('Projetos') && imagens === 0) problemas.push(`${nome} devia levar as capturas e não leva nenhuma`)
+    // No CV entra o retrato e nada mais — as capturas de projetos são ruído
+    // num CV. O Chromium pode codificar uma imagem como par imagem+máscara,
+    // por isso o limite é 2 objetos, não 1. No ficheiro de projetos as quatro
+    // capturas são o conteúdo: menos do que isso é regressão.
+    if (nome.includes('CV') && imagens > 2) problemas.push(`${nome} tem ${imagens} imagens — só o retrato devia lá estar`)
+    if (nome.includes('CV') && imagens === 0) problemas.push(`${nome} devia levar o retrato e não leva imagem nenhuma`)
+    if (nome.includes('Projetos') && imagens < 4) problemas.push(`${nome} devia levar as quatro capturas e tem ${imagens} imagens`)
   }
-  decide('PDFs legíveis, CV sem capturas, projetos com capturas', problemas)
+  decide('PDFs legíveis, CV com retrato, projetos com capturas', problemas)
 }
 
 /* ══ 12. O .zip e os tamanhos publicados ════════════════════════════════ */

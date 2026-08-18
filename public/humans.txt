@@ -8,4 +8,4 @@ Astro estático, sem CMS, sem analytics, sem cookies.
 Tipografia: IBM Plex Mono e IBM Plex Serif, auto-alojadas (OFL).
 Fonte única em src/data, cinco saídas: arquivo, dossiê, PDF, resume.json e salgado.zip.
 Nenhum número desta página é escrito à mão.
-Desenhado, escrito e construído em par com o Claude — Claude Code, da Anthropic.
+Desenhado, escrito e construído a meias com o Claude — Claude Code, da Anthropic.

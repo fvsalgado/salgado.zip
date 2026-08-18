@@ -19,10 +19,22 @@ const rot = en
 ---
 
 <article>
-  <h1>{cabecalho.nome}</h1>
-  <div class="cabecalho cabecalho--dossie">
-    {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
-  </div>
+  <header class="dossie__cabeca">
+    <div>
+      <h1>{cabecalho.nome}</h1>
+      <div class="cabecalho cabecalho--dossie">
+        {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+      </div>
+    </div>
+    <img
+      class="retrato retrato--dossie"
+      src="/fabio-salgado.jpg"
+      alt=""
+      width="200"
+      height="200"
+      decoding="async"
+    />
+  </header>
 
   <section data-seccao="projetos">
     <h2>{rot.projetos}</h2>
