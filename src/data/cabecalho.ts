@@ -13,9 +13,13 @@ export const cabecalho = parse(Cabecalho, {
   },
   linhas: [
     {
-      // Sem o nome: no arquivo entra como prefixo, no dossiê é o <h1>.
+      // Sem o nome: no arquivo entra como prefixo, no CV é o <h1>.
       pt: 'Trabalho entre políticas públicas, produção cultural e produtos digitais.',
       en: 'I work across public policy, cultural production and digital products.',
+    },
+    {
+      pt: 'O que junta os três mundos é o mesmo gesto: perceber um sistema, encontrar-lhe as regras e fazer alguma coisa com isso.',
+      en: 'What joins the three worlds is the same move: understand a system, find its rules, and make something with it.',
     },
     {
       pt: 'Divido-me entre Alfama, em Lisboa, e Ribeira Branca, em Torres Novas. Nasci na Nazaré.',

@@ -205,7 +205,7 @@ const qrSvg = await QRCode.toString(CANONICO, {
 async function pdf(nome, esconder, { comShots = false } = {}) {
   const ctx = await browser.newContext({ colorScheme: 'light' })
   const p = await ctx.newPage()
-  await p.goto(BASE + '/dossie/', { waitUntil: 'networkidle' })
+  await p.goto(BASE + '/cv/', { waitUntil: 'networkidle' })
   await p.emulateMedia({ media: 'print', colorScheme: 'light' })
   await p.evaluate(
     async ([svg, url, esconder, nome, shots]) => {

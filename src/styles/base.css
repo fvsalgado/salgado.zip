@@ -115,30 +115,6 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
 .cabecalho__texto p:first-child, .cabecalho--dossie p:first-child { font-weight: 600; }
 .cabecalho__texto p:last-child, .cabecalho--dossie p:last-child { color: var(--ink-soft); }
 
-/* ── Alternador arquivo ↔ dossiê (dois links, não um botão) ──────────────── */
-.vista {
-  display: inline-flex;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  padding: 2px;
-  font-family: var(--mono);
-  font-size: var(--t-meta);
-  letter-spacing: 0.02em;
-}
-.vista a {
-  display: block;
-  padding: 0.32rem 0.85rem;
-  border-radius: 999px;
-  text-decoration: none;
-  color: var(--ink-soft);
-}
-.vista a:hover { color: var(--accent); }
-.vista a[aria-current='page'] {
-  background: var(--paper-fundo);
-  color: var(--ink);
-  box-shadow: inset 0 0 0 1px var(--rule);
-}
-
 .controlos {
   display: flex;
   align-items: center;
@@ -360,36 +336,51 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
   margin-top: 0.8rem;
 }
 
+/* ── Marca, totais, descrição visível ────────────────────────────────────── */
+.marca {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+.totais {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  color: var(--ink-soft);
+  margin: clamp(1rem, 0.6rem + 1.5vw, 1.6rem) 0 clamp(1.6rem, 1rem + 2vw, 2.4rem);
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* A descrição visível é o que se lê sem abrir nada: serifa, dentro do summary. */
+.linha__desc {
+  display: block;
+  font-family: var(--serif);
+  font-size: 0.98rem;
+  line-height: 1.5;
+  max-width: 40rem;
+  padding: 0.05rem 0.4rem 0 1.1rem;
+  text-wrap: pretty;
+}
+.linha__ligacoes {
+  display: flex;
+  gap: 1.1rem;
+  padding: 0.25rem 0.4rem 0.15rem 1.1rem;
+  font-size: var(--t-meta);
+}
+.linha__ligacoes a { color: var(--ink-soft); }
+.linha__ligacoes a:hover { color: var(--accent); }
+summary { padding-bottom: 0.35rem; }
+
 /* ── Utilitários de espaçamento (sem style= inline: a CSP é `style-src 'self'`,
    sem 'unsafe-inline' e sem hashes a manter à mão) ───────────────────────── */
 .cabecalho + .arvore { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
 .cabecalho--dossie { margin-top: 0.9rem; }
 .no__texto--nota { margin-top: 0.7rem; color: var(--ink-soft); }
 
-/* ── Filtro da árvore: a tecla / foca, Esc limpa ─────────────────────────── */
-.filtro {
-  font: inherit;
-  color: var(--ink);
-  background: var(--paper-fundo);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  padding: 0.25rem 0.55rem;
-  width: 10.5ch;
-  transition: width var(--transicao), border-color var(--transicao);
-}
-.filtro::placeholder { color: var(--ink-soft); }
-.filtro:focus { width: 14ch; border-color: var(--accent); }
-.filtro:not(:placeholder-shown) { width: 14ch; }
-.filtro::-webkit-search-cancel-button { display: none; }
-
-.no--oculto { display: none; }
 
 .cabecalho--dossie { display: block; max-width: 34rem; }
 .cabecalho--simples { display: block; }
 
-.filtro-estado {
-  font-family: var(--mono);
-  font-size: var(--t-meta);
-  color: var(--ink-soft);
-  padding: 0.6rem 0.4rem 0 1.1rem;
-}
+

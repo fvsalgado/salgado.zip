@@ -7,21 +7,16 @@ Site pessoal de Fábio Salgado. Astro estático, sem CMS, sem analytics, sem coo
 Uma fonte, cinco saídas.
 
 ```
-src/data/*.ts  ──┬──►  /             arquivo: listagem de diretório
- fonte única     ├──►  /dossie/      dossiê: o mesmo em prosa corrida
-                 ├──►  /docs/*.pdf   CV e projetos, gerados do dossiê
+src/data/*.ts  ──┬──►  /             a página: listagem com tudo à vista
+ fonte única     ├──►  /docs/*.pdf   CV e projetos, impressos de /cv/ (interno)
                  ├──►  /resume.json  o mesmo em JSON Resume
-                 └──►  /salgado.zip  os quatro empacotados
+                 └──►  /salgado.zip  os três empacotados
 ```
 
 Nenhum texto vive num componente e **nenhum número é escrito à mão**: os
 tamanhos da listagem saem de um `statSync` sobre os ficheiros reais, as datas
 saem do `git log`, as contagens saem do `.length` dos arrays. Um número que o
 build não consegue derivar não entra.
-
-O alternador *arquivo ↔ dossiê* parece um botão mas são dois links para rotas
-reais: funciona sem JavaScript, é indexável, e o dossiê tem URL próprio para
-colar numa candidatura.
 
 ## Comandos
 
