@@ -81,10 +81,14 @@ export const posicoes = parse(Posicao.array(), [
 ], 'percurso.posicoes')
 
 /**
- * Uma seleção curta das vinte e nove licenças e certificados do LinkedIn: as
- * que dizem respeito a assuntos públicos, política pública e comunicação.
- * Uma lista curta lê-se; uma lista de vinte e nove enterra as que contam
- * entre cursos de turismo sustentável e de Linux.
+ * Três das vinte e nove licenças do LinkedIn, e só as que dizem respeito ao
+ * cargo: política pública, lobbying e advocacia.
+ *
+ * São cursos online, feitos por conta própria, e o nó chama-se `certificados/`
+ * e não `formacao/` por isso mesmo: uma lista com "Yale" e "University of
+ * Michigan" debaixo de um nó chamado formação lê-se como se lá tivesse
+ * estudado, e não foi isso que aconteceu. O rótulo tem de dizer a verdade
+ * sozinho, sem depender de quem lê abrir e reparar.
  */
 export const formacao = parse(Formacao.array(), [
   {
@@ -92,30 +96,6 @@ export const formacao = parse(Formacao.array(), [
     curso: { pt: 'Moral Foundations of Politics', en: 'Moral Foundations of Politics' },
     instituicao: 'Yale University',
     periodo: { inicio: '2024-11', fim: '2024-11' },
-  },
-  {
-    id: 'uci-corporate-communications',
-    curso: {
-      pt: 'Corporate Communications (especialização)',
-      en: 'Corporate Communications (specialization)',
-    },
-    instituicao: 'University of California, Irvine',
-    periodo: { inicio: '2024-11', fim: '2024-11' },
-  },
-  {
-    id: 'efset-c2',
-    curso: { pt: 'EF SET English Certificate — C2 Proficient', en: 'EF SET English Certificate — C2 Proficient' },
-    instituicao: 'EF SET',
-    periodo: { inicio: '2024-11', fim: '2024-11' },
-  },
-  {
-    id: 'microsoft-pr',
-    curso: {
-      pt: 'Public Relations and Communications Associate',
-      en: 'Public Relations and Communications Associate',
-    },
-    instituicao: 'Microsoft',
-    periodo: { inicio: '2024-10', fim: '2024-10' },
   },
   {
     id: 'itcilo-lobbying',

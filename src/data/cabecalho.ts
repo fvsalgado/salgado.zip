@@ -13,8 +13,8 @@ export const cabecalho = parse(Cabecalho, {
       en: 'Public affairs consultant: regulation, institutional relations and communication with public decision-makers.',
     },
     {
-      pt: 'Baseado no Médio Tejo.',
-      en: 'Based in Médio Tejo, Portugal.',
+      pt: 'Divido-me entre Alfama, em Lisboa, e Ribeira Branca, em Torres Novas. Nasci na Nazaré.',
+      en: 'I split my time between Alfama, in Lisbon, and Ribeira Branca, in Torres Novas. I was born in Nazaré.',
     },
     {
       pt: 'Também produzo eventos de fado e construo os sites que estão em baixo.',

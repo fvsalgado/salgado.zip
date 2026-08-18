@@ -9,11 +9,11 @@ const { idioma } = Astro.props
 const en = idioma === 'en'
 
 const rot = en
-  ? { projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'training/', contacto: 'contact/', ficheiros: 'files/',
+  ? { projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/', contacto: 'contact/', ficheiros: 'files/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
       papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
       privado: 'private, behind authentication', abrir: 'Open' }
-  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'formacao/', contacto: 'contacto/', ficheiros: 'ficheiros/',
+  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
       papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
       privado: 'privado, atrás de autenticação', abrir: 'Abrir' }
@@ -160,6 +160,11 @@ const rot = en
             />
           ))}
         </ul>
+        <p class="no__texto no__texto--nota">
+          {en
+            ? 'Online courses, taken independently. Not degrees from these institutions.'
+            : 'Cursos online, feitos por conta própria. Não são graus destas instituições.'}
+        </p>
       </Node>
     )
   }
@@ -180,6 +185,8 @@ const rot = en
       )}
       <dt>{en ? 'where' : 'onde'}</dt>
       <dd>{t(contacto.concelho, idioma)}</dd>
+      <dt>{en ? 'from' : 'de onde'}</dt>
+      <dd>{t(contacto.naturalidade, idioma)}</dd>
       {contacto.idiomas.length > 0 && (
         <>
           <dt>{en ? 'languages' : 'idiomas'}</dt>

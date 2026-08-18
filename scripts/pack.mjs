@@ -44,7 +44,7 @@ const resume = {
     ...(contacto.email ? { email: contacto.email } : {}),
     url: CANONICO,
     summary: cabecalho.linhas.map((l) => l.en ?? l.pt).join(' '),
-    location: { region: contacto.concelho.en ?? contacto.concelho.pt, countryCode: 'PT' },
+    location: { region: contacto.regiao, countryCode: 'PT' },
     profiles: contacto.linkedin
       ? [{ network: 'LinkedIn', url: contacto.linkedin, username: cabecalho.nome }]
       : [],

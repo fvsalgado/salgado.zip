@@ -13,8 +13,8 @@ const { idioma } = Astro.props
 const en = idioma === 'en'
 
 const rot = en
-  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates', formacao: 'Training', contacto: 'Contact' }
-  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais', formacao: 'Formação', contacto: 'Contacto' }
+  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates', formacao: 'Certificates', contacto: 'Contact' }
+  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais', formacao: 'Certificados', contacto: 'Contacto' }
 ---
 
 <article>
@@ -115,6 +115,7 @@ const rot = en
         <li><a href={contacto.linkedin} rel="noopener">{contacto.linkedin.replace(/^https:\/\//, '')}</a></li>
       )}
       <li>{t(contacto.concelho, idioma)}</li>
+      <li>{t(contacto.naturalidade, idioma)}</li>
       {contacto.idiomas.length > 0 && (
         <li>
           {contacto.idiomas.map((i) => `${t(i.lingua, idioma)} (${t(i.nivel, idioma)})`).join(' · ')}

@@ -104,7 +104,15 @@ export const Contacto = z.object({
   /** `null` até estar confirmado. `verify.mjs` falha enquanto o for. */
   email: z.email().nullable(),
   linkedin: HttpsUrl.nullable(),
+  /** Onde se está, para ler. Pode ser mais do que um sítio. */
   concelho: Lang,
+  /** De onde se é. Não é a mesma pergunta. */
+  naturalidade: Lang,
+  /**
+   * Região em forma canónica, só para o JSON-LD e o resume.json. Os dados
+   * estruturados querem um nome de região, não a frase que se lê no ecrã.
+   */
+  regiao: z.string().min(1),
   idiomas: z.array(Idioma).default([]),
 })
 export type Contacto = z.infer<typeof Contacto>
