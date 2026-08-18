@@ -39,7 +39,10 @@ export const posicoes = parse(Posicao.array(), [
   },
   {
     id: 'cml',
-    cargo: { pt: 'Conselheiro Político', en: 'Political Adviser' },
+    // «Conselheiro Político» não é designação de gabinete autárquico português:
+    // soava a tradução de «Political Adviser», e o corpo da entrada — que
+    // começa em «Assessoria ao vereador» — desmentia o título.
+    cargo: { pt: 'Assessor', en: 'Adviser' },
     organizacao: 'Câmara Municipal de Lisboa',
     periodo: { inicio: '2018-03', fim: '2022-04' },
     linhas: [

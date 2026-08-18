@@ -52,18 +52,22 @@ export const mandatos = parse(Mandato.array(), [
     periodo: NAZARE,
     linhas: [
       /**
-       * Só a idade, e «tomou posse» em vez de «eleito».
+       * O percurso, como foi, e não como o intervalo 2007–2015 faria supor.
        *
-       * As autárquicas foram em 2005, 2009 e 2013: outubro de 2007 não é
-       * eleição nenhuma, e setembro de 2015 também não. O período confirmado
-       * — 2007-10 a 2015-09 — começa e acaba a meio de mandatos e sobrepõe-se
-       * a três, não a dois. Dizer «eleito» ou contar mandatos era acrescentar
-       * duas afirmações por cima de uma data, e ambas convidavam à
-       * verificação que falha. A idade é aritmética e aguenta-se sozinha.
+       * As autárquicas foram em 2005, 2009 e 2013 — outubro de 2007 não é
+       * eleição nenhuma. Concorreu em 2005 em segundo lugar da lista, tomou
+       * posse a meio desse mandato, recandidatou-se duas vezes e saiu a meio
+       * do terceiro. Contar «dois mandatos consecutivos» a partir da divisão
+       * do intervalo por quatro dava um número que nenhuma dessas eleições
+       * confirma. Só a idade é aritmética; o resto é o que ele contou.
        */
       {
-        pt: `Tomou posse aos ${idadeEm(NAZARE.inicio)} anos.`,
-        en: `Took office at ${idadeEm(NAZARE.inicio)}.`,
+        pt: `Segundo da lista em 2005, tomou posse em 2007, aos ${idadeEm(NAZARE.inicio)} anos.`,
+        en: `Second on the list in 2005, took office in 2007, at ${idadeEm(NAZARE.inicio)}.`,
+      },
+      {
+        pt: 'Recandidatou-se em 2009 e em 2013, e saiu a meio do último mandato.',
+        en: 'Stood again in 2009 and 2013, and left partway through the final term.',
       },
     ],
   },
