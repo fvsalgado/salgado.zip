@@ -1,10 +1,16 @@
 import type { Lang, Periodo, Idioma, Lugar } from './index.ts'
+import { LINGUAS } from './idiomas.ts'
 
 export function t(v: Lang, idioma: Idioma): string {
-  return idioma === 'en' ? v.en : v.pt
+  return v[idioma]
 }
 
-const EM_CURSO: Record<Idioma, string> = { pt: 'em curso', en: 'ongoing' }
+const EM_CURSO: Record<Idioma, string> = {
+  pt: 'em curso',
+  en: 'ongoing',
+  fr: 'en cours',
+  es: 'en curso',
+}
 
 export function periodo(p: Periodo): string {
   const ano = (s: string) => s.slice(0, 4)
@@ -30,7 +36,7 @@ export function dataCurta(iso: string | undefined, idioma: Idioma): string | nul
   if (!iso) return null
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return null
-  return new Intl.DateTimeFormat(idioma === 'en' ? 'en-GB' : 'pt-PT', {
+  return new Intl.DateTimeFormat(LINGUAS[idioma].bcp47, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -38,8 +44,8 @@ export function dataCurta(iso: string | undefined, idioma: Idioma): string | nul
 }
 
 const ESTADOS: Record<string, Record<Idioma, string>> = {
-  ativo: { pt: 'ativo', en: 'live' },
-  privado: { pt: 'privado', en: 'private' },
+  ativo: { pt: 'ativo', en: 'live', fr: 'en ligne', es: 'activo' },
+  privado: { pt: 'privado', en: 'private', fr: 'privé', es: 'privado' },
 }
 export function estado(e: string, idioma: Idioma): string {
   return ESTADOS[e]?.[idioma] ?? e
@@ -47,8 +53,9 @@ export function estado(e: string, idioma: Idioma): string {
 
 /**
  * Graus decimais com sinal, WGS 84 — a forma que qualquer mapa aceita colada
- * na caixa de pesquisa, e a única que se lê igual nas duas línguas (em
- * português o oeste é «O» e em inglês é «W»; um sinal menos não tem língua).
+ * na caixa de pesquisa, e a única que se lê igual nas quatro línguas (o oeste
+ * é «O» em português, «W» em inglês, «O» em francês; um sinal menos não tem
+ * língua).
  *
  * Quatro casas chegam para acertar num bairro e não chegam para acertar numa
  * porta. É a precisão que isto deve ter.

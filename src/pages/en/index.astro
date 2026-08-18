@@ -1,32 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro'
-import Header from '../../components/Header.astro'
-import Tema from '../../components/Tema.astro'
-import Archive from '../../components/Archive.astro'
-import Rodape from '../../components/Rodape.astro'
-import { cabecalho } from '../../data'
-import { t } from '../../data/formato'
+import Arquivo from '../../components/Arquivo.astro'
+import { paginaArquivo } from '../../data/pagina'
 
 const idioma = 'en' as const
-const titulo = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}`
-const descricao = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}. ${t(cabecalho.linhas[0]!, idioma)}`
+const { titulo, descricao, caminho, alternos } = paginaArquivo(idioma)
 ---
 
-<Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/en/" alternos={{ pt: '/', en: '/en/' }}>
-  <main class="folha" id="conteudo">
-    <div class="barra">
-      <span class="marca">
-        salgado.zip
-        <span aria-hidden="true"> · </span>
-        <a href="/" hreflang="pt-PT" lang="pt-PT">português</a>
-      </span>
-      <Tema idioma={idioma} />
-    </div>
-    <Header idioma={idioma} />
-    <Archive idioma={idioma} />
-    <Rodape idioma={idioma} />
-  </main>
-  <script>
-    import '../../scripts/arquivo'
-  </script>
+<Base idioma={idioma} titulo={titulo} descricao={descricao} caminho={caminho} alternos={alternos}>
+  <Arquivo idioma={idioma} />
 </Base>

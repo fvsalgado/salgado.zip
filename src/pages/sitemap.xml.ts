@@ -1,14 +1,15 @@
 import type { APIRoute } from 'astro'
-import { CANONICO, datas } from '../data'
+import { CANONICO, datas, IDIOMAS, LINGUAS, PADRAO } from '../data'
 
-/** Escrito à mão porque são duas rotas. Uma dependência a menos. */
-const rotas = [
-  { caminho: '/', hreflang: 'pt-PT' },
-  { caminho: '/en/', hreflang: 'en' },
-]
+/**
+ * Uma rota por língua, derivadas do registo de línguas. Escrito à mão eram
+ * duas linhas; passando a quatro, seria a lista que se esquece de crescer.
+ * Uma dependência a menos e nenhuma rota a menos.
+ */
+const rotas = IDIOMAS.map((i) => ({ caminho: LINGUAS[i].raiz, hreflang: LINGUAS[i].html }))
 
 /** As alternativas de língua repetem-se em cada URL, como o protocolo exige. */
-const alternativas = [...rotas, { caminho: '/', hreflang: 'x-default' }]
+const alternativas = [...rotas, { caminho: LINGUAS[PADRAO].raiz, hreflang: 'x-default' }]
   .map((a) => `    <xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${CANONICO}${a.caminho}"/>`)
   .join('\n')
 

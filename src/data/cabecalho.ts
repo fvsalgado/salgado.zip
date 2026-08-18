@@ -5,6 +5,8 @@ export const cabecalho = parse(Cabecalho, {
   cargo: {
     pt: 'Consultor de assuntos públicos',
     en: 'Public affairs consultant',
+    fr: 'Consultant en affaires publiques',
+    es: 'Consultor de asuntos públicos',
   },
   /**
    * Para o <title> e pouco mais. O cargo fica para o JSON-LD.
@@ -16,6 +18,11 @@ export const cabecalho = parse(Cabecalho, {
   areas: {
     pt: 'assuntos públicos, cultura e software',
     en: 'public affairs, culture and software',
+    // «logiciel» e não «tech»: em francês a palavra existe, e a outra é uma
+    // categoria de brochura na mesma. Em espanhol «software» é a palavra
+    // corrente, e traduzi-la seria escrever mais claro do que se fala.
+    fr: 'affaires publiques, culture et logiciel',
+    es: 'asuntos públicos, cultura y software',
   },
   /**
    * O nome é o <h1> e `areas` é a linha de ofício por baixo. As linhas abaixo
@@ -34,10 +41,14 @@ export const cabecalho = parse(Cabecalho, {
     {
       pt: 'Nasci na Nazaré e foi lá que fui eleito pela primeira vez, em 2007, aos 21 anos. Divido-me hoje entre Alfama, em Lisboa, e Ribeira Branca, em Torres Novas.',
       en: 'I was born in Nazaré, and it was there that I was first elected, in 2007, at 21. Today I split my time between Alfama, in Lisbon, and Ribeira Branca, in Torres Novas.',
+      fr: 'Je suis né à Nazaré, et c’est là que j’ai été élu pour la première fois, en 2007, à 21 ans. Aujourd’hui je partage mon temps entre Alfama, à Lisbonne, et Ribeira Branca, à Torres Novas.',
+      es: 'Nací en Nazaré, y allí fui elegido por primera vez, en 2007, a los 21 años. Hoy reparto mi tiempo entre Alfama, en Lisboa, y Ribeira Branca, en Torres Novas.',
     },
     {
       pt: 'Desde então: uma loja minha, o balcão e o palco de uma sala de espetáculos, quatro anos num gabinete da Câmara de Lisboa, e hoje consultoria de assuntos públicos. Pelo meio comecei a construir software, e há pouco a produzir fado — sem largar nada.',
       en: 'Since then: a shop of my own, the counter and the stage of a small venue, four years in a Lisbon City Hall office, and today public affairs consulting. Somewhere in there I started building software, and more recently producing fado — without letting go of anything.',
+      fr: 'Depuis lors : une boutique à moi, le comptoir et la scène d’une petite salle de spectacle, quatre ans dans un cabinet de la Mairie de Lisbonne, et aujourd’hui le conseil en affaires publiques. Entre-temps je me suis mis à construire des logiciels, et depuis peu à produire du fado — sans rien lâcher.',
+      es: 'Desde entonces: una tienda propia, la barra y el escenario de una sala de espectáculos, cuatro años en un gabinete del Ayuntamiento de Lisboa, y hoy consultoría de asuntos públicos. Por el camino empecé a construir software, y hace poco a producir fado — sin soltar nada.',
     },
     {
       // Antes dizia «o que não está confirmado não entra», que soa a regra de
@@ -45,12 +56,16 @@ export const cabecalho = parse(Cabecalho, {
       // dizer isso. O método detalhado vive no colofão, que é o lugar dele.
       pt: 'Isto é o arquivo desse trabalho. Sou eu que o mantenho, e cada entrada diz o que é, quando foi e o que eu lá fiz.',
       en: 'This is the archive of that work. I keep it myself, and every entry says what it is, when it was, and what I did there.',
+      fr: 'Ceci est l’archive de ce travail. C’est moi qui la tiens, et chaque entrée dit ce qu’elle est, quand c’était et ce que j’y ai fait.',
+      es: 'Este es el archivo de ese trabajo. Lo mantengo yo, y cada entrada dice qué es, cuándo fue y qué hice allí.',
     },
     {
       // «isto» e não «este site»: a mesma linha sai em página e em PDF, e quem
       // tem o papel na mão pode nem saber de onde o papel veio.
       pt: 'Construo a meias com o Claude, entre outras ferramentas — isto incluído. Está tudo listado em baixo.',
       en: 'I build together with Claude, among other tools — this included. Everything is listed below.',
+      fr: 'Je construis à deux avec Claude, parmi d’autres outils — ceci compris. Tout est listé ci-dessous.',
+      es: 'Construyo a medias con Claude, entre otras herramientas — esto incluido. Está todo listado abajo.',
     },
   ],
 }, 'cabecalho')

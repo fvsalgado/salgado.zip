@@ -8,8 +8,8 @@ import stamps from '../generated/stamps.json' with { type: 'json' }
 
 export { cabecalho, projetos, posicoes, mandatos, formacao, contacto, ficheiros }
 export * from './schema.ts'
-
-export type Idioma = 'pt' | 'en'
+export { IDIOMAS, LINGUAS, RAIZES, PADRAO } from './idiomas.ts'
+export type { Idioma, Lingua } from './idiomas.ts'
 
 /** Datas de modificação, do `git log`, congeladas em src/generated/stamps.json. */
 export const datas: Record<string, string> = stamps

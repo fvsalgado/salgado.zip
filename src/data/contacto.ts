@@ -6,8 +6,15 @@ export const contacto = parse(Contacto, {
   concelho: {
     pt: 'Alfama, Lisboa · Ribeira Branca, Torres Novas',
     en: 'Alfama, Lisbon · Ribeira Branca, Torres Novas',
+    fr: 'Alfama, Lisbonne · Ribeira Branca, Torres Novas',
+    es: 'Alfama, Lisboa · Ribeira Branca, Torres Novas',
   },
-  naturalidade: { pt: 'natural da Nazaré', en: 'born in Nazaré' },
+  naturalidade: {
+    pt: 'natural da Nazaré',
+    en: 'born in Nazaré',
+    fr: 'né à Nazaré',
+    es: 'natural de Nazaré',
+  },
   regiao: 'Lisboa e Torres Novas',
   /**
    * Os três lugares, por ordem biográfica: onde nasci, e os dois onde vivo.
@@ -26,15 +33,39 @@ export const contacto = parse(Contacto, {
   nota: {
     pt: 'Projetos, parcerias e conversas começam por aqui.',
     en: 'Projects, partnerships and conversations start here.',
+    fr: 'Projets, partenariats et conversations commencent ici.',
+    es: 'Proyectos, alianzas y conversaciones empiezan por aquí.',
   },
   idiomas: [
-    { lingua: { pt: 'Português', en: 'Portuguese' }, nivel: { pt: 'nativo', en: 'native' } },
-    { lingua: { pt: 'Inglês', en: 'English' }, nivel: { pt: 'avançado, EF SET C2', en: 'advanced, EF SET C2' } },
-    { lingua: { pt: 'Espanhol', en: 'Spanish' }, nivel: { pt: 'intermédio', en: 'intermediate' } },
-    { lingua: { pt: 'Francês', en: 'French' }, nivel: { pt: 'intermédio', en: 'intermediate' } },
     {
-      lingua: { pt: 'Língua Gestual Portuguesa', en: 'Portuguese Sign Language' },
-      nivel: { pt: 'básico', en: 'basic' },
+      lingua: { pt: 'Português', en: 'Portuguese', fr: 'Portugais', es: 'Portugués' },
+      nivel: { pt: 'nativo', en: 'native', fr: 'langue maternelle', es: 'nativo' },
+    },
+    {
+      lingua: { pt: 'Inglês', en: 'English', fr: 'Anglais', es: 'Inglés' },
+      nivel: {
+        pt: 'avançado, EF SET C2',
+        en: 'advanced, EF SET C2',
+        fr: 'avancé, EF SET C2',
+        es: 'avanzado, EF SET C2',
+      },
+    },
+    {
+      lingua: { pt: 'Espanhol', en: 'Spanish', fr: 'Espagnol', es: 'Español' },
+      nivel: { pt: 'intermédio', en: 'intermediate', fr: 'intermédiaire', es: 'intermedio' },
+    },
+    {
+      lingua: { pt: 'Francês', en: 'French', fr: 'Français', es: 'Francés' },
+      nivel: { pt: 'intermédio', en: 'intermediate', fr: 'intermédiaire', es: 'intermedio' },
+    },
+    {
+      lingua: {
+        pt: 'Língua Gestual Portuguesa',
+        en: 'Portuguese Sign Language',
+        fr: 'Langue des signes portugaise',
+        es: 'Lengua de Signos Portuguesa',
+      },
+      nivel: { pt: 'básico', en: 'basic', fr: 'notions', es: 'básico' },
     },
   ],
 }, 'contacto')

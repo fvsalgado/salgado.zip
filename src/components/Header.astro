@@ -5,13 +5,21 @@ import { t } from '../data/formato'
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
+
+/** O texto alternativo do retrato: a única frase deste componente. */
+const RETRATO: Record<Idioma, string> = {
+  pt: `Retrato de ${cabecalho.nome}`,
+  en: `Portrait of ${cabecalho.nome}`,
+  fr: `Portrait de ${cabecalho.nome}`,
+  es: `Retrato de ${cabecalho.nome}`,
+}
 ---
 
 <header class="cabecalho">
   <img
     class="retrato"
     src="/fabio-salgado.jpg"
-    alt={idioma === 'en' ? `Portrait of ${cabecalho.nome}` : `Retrato de ${cabecalho.nome}`}
+    alt={RETRATO[idioma]}
     width="200"
     height="200"
     decoding="async"

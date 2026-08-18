@@ -5,7 +5,14 @@ import { dataCurta, coordenadas } from '../data/formato'
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
-const en = idioma === 'en'
+
+const ROTULOS: Record<Idioma, { atualizado: string; semRastreio: string }> = {
+  pt: { atualizado: 'atualizado', semRastreio: 'sem cookies, sem rastreio' },
+  en: { atualizado: 'updated', semRastreio: 'no cookies, no tracking' },
+  fr: { atualizado: 'mis à jour', semRastreio: 'sans cookies, sans traçage' },
+  es: { atualizado: 'actualizado', semRastreio: 'sin cookies, sin rastreo' },
+}
+const rot = ROTULOS[idioma]
 
 const maisRecente = Object.values(datas).sort().at(-1)
 const quando = dataCurta(maisRecente, idioma)
@@ -18,7 +25,8 @@ const quando = dataCurta(maisRecente, idioma)
  * Os dois saem sempre, seja qual for a língua da interface — cada um rotulado
  * na sua, que é a maneira mais curta de dizer o que está lá dentro sem o
  * traduzir. Quem lê inglês reconhece «CV in English» numa página portuguesa, e
- * ao contrário também.
+ * ao contrário também; quem lê a página em francês percebe pelo rótulo que os
+ * documentos são dois e nenhum deles é em francês, que é a verdade.
  */
 const cvs = [
   { id: 'cv-pt', rotulo: 'CV em português' },
@@ -30,7 +38,7 @@ const cvs = [
 
 <footer class="rodape">
   <span>
-    salgado.zip{quando ? ` · ${en ? 'updated' : 'atualizado'} ${quando}` : ''}
+    salgado.zip{quando ? ` · ${rot.atualizado} ${quando}` : ''}
   </span>
   <span class="rodape__ecra">
     {cvs.map((c, i) => (
@@ -40,7 +48,7 @@ const cvs = [
       </>
     ))}
     <span aria-hidden="true"> · </span>
-    {en ? 'no cookies, no tracking' : 'sem cookies, sem rastreio'}
+    {rot.semRastreio}
   </span>
   {contacto.lugares.length > 0 && (
     <span class="rodape__lugares">{coordenadas(contacto.lugares)}</span>

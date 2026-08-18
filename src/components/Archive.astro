@@ -7,39 +7,136 @@ import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
-const en = idioma === 'en'
 
+/**
+ * Os rótulos da árvore vivem aqui e não em src/data porque são interface e não
+ * conteúdo: quem abre a página vê-os, quem abre o PDF ou o resume.json não.
+ *
+ * Um bloco fechado por língua, e não um ternário por rótulo. Com duas línguas
+ * o ternário ainda se lia; com quatro seria um rótulo por linha com quatro
+ * ramos, e a garantia de que uma tradução ficava por fazer sem ninguém dar
+ * por isso. Assim o tipo obriga: rótulo em falta é erro de build.
+ */
+interface Rotulos {
+  /** Os nomes dos nós. A barra final é a metáfora da árvore, não decoração. */
+  projetos: string
+  percurso: string
+  mandatos: string
+  formacao: string
+  contacto: string
+  ficheiros: string
+  colofao: string
+  entradas: (n: number) => string
+  /** Os totais da linha de cima. */
+  contaProjetos: string
+  contaCargos: string
+  contaMandatos: string
+  maisAntigo: (ano: number) => string
+  abrirTudo: string
+  fecharTudo: string
+  /** Os campos de um nó aberto. */
+  papel: string
+  periodo: string
+  stack: string
+  endereco: string
+  acesso: string
+  privado: string
+  codigo: string
+  licenca: string
+  onde: string
+  deOnde: string
+  idiomas: string
+  visitar: string
+  codigoAberto: string
+  captura: string
+  notaFicheiros: string
+}
 
-const rot = en
-  ? { projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/', contacto: 'contact/', ficheiros: 'files/', colofao: 'colophon/',
-      entradas: (n: number) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
-      papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
-      privado: 'private, behind authentication', abrir: 'Open' }
-  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/', colofao: 'colofão/',
-      entradas: (n: number) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
-      papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
-      privado: 'privado, atrás de autenticação', abrir: 'Abrir' }
+const ROTULOS: Record<Idioma, Rotulos> = {
+  pt: {
+    projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/',
+    contacto: 'contacto/', ficheiros: 'ficheiros/', colofao: 'colofão/',
+    entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
+    contaProjetos: 'projetos', contaCargos: 'cargos', contaMandatos: 'mandatos',
+    maisAntigo: (ano) => `o mais antigo é de ${ano}`,
+    abrirTudo: 'abrir tudo', fecharTudo: 'fechar tudo',
+    papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
+    privado: 'privado, atrás de autenticação', codigo: 'código', licenca: 'licença',
+    onde: 'onde', deOnde: 'de onde', idiomas: 'idiomas',
+    visitar: 'visitar', codigoAberto: 'código aberto', captura: 'Captura de ecrã de',
+    notaFicheiros: 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.',
+  },
+  en: {
+    projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/',
+    contacto: 'contact/', ficheiros: 'files/', colofao: 'colophon/',
+    entradas: (n) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
+    contaProjetos: 'projects', contaCargos: 'positions', contaMandatos: 'mandates',
+    maisAntigo: (ano) => `oldest from ${ano}`,
+    abrirTudo: 'expand all', fecharTudo: 'collapse all',
+    papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
+    privado: 'private, behind authentication', codigo: 'source', licenca: 'licence',
+    onde: 'where', deOnde: 'from', idiomas: 'languages',
+    visitar: 'visit', codigoAberto: 'open source', captura: 'Screenshot of',
+    notaFicheiros: 'Every size above is read from the real file at build time. Nothing here is typed by hand.',
+  },
+  fr: {
+    projetos: 'projets/', percurso: 'parcours/', mandatos: 'mandats/', formacao: 'certificats/',
+    contacto: 'contact/', ficheiros: 'fichiers/', colofao: 'colophon/',
+    entradas: (n) => `${n} ${n === 1 ? 'entrée' : 'entrées'}`,
+    contaProjetos: 'projets', contaCargos: 'postes', contaMandatos: 'mandats',
+    maisAntigo: (ano) => `le plus ancien date de ${ano}`,
+    abrirTudo: 'tout ouvrir', fecharTudo: 'tout fermer',
+    papel: 'rôle', periodo: 'période', stack: 'stack', endereco: 'adresse', acesso: 'accès',
+    privado: 'privé, derrière une authentification', codigo: 'code', licenca: 'licence',
+    onde: 'où', deOnde: 'd’où', idiomas: 'langues',
+    visitar: 'visiter', codigoAberto: 'code ouvert', captura: 'Capture d’écran de',
+    notaFicheiros: 'Toutes les tailles ci-dessus sont lues sur le fichier réel au build. Rien ici n’est saisi à la main.',
+  },
+  es: {
+    projetos: 'proyectos/', percurso: 'trayectoria/', mandatos: 'mandatos/', formacao: 'certificados/',
+    contacto: 'contacto/', ficheiros: 'archivos/', colofao: 'colofón/',
+    entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
+    contaProjetos: 'proyectos', contaCargos: 'cargos', contaMandatos: 'mandatos',
+    maisAntigo: (ano) => `el más antiguo es de ${ano}`,
+    abrirTudo: 'abrir todo', fecharTudo: 'cerrar todo',
+    papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'dirección', acesso: 'acceso',
+    privado: 'privado, tras autenticación', codigo: 'código', licenca: 'licencia',
+    onde: 'dónde', deOnde: 'de dónde', idiomas: 'idiomas',
+    visitar: 'visitar', codigoAberto: 'código abierto', captura: 'Captura de pantalla de',
+    notaFicheiros: 'Todos los tamaños de arriba se leen del fichero real en el build. Nada aquí se escribe a mano.',
+  },
+}
+const rot = ROTULOS[idioma]
+
 const anoInicio = Math.min(
   ...[...posicoes, ...mandatos, ...projetos.filter((p) => p.periodo)].map((x) =>
     parseInt((x.periodo as { inicio: string }).inicio.slice(0, 4), 10)
   )
 )
 const totais = [
-  `${projetos.length} ${en ? 'projects' : 'projetos'}`,
-  `${posicoes.length} ${en ? 'positions' : 'cargos'}`,
-  `${mandatos.length} ${en ? 'mandates' : 'mandatos'}`,
+  `${projetos.length} ${rot.contaProjetos}`,
+  `${posicoes.length} ${rot.contaCargos}`,
+  `${mandatos.length} ${rot.contaMandatos}`,
   // «desde 2007» a seguir a três contagens lê-se como data de nascimento. O que
   // 2007 é: a entrada mais antiga da lista.
-  en ? `oldest from ${anoInicio}` : `o mais antigo é de ${anoInicio}`,
+  rot.maisAntigo(anoInicio),
 ]
+
+/**
+ * Os dois CV, na ficha de contacto. São dois e não um em todas as línguas: a
+ * página existe em quatro, os documentos em duas, e quem lê a página em
+ * francês tem de poder escolher em qual das duas leva o percurso. Cada um
+ * rotulado pelo nome do ficheiro, que já diz a língua.
+ */
+const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
 ---
 
 <div class="totais">
   <p>{totais.join(' · ')}</p>
   <p class="totais__controlos" data-controlos hidden>
-    <button type="button" data-abrir-tudo>{en ? 'expand all' : 'abrir tudo'}</button>
+    <button type="button" data-abrir-tudo>{rot.abrirTudo}</button>
     <span aria-hidden="true">·</span>
-    <button type="button" data-fechar-tudo>{en ? 'collapse all' : 'fechar tudo'}</button>
+    <button type="button" data-fechar-tudo>{rot.fecharTudo}</button>
   </p>
 </div>
 
@@ -69,10 +166,10 @@ const totais = [
               {((p.url !== null && p.url !== CANONICO) || p.codigo !== null) && (
                 <span class="linha__ligacoes">
                   {p.url !== null && p.url !== CANONICO && (
-                    <a href={p.url} rel="noopener">{en ? 'visit' : 'visitar'} ↗</a>
+                    <a href={p.url} rel="noopener">{rot.visitar} ↗</a>
                   )}
                   {p.codigo !== null && (
-                    <a href={p.codigo} rel="noopener">{en ? 'open source' : 'código aberto'} ↗</a>
+                    <a href={p.codigo} rel="noopener">{rot.codigoAberto} ↗</a>
                   )}
                 </span>
               )}
@@ -97,7 +194,7 @@ const totais = [
               )}
               {p.codigo !== null && (
                 <>
-                  <dt>{en ? 'source' : 'código'}</dt>
+                  <dt>{rot.codigo}</dt>
                   <dd>
                     <a href={p.codigo} rel="noopener">{p.codigo.replace('https://', '')}</a>
                   </dd>
@@ -122,7 +219,7 @@ const totais = [
               <figure class="shot">
                 <img
                   src={`/shots/${p.shot}`}
-                  alt={`${en ? 'Screenshot of' : 'Captura de ecrã de'} ${p.dominio}: ${t(p.linha, idioma)}`}
+                  alt={`${rot.captura} ${p.dominio}: ${t(p.linha, idioma)}`}
                   loading="lazy"
                   decoding="async"
                 />
@@ -230,17 +327,22 @@ const totais = [
           <dd><a href={contacto.linkedin} rel="noopener">{contacto.linkedin.replace(/^https:\/\//, '')}</a></dd>
         </>
       )}
-      <dt>{en ? 'where' : 'onde'}</dt>
+      <dt>{rot.onde}</dt>
       <dd>{t(contacto.concelho, idioma)}</dd>
-      <dt>{en ? 'from' : 'de onde'}</dt>
+      <dt>{rot.deOnde}</dt>
       <dd>{t(contacto.naturalidade, idioma)}</dd>
       <dt>cv</dt>
       <dd>
-        <a href="/docs/Fabio-Salgado-CV-PT.pdf">Fabio-Salgado-CV-PT.pdf</a>
+        {cvs.map((c, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true"> · </span>}
+            <a href={c.href}>{c.nome}</a>
+          </>
+        ))}
       </dd>
       {contacto.idiomas.length > 0 && (
         <>
-          <dt>{en ? 'languages' : 'idiomas'}</dt>
+          <dt>{rot.idiomas}</dt>
           <dd>
             {contacto.idiomas.map((i) => `${t(i.lingua, idioma)} (${t(i.nivel, idioma)})`).join(' · ')}
           </dd>
@@ -271,11 +373,7 @@ const totais = [
         ))
       }
     </ul>
-    <p class="no__texto no__texto--nota">
-      {en
-        ? 'Every size above is read from the real file at build time. Nothing here is typed by hand.'
-        : 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.'}
-    </p>
+    <p class="no__texto no__texto--nota">{rot.notaFicheiros}</p>
   </Node>
 
   <Node id="colofao" nivel={2} nome={rot.colofao}>
@@ -283,9 +381,9 @@ const totais = [
       {colofaoSite.map((l) => <p>{t(l, idioma)}</p>)}
     </div>
     <dl class="no__campos">
-      <dt>{en ? 'source' : 'código'}</dt>
+      <dt>{rot.codigo}</dt>
       <dd><a href={codigoDoSite} rel="noopener">{codigoDoSite.replace('https://', '')}</a></dd>
-      <dt>{en ? 'licence' : 'licença'}</dt>
+      <dt>{rot.licenca}</dt>
       <dd><a href={licenca.url} rel="noopener">{licenca.nome}</a></dd>
     </dl>
   </Node>

@@ -1,0 +1,30 @@
+---
+/**
+ * O corpo da página de arquivo. É o mesmo nas quatro línguas — só muda o que
+ * `idioma` escolhe lá dentro —, e por isso vive num componente e não copiado
+ * em quatro rotas: quatro cópias de uma barra de navegação são quatro sítios
+ * onde a próxima alteração fica por fazer numa delas.
+ */
+import Header from './Header.astro'
+import Tema from './Tema.astro'
+import Linguas from './Linguas.astro'
+import Archive from './Archive.astro'
+import Rodape from './Rodape.astro'
+import type { Idioma } from '../data'
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props
+---
+
+<main class="folha" id="conteudo">
+  <div class="barra">
+    <Linguas idioma={idioma} />
+    <Tema idioma={idioma} />
+  </div>
+  <Header idioma={idioma} />
+  <Archive idioma={idioma} />
+  <Rodape idioma={idioma} />
+</main>
+<script>
+  import '../scripts/arquivo'
+</script>

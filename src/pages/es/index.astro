@@ -1,9 +1,9 @@
 ---
-import Base from '../layouts/Base.astro'
-import Arquivo from '../components/Arquivo.astro'
-import { paginaArquivo } from '../data/pagina'
+import Base from '../../layouts/Base.astro'
+import Arquivo from '../../components/Arquivo.astro'
+import { paginaArquivo } from '../../data/pagina'
 
-const idioma = 'pt' as const
+const idioma = 'es' as const
 const { titulo, descricao, caminho, alternos } = paginaArquivo(idioma)
 ---
 
