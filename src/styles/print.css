@@ -30,8 +30,8 @@
 
   body {
     background: #fff;
-    font-size: 9.9pt;
-    line-height: 1.42;
+    font-size: 9.6pt;
+    line-height: 1.4;
   }
   .folha, .dossie .folha { max-width: none; padding: 0; }
 
@@ -76,7 +76,7 @@
     font-size: 7.6pt;
     letter-spacing: 0.14em;
     color: #101010;
-    margin: 6.5mm 0 3mm;
+    margin: 5.6mm 0 2.7mm;
     padding: 0;
     border: 0;
   }
@@ -85,15 +85,15 @@
     flex: 1;
     border-top: 1px solid var(--rule);
   }
-  section:first-of-type h2 { margin-top: 6mm; }
+  section:first-of-type h2 { margin-top: 5mm; }
 
   .dossie h3 { font-size: 11pt; }
-  .entrada + .entrada { margin-top: 4mm; }
+  .entrada + .entrada { margin-top: 3.4mm; }
   .entrada--linha + .entrada--linha { margin-top: 2.6mm; }
   .entrada__quando { font-size: 8pt; }
   .entrada__onde { font-size: 9.4pt; }
   .entrada__corpo { margin-top: 1.2mm; }
-  .dossie p + p { margin-top: 1.4mm; }
+  .dossie p + p { margin-top: 1.2mm; }
   .nota { font-size: 8.6pt; }
 
   /* ── As capturas ───────────────────────────────────────────────────────── */
@@ -101,7 +101,7 @@
      meio. Cada figura é que não parte. */
   /* Três por linha: uma folha de contacto, não uma galeria. Poupa uma
      linha de grelha e fecha o documento uma página mais cedo. */
-  .capturas { grid-template-columns: repeat(3, 1fr); gap: 5mm; }
+  .capturas { grid-template-columns: repeat(3, 1fr); gap: 4mm; }
   .captura img { border-color: var(--rule); }
   .captura figcaption { font-size: 8pt; margin-top: 1.2mm; }
 

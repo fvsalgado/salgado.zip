@@ -6,6 +6,18 @@
  * É o documento que sai em PDF — um por língua, com tudo lá dentro. Quem
  * recruta descarrega um ficheiro, não três, e o que abre está paginado,
  * numerado e pronto a imprimir.
+ *
+ * A ordem das secções não é a da árvore, e é de propósito. Na página, os
+ * projetos vêm primeiro: quem lá chega chegou por curiosidade e o que prende
+ * é o que foi feito. No documento manda a convenção do currículo — quem o
+ * abre procura o percurso, e procura-o no princípio. Mesma fonte, mesma
+ * matéria, ordem própria a cada suporte.
+ *
+ * As capturas fecham, e não acompanham os projetos, por aritmética de papel:
+ * a matéria toda não cabe em três páginas, e com as capturas a meio a quarta
+ * página ficava com o colofão sozinho — vinte e cinco milímetros de cinzento
+ * numa folha em branco. No fim, a última página é uma folha de contacto com
+ * o colofão ao pé, que é uma página inteira com razão de existir.
  */
 import { cabecalho, projetos, posicoes, mandatos, formacao, contacto } from '../data'
 import { colofaoDocumento, notaCertificados } from '../data/textos.ts'
@@ -58,6 +70,26 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
     <img class="tarja__qr" src="/qr.svg" alt={en ? 'QR code for salgado.zip' : 'Código QR para salgado.zip'} width="120" height="120" />
   </div>
 
+  {
+    posicoes.length > 0 && (
+      <section data-seccao="percurso">
+        <h2>{rot.percurso}</h2>
+        {posicoes.map((p) => (
+          <div class="entrada" id={`d-${p.id}`}>
+            <div class="entrada__cabeca">
+              <h3>{t(p.cargo, idioma)}</h3>
+              <span class="entrada__quando">{periodoLongo(p.periodo, idioma)}</span>
+            </div>
+            <p class="entrada__onde">{p.organizacao}</p>
+            <div class="entrada__corpo">
+              {p.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+            </div>
+          </div>
+        ))}
+      </section>
+    )
+  }
+
   <section data-seccao="projetos">
     <h2>{rot.projetos}</h2>
     {
@@ -80,42 +112,6 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
       ))
     }
   </section>
-
-  {
-    comCaptura.length > 0 && (
-      <section data-seccao="capturas">
-        <h2>{rot.capturas}</h2>
-        <div class="capturas">
-          {comCaptura.map((p) => (
-            <figure class="captura">
-              <img src={`/shots/${p.shot}`} alt={`${en ? 'Screenshot of' : 'Captura de ecrã de'} ${p.dominio}`} decoding="async" />
-              <figcaption>{p.dominio}</figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
-    )
-  }
-
-  {
-    posicoes.length > 0 && (
-      <section data-seccao="percurso">
-        <h2>{rot.percurso}</h2>
-        {posicoes.map((p) => (
-          <div class="entrada" id={`d-${p.id}`}>
-            <div class="entrada__cabeca">
-              <h3>{t(p.cargo, idioma)}</h3>
-              <span class="entrada__quando">{periodoLongo(p.periodo, idioma)}</span>
-            </div>
-            <p class="entrada__onde">{p.organizacao}</p>
-            <div class="entrada__corpo">
-              {p.linhas.map((l) => <p>{t(l, idioma)}</p>)}
-            </div>
-          </div>
-        ))}
-      </section>
-    )
-  }
 
   {
     mandatos.length > 0 && (
@@ -164,6 +160,22 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
       <section data-seccao="idiomas">
         <h2>{rot.idiomas}</h2>
         <p>{contacto.idiomas.map((i) => `${t(i.lingua, idioma)} (${t(i.nivel, idioma)})`).join(' · ')}</p>
+      </section>
+    )
+  }
+
+  {
+    comCaptura.length > 0 && (
+      <section data-seccao="capturas">
+        <h2>{rot.capturas}</h2>
+        <div class="capturas">
+          {comCaptura.map((p) => (
+            <figure class="captura">
+              <img src={`/shots/${p.shot}`} alt={`${en ? 'Screenshot of' : 'Captura de ecrã de'} ${p.dominio}`} decoding="async" />
+              <figcaption>{p.dominio}</figcaption>
+            </figure>
+          ))}
+        </div>
       </section>
     )
   }
