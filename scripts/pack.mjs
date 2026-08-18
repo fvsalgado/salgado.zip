@@ -9,7 +9,7 @@
  * Os dois ficheiros ficam em .gitignore: assim o Astro consegue ler-lhes o
  * tamanho com fs no build e não há binários a inchar o histórico.
  */
-import { createWriteStream, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import { createWriteStream, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { ZipArchive } from 'archiver'
 
@@ -151,6 +151,36 @@ for (const e of entradas) {
 await zip.finalize()
 await pronto
 
+/* ── linhas.json ──────────────────────────────────────────────────────────
+   O contador de linhas do colofão. Conta-se aqui, antes de cada build, para
+   o número publicado ser sempre o do código que está no ar: ficheiros
+   autorados (componentes, dados, estilos, scripts, configuração), excluindo
+   o gerado e os assets. Contagem à maneira do wc -l, reproduzível por
+   qualquer pessoa com o repositório à frente. */
+const contaveis = []
+const apanhar = (dir, aceita) => {
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    const caminho = dir + e.name
+    if (e.isDirectory()) apanhar(caminho + '/', aceita)
+    else if (aceita(caminho)) contaveis.push(caminho)
+  }
+}
+apanhar(raiz + 'src/', (f) => /\.(astro|ts|css)$/.test(f) && !f.includes('/generated/') && !f.endsWith('fonts.css'))
+apanhar(raiz + 'scripts/', (f) => f.endsWith('.mjs'))
+for (const f of ['public/tema.js', 'astro.config.mjs', 'tsconfig.json', 'vercel.json', 'package.json', '.github/workflows/verify.yml']) {
+  if (existsSync(raiz + f)) contaveis.push(raiz + f)
+}
+let linhas = 0
+for (const f of contaveis) {
+  const texto = readFileSync(f, 'utf8')
+  linhas += texto.split('\n').length - (texto.endsWith('\n') ? 1 : 0)
+}
+mkdirSync(raiz + 'src/generated', { recursive: true })
+writeFileSync(
+  raiz + 'src/generated/linhas.json',
+  JSON.stringify({ total: linhas, ficheiros: contaveis.length }, null, 2) + '\n'
+)
+
 /* ── tamanhos.json ────────────────────────────────────────────────────────
    Nenhum número é escrito à mão: os tamanhos da listagem saem daqui, de um
    statSync sobre os ficheiros reais, depois de o .zip estar fechado. */
@@ -165,7 +195,7 @@ for (const d of definicoes) {
 mkdirSync(raiz + 'src/generated', { recursive: true })
 writeFileSync(raiz + 'src/generated/tamanhos.json', JSON.stringify(tamanhos, null, 2) + '\n')
 
-console.log(`pack: resume.json + salgado.zip (${entradas.length - emFalta.length}/${entradas.length} entradas)`)
+console.log(`pack: resume.json + salgado.zip (${entradas.length - emFalta.length}/${entradas.length} entradas) · ${linhas} linhas em ${contaveis.length} ficheiros`)
 if (emFalta.length) {
   console.log(`      em falta, corre \`npm run artifacts\`: ${emFalta.join(', ')}`)
 }
