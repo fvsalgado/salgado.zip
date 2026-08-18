@@ -1,0 +1,13 @@
+---
+/**
+ * Alternador de tema. Nasce escondido: sem JS não faz nada, e um controlo que
+ * não faz nada é pior do que controlo nenhum.
+ */
+import type { Idioma } from '../data'
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props
+const rot = idioma === 'en' ? 'Toggle theme' : 'Alternar tema'
+---
+
+<button type="button" class="tema" data-controlos data-tema aria-label={rot} title={rot} hidden>◐</button>

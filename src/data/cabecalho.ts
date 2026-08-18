@@ -15,8 +15,8 @@ export const cabecalho = parse(Cabecalho, {
   // cartão social já fazia bem. As linhas abaixo são a prosa, não o título.
   linhas: [
     {
-      pt: 'O que junta os três mundos é o mesmo gesto: perceber um sistema, encontrar-lhe as regras e fazer alguma coisa com isso.',
-      en: 'What joins the three worlds is the same move: understand a system, find its rules, and make something with it.',
+      pt: 'Os três juntam-se no mesmo gesto: perceber um sistema, encontrar-lhe as regras e construir dentro delas.',
+      en: 'The three meet in the same move: understand a system, find its rules, and build within them.',
     },
     {
       pt: 'Divido-me entre Alfama, em Lisboa, e Ribeira Branca, em Torres Novas. Nasci na Nazaré.',

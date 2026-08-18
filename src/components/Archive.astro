@@ -15,7 +15,7 @@ const rot = en
       entradas: (n: number) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
       papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
       privado: 'private, behind authentication', abrir: 'Open' }
-  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/', colofao: 'colofao/',
+  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/', colofao: 'colofão/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
       papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
       privado: 'privado, atrás de autenticação', abrir: 'Abrir' }
@@ -25,18 +25,26 @@ const anoInicio = Math.min(
   )
 )
 const totais = [
-  `${projetos.length} ${en ? 'products' : 'produtos'}`,
-  `${posicoes.length} ${en ? 'positions' : 'posições'}`,
+  `${projetos.length} ${en ? 'projects' : 'projetos'}`,
+  `${posicoes.length} ${en ? 'positions' : 'cargos'}`,
   `${mandatos.length} ${en ? 'mandates' : 'mandatos'}`,
   en ? `since ${anoInicio}` : `desde ${anoInicio}`,
 ]
 ---
 
-<p class="totais">{totais.join(' · ')}</p>
+<div class="totais">
+  <p>{totais.join(' · ')}</p>
+  <p class="totais__controlos" data-controlos hidden>
+    <button type="button" data-abrir-tudo>{en ? 'expand all' : 'abrir tudo'}</button>
+    <span aria-hidden="true">·</span>
+    <button type="button" data-fechar-tudo>{en ? 'collapse all' : 'fechar tudo'}</button>
+  </p>
+</div>
 
 <ul class="arvore" role="list" data-arvore>
   <Node
     id="projetos"
+    nivel={2}
     nome={rot.projetos}
     aberto={true}
     colunas={[{ classe: 'nota', valor: rot.entradas(projetos.length) }]}
@@ -46,6 +54,7 @@ const totais = [
         projetos.map((p) => (
           <Node
             id={p.id}
+            nivel={3}
             nome={p.dominio}
             colunas={[
               { classe: 'papel', valor: t(p.papel, idioma) },
@@ -109,13 +118,12 @@ const totais = [
             </dl>
             {p.shot !== null && (
               <figure class="shot">
-                {p.url !== null && p.url !== CANONICO ? (
-                  <a href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
-                    <img src={`/shots/${p.shot}`} alt="" loading="lazy" decoding="async" />
-                  </a>
-                ) : (
-                  <img src={`/shots/${p.shot}`} alt="" loading="lazy" decoding="async" />
-                )}
+                <img
+                  src={`/shots/${p.shot}`}
+                  alt={`${en ? 'Screenshot of' : 'Captura de ecrã de'} ${p.dominio}: ${t(p.linha, idioma)}`}
+                  loading="lazy"
+                  decoding="async"
+                />
               </figure>
             )}
           </Node>
@@ -128,6 +136,7 @@ const totais = [
     posicoes.length > 0 && (
       <Node
         id="percurso"
+        nivel={2}
         nome={rot.percurso}
         colunas={[{ classe: 'nota', valor: rot.entradas(posicoes.length) }]}
       >
@@ -135,6 +144,7 @@ const totais = [
           {posicoes.map((p) => (
             <Node
               id={p.id}
+              nivel={3}
               nome={`${t(p.cargo, idioma)} · ${p.organizacao}`}
               colunas={[{ classe: 'periodo', valor: periodo(p.periodo) }]}
             >
@@ -152,6 +162,7 @@ const totais = [
     mandatos.length > 0 && (
       <Node
         id="mandatos"
+        nivel={2}
         nome={rot.mandatos}
         colunas={[{ classe: 'nota', valor: rot.entradas(mandatos.length) }]}
       >
@@ -159,6 +170,7 @@ const totais = [
           {mandatos.map((m) => (
             <Node
               id={m.id}
+              nivel={3}
               nome={`${t(m.cargo, idioma)} · ${m.organizacao}`}
               colunas={[{ classe: 'periodo', valor: periodo(m.periodo) }]}
               folha={m.linhas.length === 0}
@@ -177,6 +189,7 @@ const totais = [
     formacao.length > 0 && (
       <Node
         id="formacao"
+        nivel={2}
         nome={rot.formacao}
         colunas={[{ classe: 'nota', valor: rot.entradas(formacao.length) }]}
       >
@@ -202,7 +215,7 @@ const totais = [
     )
   }
 
-  <Node id="contacto" nome={rot.contacto} aberto={true}>
+  <Node id="contacto" nivel={2} nome={rot.contacto} aberto={true}>
     <p class="no__texto no__texto--nota">{t(contacto.nota, idioma)}</p>
     <dl class="no__campos">
       {contacto.email && (
@@ -238,6 +251,7 @@ const totais = [
 
   <Node
     id="ficheiros"
+    nivel={2}
     nome={rot.ficheiros}
     colunas={[{ classe: 'nota', valor: rot.entradas(ficheiros.length) }]}
   >
@@ -249,7 +263,11 @@ const totais = [
             nome={f.nome}
             href={f.href}
             colunas={[{ classe: 'tam', valor: tamanho(f.bytes) }]}
-          />
+          >
+            <Fragment slot="resumo">
+              <span class="linha__desc">{t(f.descricao, idioma)}</span>
+            </Fragment>
+          </Node>
         ))
       }
     </ul>
@@ -260,7 +278,7 @@ const totais = [
     </p>
   </Node>
 
-  <Node id="colofao" nome={rot.colofao}>
+  <Node id="colofao" nivel={2} nome={rot.colofao}>
     <div class="no__texto">
       {colofao.map((l) => <p>{t(l, idioma)}</p>)}
     </div>

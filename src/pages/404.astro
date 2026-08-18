@@ -9,7 +9,7 @@ const titulo = `404 — ${cabecalho.nome}`
 const descricao = t(cabecalho.linhas[0]!, idioma)
 ---
 
-<Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/404/">
+<Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/404/" robots="noindex, follow">
   <main class="folha" id="conteudo">
     <header class="cabecalho cabecalho--simples">
       <div class="cabecalho__texto">
@@ -19,9 +19,9 @@ const descricao = t(cabecalho.linhas[0]!, idioma)
       </div>
     </header>
     <ul class="arvore" role="list">
-      <Node nome="arquivo/" href="/" colunas={[{ classe: 'nota', valor: 'a listagem completa' }]} />
+      <Node nome="salgado.zip" href="/" colunas={[{ classe: 'nota', valor: 'a página, com tudo' }]} />
       <Node nome="Fabio-Salgado-CV-PT.pdf" href="/docs/Fabio-Salgado-CV-PT.pdf" colunas={[{ classe: 'nota', valor: 'o percurso, em pdf' }]} />
-      <Node nome="salgado.zip" href="/salgado.zip" colunas={[{ classe: 'nota', valor: 'tudo, num arquivo' }]} />
+      <Node nome="salgado.zip (ficheiro)" href="/salgado.zip" colunas={[{ classe: 'nota', valor: 'o mesmo, para descarregar' }]} />
     </ul>
   </main>
 </Base>

@@ -19,14 +19,21 @@ interface Props {
   aberto?: boolean
   href?: string
   /**
+   * Nível de cabeçalho da linha. Um nó que abre uma secção é um cabeçalho:
+   * dá índice a quem navega por teclado, por leitor de ecrã ou por robô.
+   * O `<summary>` aceita conteúdo de cabeçalho misturado com conteúdo de frase.
+   */
+  nivel?: 2 | 3
+  /**
    * Linha sem corpo: nem `<details>` nem marcador. Um nó que abre para dentro
    * e não mostra nada é uma promessa falhada — a seta diz que há mais e não há.
    */
   folha?: boolean
 }
 
-const { id, nome, colunas = [], aberto = false, href, folha = false } = Astro.props
+const { id, nome, colunas = [], aberto = false, href, folha = false, nivel } = Astro.props
 const ehFicheiro = href !== undefined
+const Titulo = nivel === undefined ? 'span' : (`h${nivel}` as 'h2' | 'h3')
 ---
 
 <li class:list={['no', (ehFicheiro || folha) && 'no--ficheiro']}>
@@ -41,18 +48,21 @@ const ehFicheiro = href !== undefined
         ))}
       </span>
     ) : ehFicheiro ? (
-      <a class="linha" id={id} href={href}>
-        <span class="linha__nome">{nome}</span>
-        {colunas.map((c) => (
-          <span class={`linha__col linha__col--${c.classe}`} data-estado={c.dataEstado}>
-            {c.valor}
-          </span>
-        ))}
-      </a>
+      <>
+        <a class="linha" id={id} href={href}>
+          <span class="linha__nome">{nome}</span>
+          {colunas.map((c) => (
+            <span class={`linha__col linha__col--${c.classe}`} data-estado={c.dataEstado}>
+              {c.valor}
+            </span>
+          ))}
+        </a>
+        <slot name="resumo" />
+      </>
     ) : (
       <details id={id} open={aberto}>
         <summary>
-          <span class="linha">
+          <Titulo class="linha">
             <span class="linha__marca" aria-hidden="true" />
             <span class="linha__nome">{nome}</span>
             {colunas.map((c) => (
@@ -60,7 +70,7 @@ const ehFicheiro = href !== undefined
                 {c.valor}
               </span>
             ))}
-          </span>
+          </Titulo>
           <slot name="resumo" />
         </summary>
         <div class="no__corpo">

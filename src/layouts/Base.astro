@@ -1,9 +1,10 @@
 ---
 import '../styles/base.css'
 import '../styles/print.css'
-import { cabecalho, contacto, projetos, CANONICO } from '../data'
+import { cabecalho, contacto, projetos, posicoes, datas, CANONICO } from '../data'
 import type { Idioma } from '../data'
 import { t } from '../data/formato'
+import dimensoes from '../generated/og.json' with { type: 'json' }
 
 interface Props {
   idioma: Idioma
@@ -19,31 +20,89 @@ interface Props {
 const { idioma, titulo, descricao, caminho, classe = '', robots, alternos } = Astro.props
 const canonical = CANONICO + caminho
 
+const maiuscula = (frase: string) => frase[0]!.toUpperCase() + frase.slice(1)
+
+const og = dimensoes as { largura?: number; altura?: number }
+const lang = idioma === 'en' ? 'en' : 'pt-PT'
+const modificado = Object.values(datas).sort().at(-1)
+
+/** Perfis e sítios noutros domínios. O próprio não entra: já é o `url`. */
 const sameAs = [
   ...(contacto.linkedin ? [contacto.linkedin] : []),
-  ...projetos.filter((p) => p.url !== null).map((p) => p.url as string),
+  ...projetos.map((p) => p.url).filter((u): u is string => u !== null && u !== CANONICO),
 ]
 
+/** O cargo atual é o da posição sem fim: derivado, não escrito. */
+const atual = posicoes.find((p) => p.periodo.fim === null)
+
+const PESSOA = `${CANONICO}/#pessoa`
+const SITE = `${CANONICO}/#site`
+
+/**
+ * Um grafo, não um nó solto: quem lê à máquina — motor de busca, assistente,
+ * agregador — encontra a pessoa, o site, a página e o que foi feito, ligados
+ * por identificador. Os projetos privados entram sem endereço, como em todo o
+ * lado. Nada aqui é escrito à mão que não venha de src/data.
+ */
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: cabecalho.nome,
-  jobTitle: t(cabecalho.cargo, idioma),
-  url: CANONICO,
-  image: CANONICO + '/fabio-salgado.jpg',
-  address: { '@type': 'PostalAddress', addressRegion: contacto.regiao, addressCountry: 'PT' },
-  ...(contacto.email ? { email: `mailto:${contacto.email}` } : {}),
-  ...(sameAs.length ? { sameAs } : {}),
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': PESSOA,
+      name: cabecalho.nome,
+      jobTitle: t(cabecalho.cargo, idioma),
+      description: `${maiuscula(t(cabecalho.areas, idioma))}. ${t(cabecalho.linhas[0]!, idioma)}`,
+      url: CANONICO,
+      image: `${CANONICO}/fabio-salgado.jpg`,
+      address: { '@type': 'PostalAddress', addressRegion: contacto.regiao, addressCountry: 'PT' },
+      knowsLanguage: contacto.idiomas.map((i) => ({ '@type': 'Language', name: t(i.lingua, idioma) })),
+      hasOccupation: { '@type': 'Occupation', name: t(cabecalho.cargo, idioma) },
+      ...(atual ? { worksFor: { '@type': 'Organization', name: atual.organizacao } } : {}),
+      ...(contacto.email ? { email: `mailto:${contacto.email}` } : {}),
+      ...(sameAs.length ? { sameAs } : {}),
+    },
+    ...projetos.map((p) => ({
+      '@type': 'CreativeWork',
+      name: p.dominio,
+      description: t(p.linha, idioma),
+      creator: { '@id': PESSOA },
+      inLanguage: 'pt-PT',
+      ...(p.url ? { url: p.url } : {}),
+      ...(p.codigo ? { codeRepository: p.codigo } : {}),
+    })),
+    {
+      '@type': 'WebSite',
+      '@id': SITE,
+      url: CANONICO,
+      name: 'salgado.zip',
+      inLanguage: lang,
+      publisher: { '@id': PESSOA },
+    },
+    {
+      '@type': 'ProfilePage',
+      '@id': canonical,
+      url: canonical,
+      name: titulo,
+      description: descricao,
+      inLanguage: lang,
+      isPartOf: { '@id': SITE },
+      mainEntity: { '@id': PESSOA },
+      primaryImageOfPage: { '@type': 'ImageObject', url: `${CANONICO}/og.png` },
+      ...(modificado ? { dateModified: modificado } : {}),
+    },
+  ],
 }
 ---
 
 <!doctype html>
-<html lang={idioma === 'en' ? 'en' : 'pt-PT'}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titulo}</title>
     <meta name="description" content={descricao} />
+    <meta name="author" content={cabecalho.nome} />
     <link rel="canonical" href={canonical} />
     {robots && <meta name="robots" content={robots} />}
     {
@@ -63,7 +122,11 @@ const jsonLd = {
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descricao} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="salgado.zip" />
     <meta property="og:image" content={CANONICO + '/og.png'} />
+    <meta property="og:image:alt" content={`${cabecalho.nome} — ${t(cabecalho.areas, idioma)}`} />
+    {og.largura && <meta property="og:image:width" content={String(og.largura)} />}
+    {og.altura && <meta property="og:image:height" content={String(og.altura)} />}
     <meta property="og:locale" content={idioma === 'en' ? 'en_GB' : 'pt_PT'} />
     <meta name="twitter:card" content="summary_large_image" />
 

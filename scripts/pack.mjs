@@ -200,6 +200,22 @@ for (const d of definicoes) {
 mkdirSync(raiz + 'src/generated', { recursive: true })
 writeFileSync(raiz + 'src/generated/tamanhos.json', JSON.stringify(tamanhos, null, 2) + '\n')
 
+/* ── og.json ──────────────────────────────────────────────────────────────
+   As dimensões do cartão social, lidas do cabeçalho IHDR do próprio PNG. O
+   WhatsApp e o LinkedIn reservam o espaço da imagem antes de a descarregar
+   quando as recebem na meta — e continuam a ser números que ninguém escreve. */
+const og = {}
+try {
+  const png = readFileSync(pub + 'og.png')
+  if (png.subarray(12, 16).toString('latin1') === 'IHDR') {
+    og.largura = png.readUInt32BE(16)
+    og.altura = png.readUInt32BE(20)
+  }
+} catch {
+  /* cartão ainda não gerado: as meta de dimensão não saem, o resto sai */
+}
+writeFileSync(raiz + 'src/generated/og.json', JSON.stringify(og, null, 2) + '\n')
+
 console.log(`pack: resume.json + salgado.zip (${entradas.length - emFalta.length}/${entradas.length} entradas) · ${linhas} linhas em ${contaveis.length} ficheiros`)
 if (emFalta.length) {
   console.log(`      em falta, corre \`npm run artifacts\`: ${emFalta.join(', ')}`)
