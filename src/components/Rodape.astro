@@ -1,7 +1,7 @@
 ---
-import { datas, ficheiros } from '../data'
+import { datas, contacto, ficheiros } from '../data'
 import type { Idioma } from '../data'
-import { dataCurta, tamanho } from '../data/formato'
+import { dataCurta, coordenadas } from '../data/formato'
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
@@ -9,7 +9,23 @@ const en = idioma === 'en'
 
 const maisRecente = Object.values(datas).sort().at(-1)
 const quando = dataCurta(maisRecente, idioma)
-const zip = ficheiros.find((f) => f.id === 'salgado-zip')
+
+/**
+ * Os dois documentos, e não o arquivo inteiro: quem chega ao fim da página é
+ * quem quer levar alguma coisa, e o que se leva de um sítio destes é o CV. O
+ * .zip continua em `ficheiros/`, com o tamanho ao lado.
+ *
+ * Os dois saem sempre, seja qual for a língua da interface — cada um rotulado
+ * na sua, que é a maneira mais curta de dizer o que está lá dentro sem o
+ * traduzir. Quem lê inglês reconhece «CV in English» numa página portuguesa, e
+ * ao contrário também.
+ */
+const cvs = [
+  { id: 'cv-pt', rotulo: 'CV em português' },
+  { id: 'cv-en', rotulo: 'CV in English' },
+]
+  .map((d) => ({ ...d, href: ficheiros.find((f) => f.id === d.id)?.href ?? null }))
+  .filter((d): d is { id: string; rotulo: string; href: string } => d.href !== null)
 ---
 
 <footer class="rodape">
@@ -17,9 +33,16 @@ const zip = ficheiros.find((f) => f.id === 'salgado-zip')
     salgado.zip{quando ? ` · ${en ? 'updated' : 'atualizado'} ${quando}` : ''}
   </span>
   <span class="rodape__ecra">
-    <a href="/salgado.zip">{en ? 'download the archive' : 'descarregar o arquivo'}</a>
-    {zip?.bytes !== null && zip !== undefined ? ` (${tamanho(zip.bytes)})` : ''}
+    {cvs.map((c, i) => (
+      <>
+        {i > 0 && <span aria-hidden="true"> · </span>}
+        <a href={c.href}>{c.rotulo}</a>
+      </>
+    ))}
     <span aria-hidden="true"> · </span>
     {en ? 'no cookies, no tracking' : 'sem cookies, sem rastreio'}
   </span>
+  {contacto.lugares.length > 0 && (
+    <span class="rodape__lugares">{coordenadas(contacto.lugares)}</span>
+  )}
 </footer>

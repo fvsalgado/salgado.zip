@@ -1,4 +1,4 @@
-import type { Lang, Periodo, Idioma } from './index.ts'
+import type { Lang, Periodo, Idioma, Lugar } from './index.ts'
 
 export function t(v: Lang, idioma: Idioma): string {
   return idioma === 'en' ? v.en : v.pt
@@ -43,4 +43,16 @@ const ESTADOS: Record<string, Record<Idioma, string>> = {
 }
 export function estado(e: string, idioma: Idioma): string {
   return ESTADOS[e]?.[idioma] ?? e
+}
+
+/**
+ * Graus decimais com sinal, WGS 84 — a forma que qualquer mapa aceita colada
+ * na caixa de pesquisa, e a única que se lê igual nas duas línguas (em
+ * português o oeste é «O» e em inglês é «W»; um sinal menos não tem língua).
+ *
+ * Quatro casas chegam para acertar num bairro e não chegam para acertar numa
+ * porta. É a precisão que isto deve ter.
+ */
+export function coordenadas(lugares: readonly Lugar[]): string {
+  return lugares.map((l) => `${l.lat.toFixed(4)}, ${l.lon.toFixed(4)}`).join(' · ')
 }
