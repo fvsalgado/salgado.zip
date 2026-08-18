@@ -32,5 +32,4 @@
   height: 150px;
   border: 1px solid var(--rule);
   border-radius: 5px;
-  filter: grayscale(1) contrast(0.95);
 }

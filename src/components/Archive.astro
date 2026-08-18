@@ -1,6 +1,6 @@
 ---
 import Node from './Node.astro'
-import { projetos, posicoes, mandatos, formacao, contacto, ficheiros } from '../data'
+import { projetos, posicoes, mandatos, formacao, contacto, ficheiros, CANONICO } from '../data'
 import { colofao, codigoDoSite } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
@@ -55,9 +55,11 @@ const totais = [
           >
             <Fragment slot="resumo">
               <span class="linha__desc">{t(p.linha, idioma)}</span>
-              {(p.url !== null || p.codigo !== null) && (
+              {((p.url !== null && p.url !== CANONICO) || p.codigo !== null) && (
                 <span class="linha__ligacoes">
-                  {p.url !== null && <a href={p.url} rel="noopener">{en ? 'visit' : 'visitar'} ↗</a>}
+                  {p.url !== null && p.url !== CANONICO && (
+                    <a href={p.url} rel="noopener">{en ? 'visit' : 'visitar'} ↗</a>
+                  )}
                   {p.codigo !== null && (
                     <a href={p.codigo} rel="noopener">{en ? 'open source' : 'código aberto'} ↗</a>
                   )}
@@ -90,32 +92,30 @@ const totais = [
                   </dd>
                 </>
               )}
-              {p.url !== null ? (
+              {p.url !== null && p.url !== CANONICO && (
                 <>
                   <dt>{rot.endereco}</dt>
                   <dd>
                     <a href={p.url} rel="noopener">{p.dominio}</a>
                   </dd>
                 </>
-              ) : (
+              )}
+              {p.estado === 'privado' && (
                 <>
                   <dt>{rot.acesso}</dt>
                   <dd>{rot.privado}</dd>
                 </>
               )}
             </dl>
-            {p.shot !== null && p.url !== null && (
+            {p.shot !== null && (
               <figure class="shot">
-                <a href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
-                  <img
-                    src={`/shots/${p.shot}`}
-                    alt=""
-                    width="1440"
-                    height="900"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </a>
+                {p.url !== null && p.url !== CANONICO ? (
+                  <a href={p.url} rel="noopener" tabindex="-1" aria-hidden="true">
+                    <img src={`/shots/${p.shot}`} alt="" loading="lazy" decoding="async" />
+                  </a>
+                ) : (
+                  <img src={`/shots/${p.shot}`} alt="" loading="lazy" decoding="async" />
+                )}
               </figure>
             )}
           </Node>

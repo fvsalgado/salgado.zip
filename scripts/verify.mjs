@@ -288,9 +288,9 @@ function html(rota) {
       if (/\.(txt|json)$/.test(entrada.nome)) suspeito(z.ler(entrada.nome).toString('utf8'), `zip:${entrada.nome}`)
     }
   }
-  for (const p of privados) {
-    if (existsSync(pub + `shots/${p.id}.webp`)) problemas.push(`existe captura de ${p.dominio}`)
-  }
+  // Capturas de projetos privados são permitidas desde que mostrem dados de
+  // demonstração — decisão do Fábio a 18/08/2026. O que continua proibido é
+  // qualquer endereço que lhes aponte.
   decide(
     'projetos privados sem endereço nem captura em lado nenhum',
     problemas,
@@ -396,7 +396,10 @@ function html(rota) {
     // capturas são o conteúdo: menos do que isso é regressão.
     if (nome.includes('CV') && imagens > 2) problemas.push(`${nome} tem ${imagens} imagens — só o retrato devia lá estar`)
     if (nome.includes('CV') && imagens === 0) problemas.push(`${nome} devia levar o retrato e não leva imagem nenhuma`)
-    if (nome.includes('Projetos') && imagens < 4) problemas.push(`${nome} devia levar as quatro capturas e tem ${imagens} imagens`)
+    const esperadas = projetos.filter((x) => x.shot !== null).length
+    if (nome.includes('Projetos') && imagens < esperadas) {
+      problemas.push(`${nome} devia levar as ${esperadas} capturas e tem ${imagens} imagens`)
+    }
   }
   decide('PDFs legíveis, CV com retrato, projetos com capturas', problemas)
 }
