@@ -17,7 +17,7 @@ export const mandatos = parse(Mandato.array(), [
   },
   {
     id: 'assembleia-nazare',
-    cargo: { pt: 'Deputado Municipal', en: 'Municipal Assembly deputy' },
+    cargo: { pt: 'Deputado Municipal', en: 'Municipal Assembly Deputy' },
     organizacao: 'Assembleia Municipal da Nazaré',
     periodo: { inicio: '2007-10', fim: '2015-09' },
     linhas: [],

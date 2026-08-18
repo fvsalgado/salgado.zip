@@ -13,3 +13,7 @@ public/salgado.zip
 public/resume.json
 .verify/
 public/qr.svg
+
+# Fotogramas de ecrã dos projetos privados: entram no mosaico
+# (scripts/mosaico.mjs), não entram no repositório.
+private/

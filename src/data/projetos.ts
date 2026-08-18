@@ -45,15 +45,18 @@ export const projetos = parse(Projeto.array().min(1), [
     papel: { pt: 'fundador e criador · produto', en: 'founder and maker · product' },
     estado: 'ativo',
     periodo: { inicio: '2016-11', fim: null },
+    // A cobertura nacional — todos os distritos e regiões autónomas — é facto
+    // confirmado pelo Fábio (18/08/2026); a homepage não expõe um contador de
+    // distritos que se possa ler à máquina, ao contrário dos três números.
     linha: {
       pt:
         centena && cobertura
-          ? `A agenda cultural de Portugal num sítio só: mais de ${centena} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos.`
-          : 'A agenda cultural de Portugal num sítio só: teatros, salas de concerto, museus e cinemas.',
+          ? `A agenda cultural de Portugal num sítio só: mais de ${centena} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos — todos os distritos e regiões autónomas.`
+          : 'A agenda cultural de Portugal num sítio só, de todos os distritos e regiões autónomas: teatros, salas de concerto, museus e cinemas.',
       en:
         centena && cobertura
-          ? `Portugal's cultural agenda in one place: over ${centena.replace(/\u00a0|\s/g, ',')} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities.`
-          : "Portugal's cultural agenda in one place: theatres, concert halls, museums and cinemas.",
+          ? `Portugal's cultural agenda in one place: over ${centena.replace(/\u00a0|\s/g, ',')} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities — every district and autonomous region.`
+          : "Portugal's cultural agenda in one place, from every district and autonomous region: theatres, concert halls, museums and cinemas.",
     },
     detalhe: [
       {
@@ -203,13 +206,13 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2026-08', fim: null },
     linha: {
-      pt: 'Este site. Uma fonte de dados, várias saídas, e uma bateria de verificações antes de cada publicação. O código é público.',
-      en: 'This site. One data source, several outputs, and a battery of checks before every release. The code is public.',
+      pt: 'Sítio pessoal e arquivo de projetos: uma fonte de dados e várias saídas — página, PDF, resume.json e um zip —, com uma bateria de verificações antes de cada publicação.',
+      en: 'Personal site and project archive: one data source and several outputs — page, PDFs, resume.json and a zip — with a battery of checks before every release.',
     },
     detalhe: [
       {
-        pt: 'Construído a meias com o Claude. O colofão conta o resto.',
-        en: 'Built together with Claude. The colophon tells the rest.',
+        pt: 'Código aberto. Construído a meias com o Claude.',
+        en: 'Open source. Built together with Claude.',
       },
     ],
     stack: ['Astro', 'TypeScript', 'Claude Code'],

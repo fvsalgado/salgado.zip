@@ -8,7 +8,7 @@
  * numerado e pronto a imprimir.
  */
 import { cabecalho, projetos, posicoes, mandatos, formacao, contacto } from '../data'
-import { colofao } from '../data/textos.ts'
+import { colofaoDocumento, notaCertificados } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodoLongo, estado } from '../data/formato'
 
@@ -153,9 +153,7 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
           </div>
         ))}
         <p class="nota">
-          {en
-            ? 'Online courses, taken independently. Not degrees from these institutions.'
-            : 'Cursos online, feitos por conta própria. Não são graus destas instituições.'}
+          {t(notaCertificados, idioma)}
         </p>
       </section>
     )
@@ -172,7 +170,7 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
 
   <section data-seccao="colofao">
     <h2>{rot.colofao}</h2>
-    {colofao.map((l) => <p>{t(l, idioma)}</p>)}
+    {colofaoDocumento.map((l) => <p>{t(l, idioma)}</p>)}
   </section>
 
 </article>

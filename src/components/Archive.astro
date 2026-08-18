@@ -1,7 +1,7 @@
 ---
 import Node from './Node.astro'
 import { projetos, posicoes, mandatos, formacao, contacto, ficheiros, CANONICO } from '../data'
-import { colofao, codigoDoSite } from '../data/textos.ts'
+import { colofaoSite, codigoDoSite, notaCertificados } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
 
@@ -28,7 +28,9 @@ const totais = [
   `${projetos.length} ${en ? 'projects' : 'projetos'}`,
   `${posicoes.length} ${en ? 'positions' : 'cargos'}`,
   `${mandatos.length} ${en ? 'mandates' : 'mandatos'}`,
-  en ? `since ${anoInicio}` : `desde ${anoInicio}`,
+  // «desde 2007» a seguir a três contagens lê-se como data de nascimento. O que
+  // 2007 é: a entrada mais antiga da lista.
+  en ? `oldest from ${anoInicio}` : `o mais antigo é de ${anoInicio}`,
 ]
 ---
 
@@ -207,9 +209,7 @@ const totais = [
           ))}
         </ul>
         <p class="no__texto no__texto--nota">
-          {en
-            ? 'Online courses, taken independently. Not degrees from these institutions.'
-            : 'Cursos online, feitos por conta própria. Não são graus destas instituições.'}
+          {t(notaCertificados, idioma)}
         </p>
       </Node>
     )
@@ -280,7 +280,7 @@ const totais = [
 
   <Node id="colofao" nivel={2} nome={rot.colofao}>
     <div class="no__texto">
-      {colofao.map((l) => <p>{t(l, idioma)}</p>)}
+      {colofaoSite.map((l) => <p>{t(l, idioma)}</p>)}
     </div>
     <dl class="no__campos">
       <dt>{en ? 'source' : 'código'}</dt>

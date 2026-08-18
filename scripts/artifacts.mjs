@@ -209,12 +209,23 @@ if (semShots) {
    @page não existem em motores WebKit, e o modelo do rodapé é um documento à
    parte — sem acesso às fontes da página, e com corpo 0 por omissão, o que
    obriga a declarar o estilo à mão. */
-const rodape = `<div style="width:100%;margin:0 16mm;font:7pt Georgia,serif;color:#8c8577;display:flex;justify-content:space-between">
+/**
+ * Uma folha solta deste PDF tem de dizer sozinha de quem é, de onde veio,
+ * de quando é e que lugar ocupa. É isso, e nada mais, que o rodapé leva.
+ */
+const rodape = (idioma) => {
+  const data = new Intl.DateTimeFormat(idioma === 'en' ? 'en-GB' : 'pt-PT', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+  return `<div style="width:100%;margin:0 16mm;font:7pt Georgia,serif;color:#8c8577;display:flex;justify-content:space-between">
   <span>${cabecalho.nome} · ${CANONICO.replace('https://', '')}</span>
-  <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
+  <span>${data} · <span class="pageNumber"></span>/<span class="totalPages"></span></span>
 </div>`
+}
 
-async function pdf(nome, rota) {
+async function pdf(nome, rota, idioma) {
   const ctx = await browser.newContext({ colorScheme: 'light' })
   const p = await ctx.newPage()
   await p.goto(BASE + rota, { waitUntil: 'networkidle' })
@@ -244,15 +255,15 @@ async function pdf(nome, rota) {
     printBackground: false,
     displayHeaderFooter: true,
     headerTemplate: '<span></span>',
-    footerTemplate: rodape,
+    footerTemplate: rodape(idioma),
     margin: { top: '17mm', right: '16mm', bottom: '16mm', left: '16mm' },
   })
   await ctx.close()
   console.log(`· ${nome}`)
 }
 
-await pdf('Fabio-Salgado-CV-PT.pdf', '/cv/')
-await pdf('Fabio-Salgado-CV-EN.pdf', '/en/cv/')
+await pdf('Fabio-Salgado-CV-PT.pdf', '/cv/', 'pt')
+await pdf('Fabio-Salgado-CV-EN.pdf', '/en/cv/', 'en')
 
 await browser.close()
 if (servidor) servidor.kill()
