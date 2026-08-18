@@ -25,8 +25,8 @@ export const cabecalho = parse(Cabecalho, {
     {
       // «isto» e não «este site»: a mesma linha sai em página e em PDF, e quem
       // tem o papel na mão pode nem saber de onde o papel veio.
-      pt: 'Construo a meias com o Claude — isto incluído. Está tudo listado em baixo.',
-      en: 'I build together with Claude — this included. Everything is listed below.',
+      pt: 'Construo a meias com o Claude, entre outras ferramentas — isto incluído. Está tudo listado em baixo.',
+      en: 'I build together with Claude, among other tools — this included. Everything is listed below.',
     },
   ],
 }, 'cabecalho')

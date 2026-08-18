@@ -20,8 +20,8 @@ export const colofaoSite = parse(z.array(Lang).min(1), [
     en: `${num('en-GB')} lines of code across ${m} files. One data source; the page, the PDFs, the resume.json and the zip come out of it.`,
   },
   {
-    pt: 'Desenhado, escrito e construído a meias com o Claude — Claude Code, da Anthropic.',
-    en: 'Designed, written and built together with Claude — Claude Code, by Anthropic.',
+    pt: 'Desenhado, escrito e construído a meias com o Claude — Claude Code, da Anthropic —, entre outras ferramentas.',
+    en: 'Designed, written and built together with Claude — Claude Code, by Anthropic — among other tools.',
   },
 ], 'textos.colofaoSite')
 
@@ -33,15 +33,22 @@ export const colofaoSite = parse(z.array(Lang).min(1), [
  * proveniência ser explícita, e não uma remissão para «este site». A data de
  * geração vai no rodapé de todas as páginas, que é onde sobrevive a uma folha
  * solta.
+ *
+ * Fala do objeto e não do ecrã: composição, imposição, tiragem, e o caminho de
+ * volta ao original. Um colofão que se lesse igual num site não era um colofão.
  */
 export const colofaoDocumento = parse(z.array(Lang).min(1), [
   {
-    pt: 'Composto em IBM Plex Serif e IBM Plex Mono. Paginado em HTML e impresso em PDF.',
-    en: 'Set in IBM Plex Serif and IBM Plex Mono. Paginated in HTML and printed to PDF.',
+    pt: 'Composto em IBM Plex Serif e IBM Plex Mono, ambas de licença aberta. Paginado em HTML, imposto em A4 e impresso em PDF.',
+    en: 'Set in IBM Plex Serif and IBM Plex Mono, both openly licensed. Paginated in HTML, imposed on A4 and printed to PDF.',
   },
   {
-    pt: 'Gerado a partir de salgado.zip, onde esta informação é mantida e verificada antes de cada publicação. Escrito e construído a meias com o Claude — Claude Code, da Anthropic.',
-    en: 'Generated from salgado.zip, where this information is maintained and checked before every release. Written and built together with Claude — Claude Code, by Anthropic.',
+    pt: 'Tirado de salgado.zip, onde esta informação é mantida e verificada antes de cada publicação. A data desta tiragem está no rodapé de cada página, e o código QR da primeira leva ao original.',
+    en: 'Drawn from salgado.zip, where this information is maintained and checked before every release. The date of this impression is in the footer of every page, and the QR code on the first leads back to the original.',
+  },
+  {
+    pt: 'Escrito e construído a meias com o Claude — Claude Code, da Anthropic —, entre outras ferramentas.',
+    en: 'Written and built together with Claude — Claude Code, by Anthropic — among other tools.',
   },
 ], 'textos.colofaoDocumento')
 

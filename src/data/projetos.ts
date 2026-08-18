@@ -12,9 +12,13 @@ const n = numeros as {
   primeiraplateiaSalas?: number
   primeiraplateiaConcelhos?: number
 }
+/** Cada língua agrupa os milhares à sua maneira; nenhuma delas à mão. */
 const centena =
   n.primeiraplateiaEspetaculos && n.primeiraplateiaEspetaculos >= 100
-    ? (Math.floor(n.primeiraplateiaEspetaculos / 100) * 100).toLocaleString('pt-PT')
+    ? {
+        pt: (Math.floor(n.primeiraplateiaEspetaculos / 100) * 100).toLocaleString('pt-PT'),
+        en: (Math.floor(n.primeiraplateiaEspetaculos / 100) * 100).toLocaleString('en-GB'),
+      }
     : null
 const cobertura =
   n.primeiraplateiaSalas && n.primeiraplateiaConcelhos
@@ -34,6 +38,11 @@ const cobertura =
  * ele funda e gere o projeto além de construir o produto; nos outros três
  * construiu o produto e mais nada.
  *
+ * Cada entrada fecha com uma LINHA DE ASSINATURA: uma frase curta, na
+ * primeira pessoa, que diz o papel real em verbos conjugados e sem um único
+ * adjetivo. É o que separa uma ficha de produto de uma prova sobre a pessoa —
+ * a listagem descreve o que o produto faz, e a última linha diz quem o fez.
+ *
  * `periodo: null` significa ano por confirmar. Não se publica por adivinhação:
  * são datas do percurso de uma pessoa real, num site que vai para
  * candidaturas. A verificação 14 bloqueia enquanto houver algum por confirmar.
@@ -51,11 +60,11 @@ export const projetos = parse(Projeto.array().min(1), [
     linha: {
       pt:
         centena && cobertura
-          ? `A agenda cultural de Portugal num sítio só: mais de ${centena} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos — todos os distritos e regiões autónomas.`
+          ? `A agenda cultural de Portugal num sítio só: mais de ${centena.pt} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos — todos os distritos e regiões autónomas.`
           : 'A agenda cultural de Portugal num sítio só, de todos os distritos e regiões autónomas: teatros, salas de concerto, museus e cinemas.',
       en:
         centena && cobertura
-          ? `Portugal's cultural agenda in one place: over ${centena.replace(/\u00a0|\s/g, ',')} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities — every district and autonomous region.`
+          ? `Portugal's cultural agenda in one place: over ${centena.en} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities — every district and autonomous region.`
           : "Portugal's cultural agenda in one place, from every district and autonomous region: theatres, concert halls, museums and cinemas.",
     },
     detalhe: [
@@ -66,6 +75,10 @@ export const projetos = parse(Projeto.array().min(1), [
       {
         pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa. Renomeado e relançado em 2026, agora de âmbito nacional.',
         en: 'Born in 2016 as EmCena.pt, a Lisbon theatre listing. Renamed and relaunched in 2026, now nationwide.',
+      },
+      {
+        pt: 'Um pipeline próprio recolhe e normaliza o cartaz, sala a sala; a revisão final passa por mim.',
+        en: 'A pipeline of my own collects and normalises the listings, venue by venue; the final pass is mine.',
       },
       {
         pt: 'Fundei-o, giro-o e construí-o.',
@@ -92,6 +105,10 @@ export const projetos = parse(Projeto.array().min(1), [
         pt: 'O nome vem de Maria Severa Onofriana. Quatro formatos: Severa, Mariquinhas, Guitarradas e Vimioso.',
         en: 'Named after Maria Severa Onofriana. Four formats: Severa, Mariquinhas, Guitarradas and Vimioso.',
       },
+      {
+        pt: 'Representamos artistas e organizamos os concertos. Edição discográfica, pontualmente.',
+        en: 'We represent artists and put on the concerts. Record releases, now and then.',
+      },
       { pt: 'Curadoria artística de Marta Rosa.', en: 'Artistic curation by Marta Rosa.' },
       {
         pt: 'Cofundei-o e produzo-o; o site também é meu.',
@@ -112,7 +129,13 @@ export const projetos = parse(Projeto.array().min(1), [
       pt: 'O percurso de uma atleta de golfe, época a época: rankings WAGR e europeu, parcerias, imprensa e WITB.',
       en: "A golfer's path, season by season: WAGR and European rankings, partnerships, press and WITB.",
     },
-    detalhe: [],
+    detalhe: [
+      {
+        pt: 'Os rankings atualizam-se sozinhos: por API onde há API, por recolha da página onde não há.',
+        en: 'The rankings keep themselves up to date: by API where there is one, by scraping the page where there is not.',
+      },
+      { pt: 'Desenhei-o e construí-o.', en: 'I designed it and built it.' },
+    ],
     stack: [],
     url: 'https://franciscasalgado.golf',
     shot: 'franciscasalgado.webp',
@@ -129,6 +152,7 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       { pt: 'Voz, viola de fado e letra própria.', en: 'Voice, fado viola, and her own lyrics.' },
+      { pt: 'Desenhei-o e construí-o.', en: 'I designed it and built it.' },
     ],
     stack: [],
     url: 'https://martarosa.pt',
@@ -157,6 +181,7 @@ export const projetos = parse(Projeto.array().min(1), [
         pt: 'Aplicação privada, atrás de autenticação — sem ligação pública. As capturas mostram dados de demonstração.',
         en: 'Private application, behind authentication — no public link. The screenshots show demo data.',
       },
+      { pt: 'Desenhei-o e construí-o, módulo a módulo.', en: 'I designed it and built it, module by module.' },
     ],
     stack: ['Vite', 'Supabase (RLS)', 'PWA offline-first'],
     url: null,
@@ -173,7 +198,16 @@ export const projetos = parse(Projeto.array().min(1), [
       pt: 'Venda de experiências de fado em Lisboa: seis casas, escolhidas por quem vive em Alfama.',
       en: 'Selling fado experiences in Lisbon: six houses, chosen by someone who lives in Alfama.',
     },
-    detalhe: [],
+    detalhe: [
+      {
+        pt: 'A reserva passa pelas plataformas de experiências que vendem a cidade.',
+        en: 'Booking goes through the experience platforms that sell the city.',
+      },
+      {
+        pt: 'Escolhi as casas, desenhei o sítio e construí-o.',
+        en: 'I chose the houses, designed the site and built it.',
+      },
+    ],
     stack: [],
     url: 'https://fado.today',
     shot: 'fado-today.webp',
@@ -191,8 +225,16 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       {
+        pt: 'Nasceu dentro da produção de eventos, para resolver o balcão real.',
+        en: 'It was born inside event production, to solve a real bar counter.',
+      },
+      {
         pt: 'Aplicação privada, atrás de autenticação — sem ligação pública.',
         en: 'Private application, behind authentication — no public link.',
+      },
+      {
+        pt: 'Desenhei-o e construí-o; está em uso por uma organização comunitária.',
+        en: "I designed it and built it; it's in use by a community organisation.",
       },
     ],
     stack: ['React', 'Vite'],
@@ -211,8 +253,8 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       {
-        pt: 'Código aberto. Construído a meias com o Claude.',
-        en: 'Open source. Built together with Claude.',
+        pt: 'Código aberto. Construído a meias com o Claude, entre outras ferramentas.',
+        en: 'Open source. Built together with Claude, among other tools.',
       },
     ],
     stack: ['Astro', 'TypeScript', 'Claude Code'],
