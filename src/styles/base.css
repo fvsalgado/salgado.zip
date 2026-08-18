@@ -77,7 +77,7 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
 /* A cores: numa página que é toda tinta sobre papel, as fotografias são o
    único acento — e um retrato a cores reconhece-se. */
 .retrato {
-  width: clamp(4.5rem, 3.5rem + 4vw, 6.5rem);
+  width: clamp(5rem, 3.5rem + 5vw, 7.5rem);
   height: auto;
   border: 1px solid var(--rule);
   border-radius: 3px;
@@ -102,14 +102,28 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
   gap: 1.5rem;
 }
 .retrato--dossie { width: 6rem; flex: 0 0 auto; }
-.cabecalho__texto p, .cabecalho__texto h1, .cabecalho--dossie p {
+/* O nome é o título — grande, imediato, como no cartão social. A linha de
+   ofício vem por baixo em mono; a prosa vem depois, e é secundária. */
+.cabecalho__texto h1, .dossie h1 {
+  font-size: var(--t-titulo);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+.cabecalho__areas {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+  margin-top: 0.55rem;
+}
+.cabecalho__texto p:not(.cabecalho__areas), .cabecalho--dossie p {
   font-size: clamp(1.02rem, 0.95rem + 0.45vw, 1.2rem);
   line-height: 1.5;
   text-wrap: pretty;
 }
-.cabecalho__texto h1 { font-weight: 600; }
-.cabecalho__texto h1 + p, .cabecalho__texto p + p, .cabecalho--dossie p + p { margin-top: 0.5rem; }
-.cabecalho__texto p:first-child, .cabecalho--dossie p:first-child { font-weight: 600; }
+.cabecalho__areas + p { margin-top: 1.15rem; }
+.cabecalho__texto p + p, .cabecalho--dossie p + p { margin-top: 0.5rem; }
 .cabecalho__texto p:last-child, .cabecalho--dossie p:last-child { color: var(--ink-soft); }
 
 .controlos {
@@ -216,7 +230,9 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
     padding-top: 0.55rem;
     padding-bottom: 0.6rem;
   }
-  .controlos button { padding: 0.5rem 0.6rem; }
+  .controlos button { padding: 0.5rem 0.5rem; }
+  .controlos { gap: 0.25rem; }
+  .barra { gap: 0.5rem 1rem; }
   .linha__marca { top: 0.95em; }
   .linha__nome { flex: 1 0 100%; }
   .linha__col { text-align: left; min-width: 0; white-space: normal; }
@@ -264,12 +280,6 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
 }
 
 /* ── Dossiê ──────────────────────────────────────────────────────────────── */
-.dossie h1 {
-  font-size: var(--t-titulo);
-  line-height: 1.15;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
 .dossie h2 {
   font-family: var(--mono);
   font-size: var(--t-meta);
@@ -369,3 +379,9 @@ summary { padding-bottom: 0.35rem; }
 
 .marca a { color: var(--ink-soft); text-decoration-color: var(--rule-forte); }
 .marca a:hover { color: var(--accent); }
+
+/* Em ecrã estreito o rótulo encurta para a barra caber numa linha. O nome
+   completo fica no aria-label, portanto quem ouve não perde nada. */
+@media (max-width: 46rem) {
+  .so-largo { display: none; }
+}

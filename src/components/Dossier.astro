@@ -22,6 +22,7 @@ const rot = en
   <header class="dossie__cabeca">
     <div>
       <h1>{cabecalho.nome}</h1>
+      <p class="cabecalho__areas">{t(cabecalho.areas, idioma)}</p>
       <div class="cabecalho cabecalho--dossie">
         {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
       </div>

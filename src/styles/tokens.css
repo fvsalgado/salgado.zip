@@ -30,7 +30,7 @@
   --t-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
   --t-mono: clamp(0.82rem, 0.78rem + 0.2vw, 0.9rem);
   --t-meta: clamp(0.7rem, 0.68rem + 0.14vw, 0.775rem);
-  --t-titulo: clamp(1.3rem, 1.1rem + 1vw, 1.9rem);
+  --t-titulo: clamp(1.95rem, 1.3rem + 2.6vw, 3rem);
 
   --larg: 54rem;
   --esp: clamp(1rem, 0.6rem + 2vw, 2.5rem);

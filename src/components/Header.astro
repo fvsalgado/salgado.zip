@@ -5,7 +5,6 @@ import { t } from '../data/formato'
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
-const [primeira, ...resto] = cabecalho.linhas
 ---
 
 <header class="cabecalho">
@@ -18,7 +17,8 @@ const [primeira, ...resto] = cabecalho.linhas
     decoding="async"
   />
   <div class="cabecalho__texto">
-    <h1>{cabecalho.nome}. {t(primeira!, idioma)}</h1>
-    {resto.map((l) => <p>{t(l, idioma)}</p>)}
+    <h1>{cabecalho.nome}</h1>
+    <p class="cabecalho__areas">{t(cabecalho.areas, idioma)}</p>
+    {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
   </div>
 </header>

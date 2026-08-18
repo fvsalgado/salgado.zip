@@ -11,7 +11,7 @@ import { t } from '../data/formato'
 
 const idioma = 'pt' as const
 const titulo = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}`
-const descricao = `${cabecalho.nome}. ${t(cabecalho.linhas[0]!, idioma)}`
+const descricao = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}. ${t(cabecalho.linhas[0]!, idioma)}`
 ---
 
 <Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/cv/" classe="dossie" robots="noindex, nofollow">
