@@ -38,6 +38,11 @@ const cobertura =
  * ele funda e gere o projeto além de construir o produto; nos outros três
  * construiu o produto e mais nada.
  *
+ * Cada entrada que tem um motivo diz o motivo, na primeira pessoa. É a parte
+ * que faltava: a listagem provava competência à exaustão e não provava
+ * apetite, e ninguém funda nada sem um. Os motivos são do Fábio, ditos por
+ * ele; onde não houver motivo confirmado, não se inventa nenhum.
+ *
  * Cada entrada fecha com uma LINHA DE ASSINATURA: uma frase curta, na
  * primeira pessoa, que diz o papel real em verbos conjugados e sem um único
  * adjetivo. É o que separa uma ficha de produto de uma prova sobre a pessoa —
@@ -68,6 +73,10 @@ export const projetos = parse(Projeto.array().min(1), [
           : "Portugal's cultural agenda in one place, from every district and autonomous region: theatres, concert halls, museums and cinemas.",
     },
     detalhe: [
+      {
+        pt: 'Fi-lo porque gosto de teatro e não conseguia saber o que estava em cena: a agenda nacional vive espalhada pelo sítio de cada estrutura e de cada sala.',
+        en: "I made it because I love theatre and could never find out what was on: the national listings live scattered across each company's and each venue's own site.",
+      },
       {
         pt: 'Filtros por dia, por entrada livre e por acessibilidade. Seguir artistas e salas. Newsletter semanal.',
         en: 'Filter by day, by free admission and by accessibility. Follow artists and venues. Weekly newsletter.',
@@ -109,11 +118,11 @@ export const projetos = parse(Projeto.array().min(1), [
         pt: 'Representamos artistas e organizamos os concertos. Edição discográfica, pontualmente.',
         en: 'We represent artists and put on the concerts. Record releases, now and then.',
       },
-      { pt: 'Curadoria artística de Marta Rosa.', en: 'Artistic curation by Marta Rosa.' },
       {
-        pt: 'Cofundei-o e produzo-o; o site também é meu.',
-        en: 'I co-founded it and I produce it; the site is mine too.',
+        pt: 'A curadoria artística é da Marta Rosa, minha companheira. Fundámo-lo os dois.',
+        en: 'Artistic curation is by Marta Rosa, my partner. We founded it together.',
       },
+      { pt: 'Produzo-o, e o site também é meu.', en: 'I produce it, and the site is mine too.' },
     ],
     stack: [],
     url: 'https://onofriana.pt',
@@ -130,6 +139,7 @@ export const projetos = parse(Projeto.array().min(1), [
       en: "A golfer's path, season by season: WAGR and European rankings, partnerships, press and WITB.",
     },
     detalhe: [
+      { pt: 'A Francisca é minha sobrinha.', en: 'Francisca is my niece.' },
       {
         pt: 'Os rankings atualizam-se sozinhos: por API onde há API, por recolha da página onde não há.',
         en: 'The rankings keep themselves up to date: by API where there is one, by scraping the page where there is not.',
@@ -152,7 +162,14 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       { pt: 'Voz, viola de fado e letra própria.', en: 'Voice, fado viola, and her own lyrics.' },
-      { pt: 'Desenhei-o e construí-o.', en: 'I designed it and built it.' },
+      {
+        pt: 'A Marta é a minha companheira, e é com ela que produzo fado.',
+        en: "Marta is my partner, and she's who I produce fado with.",
+      },
+      {
+        pt: 'Desenhei-o e construí-o; as canções são dela.',
+        en: 'I designed it and built it; the songs are hers.',
+      },
     ],
     stack: [],
     url: 'https://martarosa.pt',
@@ -170,12 +187,20 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       {
+        pt: 'Fi-lo por autonomia: a obra, a manutenção dos equipamentos, as vacinas dos animais e a domótica no mesmo sítio — e no telemóvel. Cada módulo funciona como uma aplicação; estão todos ligados.',
+        en: 'I made it for autonomy: the building work, equipment upkeep, the animals\u2019 vaccines and the home automation in one place — and on the phone. Each module works like an app; they are all connected.',
+      },
+      {
         pt: 'Módulo de obra: capítulos por fase, orçamento contra pago, registo de despesa e fichas por divisão.',
         en: 'Construction module: chapters by phase, budget versus paid, expense log and per-room sheets.',
       },
       {
-        pt: 'Liga-se ao exterior por API: meteorologia, risco de incêndio, automações e alertas.',
-        en: 'It reaches outside through APIs: weather, wildfire risk, automations and alerts.',
+        pt: 'CRM integrado para gerir uma microempresa, com gerador de propostas e orçamentos.',
+        en: 'Built-in CRM for running a micro-business, with a proposal and quote generator.',
+      },
+      {
+        pt: 'Liga-se ao exterior por API: meteorologia, transportes, rádio, risco de incêndio, alertas de calor, automações e domótica.',
+        en: 'It reaches outside through APIs: weather, transport, radio, wildfire risk, heat alerts, automations and home control.',
       },
       {
         pt: 'Aplicação privada, atrás de autenticação — sem ligação pública. As capturas mostram dados de demonstração.',
@@ -225,16 +250,16 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       {
-        pt: 'Nasceu dentro da produção de eventos, para resolver o balcão real.',
-        en: 'It was born inside event production, to solve a real bar counter.',
+        pt: 'Nasceu de uma necessidade real: uma organização comunitária precisava de controlar a faturação por dentro. Está em uso, e fica disponível para outras.',
+        en: 'It came out of a real need: a community organisation had to keep its own billing under control. It is in use, and it is available to others.',
       },
       {
         pt: 'Aplicação privada, atrás de autenticação — sem ligação pública.',
         en: 'Private application, behind authentication — no public link.',
       },
       {
-        pt: 'Desenhei-o e construí-o; está em uso por uma organização comunitária.',
-        en: "I designed it and built it; it's in use by a community organisation.",
+        pt: 'Desenhei-o e construí-o. Já estive do outro lado deste balcão.',
+        en: 'I designed it and built it. I have stood on the other side of this counter.',
       },
     ],
     stack: ['React', 'Vite'],
@@ -253,8 +278,8 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       {
-        pt: 'Código aberto. Construído a meias com o Claude, entre outras ferramentas.',
-        en: 'Open source. Built together with Claude, among other tools.',
+        pt: 'Código aberto. Escrevi-o e construí-o a meias com o Claude, entre outras ferramentas.',
+        en: 'Open source. I wrote it and built it together with Claude, among other tools.',
       },
     ],
     stack: ['Astro', 'TypeScript', 'Claude Code'],
