@@ -7,10 +7,18 @@ import numeros from '../generated/numeros.json' with { type: 'json' }
  * arredondado à centena: «mais de 1 500» continua verdadeiro enquanto o
  * catálogo cresce, e nunca finge precisão que já não tem.
  */
-const espetaculos = (numeros as { primeiraplateiaEspetaculos?: number }).primeiraplateiaEspetaculos
+const n = numeros as {
+  primeiraplateiaEspetaculos?: number
+  primeiraplateiaSalas?: number
+  primeiraplateiaConcelhos?: number
+}
 const centena =
-  espetaculos && espetaculos >= 100
-    ? (Math.floor(espetaculos / 100) * 100).toLocaleString('pt-PT')
+  n.primeiraplateiaEspetaculos && n.primeiraplateiaEspetaculos >= 100
+    ? (Math.floor(n.primeiraplateiaEspetaculos / 100) * 100).toLocaleString('pt-PT')
+    : null
+const cobertura =
+  n.primeiraplateiaSalas && n.primeiraplateiaConcelhos
+    ? { salas: n.primeiraplateiaSalas, concelhos: n.primeiraplateiaConcelhos }
     : null
 
 /**
@@ -38,12 +46,14 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2016-11', fim: null },
     linha: {
-      pt: centena
-        ? `A agenda cultural de Portugal num sítio só: mais de ${centena} espetáculos em cartaz, de teatros, salas de concerto, museus e cinemas.`
-        : 'A agenda cultural de Portugal num sítio só: teatros, salas de concerto, museus e cinemas.',
-      en: centena
-        ? `Portugal's cultural agenda in one place: over ${centena.replace(/\u00a0|\s/g, ',')} events on show, from theatres, concert halls, museums and cinemas.`
-        : "Portugal's cultural agenda in one place: theatres, concert halls, museums and cinemas.",
+      pt:
+        centena && cobertura
+          ? `A agenda cultural de Portugal num sítio só: mais de ${centena} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos.`
+          : 'A agenda cultural de Portugal num sítio só: teatros, salas de concerto, museus e cinemas.',
+      en:
+        centena && cobertura
+          ? `Portugal's cultural agenda in one place: over ${centena.replace(/\u00a0|\s/g, ',')} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities.`
+          : "Portugal's cultural agenda in one place: theatres, concert halls, museums and cinemas.",
     },
     detalhe: [
       {
@@ -141,12 +151,74 @@ export const projetos = parse(Projeto.array().min(1), [
         en: 'It reaches outside through APIs: weather, wildfire risk, automations and alerts.',
       },
       {
-        pt: 'Aplicação privada, atrás de autenticação. Sem ligação e sem captura: um ecrã de acesso não mostra nada e os registos reais não se mostram.',
-        en: 'Private application, behind authentication. No link and no screenshot: a login screen shows nothing, and real records are not shown.',
+        pt: 'Aplicação privada, atrás de autenticação — sem ligação pública. As capturas mostram dados de demonstração.',
+        en: 'Private application, behind authentication — no public link. The screenshots show demo data.',
       },
     ],
     stack: ['Vite', 'Supabase (RLS)', 'PWA offline-first'],
     url: null,
+    shot: 'travertina.webp',
+  },
+  {
+    id: 'fado-today',
+    dominio: 'fado.today',
+    papel: { pt: 'autor', en: 'author' },
+    estado: 'ativo',
+    // Data de registo do domínio, via RDAP. Derivada, não inventada.
+    periodo: { inicio: '2026-05', fim: null },
+    linha: {
+      pt: 'O fado em Lisboa, escolhido por um local: seis recomendações honestas para uma noite de fado, escritas de Alfama.',
+      en: 'Fado in Lisbon, chosen by a local: six honest recommendations for a fado night, written from Alfama.',
+    },
+    detalhe: [],
+    stack: [],
+    url: 'https://fado.today',
+    shot: 'fado-today.webp',
+  },
+  {
+    id: 'pospopular',
+    dominio: 'pospopular',
+    papel: { pt: 'autor do produto', en: 'product author' },
+    estado: 'privado',
+    // Data de criação do projeto na Vercel. Derivada, não inventada.
+    periodo: { inicio: '2026-04', fim: null },
+    linha: {
+      pt: 'Ponto de venda multi-tenant para eventos e angariação de fundos: comandas, mesas, cartão de consumo e talões de cozinha.',
+      en: 'Multi-tenant point of sale for events and fundraising: order slips, tables, consumption cards and kitchen tickets.',
+    },
+    detalhe: [
+      {
+        pt: 'Feito para o balcão de um arraial: rápido, offline quando é preciso, e com contas certas no fim da noite.',
+        en: 'Built for a street-party counter: fast, offline when needed, and with the books balanced at the end of the night.',
+      },
+      {
+        pt: 'Aplicação privada, atrás de autenticação — sem ligação pública.',
+        en: 'Private application, behind authentication — no public link.',
+      },
+    ],
+    stack: ['React', 'Vite'],
+    url: null,
+    shot: null,
+  },
+  {
+    id: 'salgado-zip',
+    dominio: 'salgado.zip',
+    papel: { pt: 'autor', en: 'author' },
+    estado: 'ativo',
+    periodo: { inicio: '2026-08', fim: null },
+    linha: {
+      pt: 'Este site. Uma fonte de dados, várias saídas, e uma bateria de verificações antes de cada publicação. O código é público.',
+      en: 'This site. One data source, several outputs, and a battery of checks before every release. The code is public.',
+    },
+    detalhe: [
+      {
+        pt: 'Construído a meias com o Claude. O colofão conta o resto.',
+        en: 'Built together with Claude. The colophon tells the rest.',
+      },
+    ],
+    stack: ['Astro', 'TypeScript', 'Claude Code'],
+    url: 'https://salgado.zip',
+    codigo: 'https://github.com/fvsalgado/salgado.zip',
     shot: null,
   },
 ], 'projetos')

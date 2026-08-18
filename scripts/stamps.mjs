@@ -49,14 +49,19 @@ try {
 try {
   const r = await fetch('https://primeiraplateia.pt', { redirect: 'follow' })
   const html = await r.text()
-  const m = html.match(/>([\d\s.,]{2,9})<\/span>\s*(?:<[^>]+>)*\s*espet[áa]culos/i)
-  if (m) {
+  const ler = (rotulo) => {
+    const m = html.match(new RegExp('>([\\d\\s.,]{1,9})</span>\\s*(?:<[^>]+>)*\\s*' + rotulo, 'i'))
+    if (!m) return null
     const n = parseInt(m[1].replace(/[^\d]/g, ''), 10)
-    if (Number.isFinite(n) && n > 0) {
-      numeros.primeiraplateiaEspetaculos = n
-      numeros.lidoEm = stamps[alvos[0]] ?? null
-    }
+    return Number.isFinite(n) && n > 0 ? n : null
   }
+  const esp = ler('espet[áa]culos')
+  const salas = ler('salas')
+  const concelhos = ler('concelhos')
+  if (esp) numeros.primeiraplateiaEspetaculos = esp
+  if (salas) numeros.primeiraplateiaSalas = salas
+  if (concelhos) numeros.primeiraplateiaConcelhos = concelhos
+  if (esp || salas || concelhos) numeros.lidoEm = stamps[alvos[0]] ?? null
 } catch {}
 writeFileSync(numerosPath, JSON.stringify(numeros, null, 2) + '\n')
 console.log(`numeros: espetáculos = ${numeros.primeiraplateiaEspetaculos ?? '—'}`)

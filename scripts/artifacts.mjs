@@ -107,7 +107,11 @@ async function paraWebp(pngBuffer, largura, altura) {
    Quatro. O Travertina não entra, e a decisão não se revisita por
    conveniência: está atrás de autenticação. Uma captura só podia mostrar um
    ecrã de acesso — inútil — ou registos reais — inaceitável. */
+// O que se CAPTURA são os sites públicos; o que se EMBEBE no PDF são todas
+// as capturas que existem — incluindo as de projetos privados, compostas a
+// partir de prints com dados de demonstração.
 const comCaptura = projetos.filter((p) => p.shot !== null && p.url !== null && (so === null || p.id === so))
+const comShot = projetos.filter((p) => p.shot !== null)
 
 if (semShots) {
   console.log('· capturas: saltadas (--sem-shots)')
@@ -261,7 +265,7 @@ async function pdf(nome, esconder, { comShots = false } = {}) {
   console.log(`· ${nome}`)
 }
 
-const shotsDisponiveis = comCaptura.map((p) => [p.id, `${BASE}/shots/${p.shot}`])
+const shotsDisponiveis = comShot.map((p) => [p.id, `${BASE}/shots/${p.shot}`])
 
 await pdf('Fabio-Salgado-CV-PT.pdf', ['.vista', '.controlos', '.rodape'])
 // O ficheiro de projetos leva projetos e contacto; percurso e formação ficam

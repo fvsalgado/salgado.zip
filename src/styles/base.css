@@ -74,17 +74,14 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
 }
 .cabecalho__texto { max-width: 34rem; }
 
-/* O retrato segue a regra das capturas: cinzento em repouso, cor ao passar. */
+/* A cores: numa página que é toda tinta sobre papel, as fotografias são o
+   único acento — e um retrato a cores reconhece-se. */
 .retrato {
   width: clamp(4.5rem, 3.5rem + 4vw, 6.5rem);
   height: auto;
   border: 1px solid var(--rule);
   border-radius: 3px;
-  filter: grayscale(1) contrast(0.95);
-  opacity: 0.85;
-  transition: filter var(--transicao), opacity var(--transicao);
 }
-.retrato:hover { filter: none; opacity: 1; }
 
 @media (max-width: 46rem) {
   /* Em ecrã estreito o retrato flutua à direita do texto: aproveita o espaço
@@ -264,11 +261,7 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
   height: auto;
   border: 1px solid var(--rule);
   border-radius: 3px;
-  filter: grayscale(1) contrast(0.95);
-  opacity: 0.68;
-  transition: filter var(--transicao), opacity var(--transicao);
 }
-.shot a:hover img, .shot a:focus-visible img { filter: none; opacity: 1; }
 
 /* ── Dossiê ──────────────────────────────────────────────────────────────── */
 .dossie h1 {
