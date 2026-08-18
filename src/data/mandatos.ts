@@ -11,6 +11,27 @@ import { Mandato, parse } from './schema.ts'
  * corta para os dois lados. Estes dois entram porque mostram experiência do
  * lado de quem decide, que é o que o cargo pede.
  */
+/**
+ * Nascimento, com a granularidade mínima que serve o cálculo: ano e mês, a
+ * mesma de todos os períodos deste sítio.
+ *
+ * O dia não acrescenta nada ao que se publica — a idade sai igual sem ele — e
+ * acrescenta bastante a quem queira passar por outra pessoa: nome completo mais
+ * data de nascimento exata é o par que abre contas. Guarda-se o mínimo,
+ * publica-se o derivado, e a verificação 16 confirma que nem esta linha nem o
+ * ano em bruto chegam a sair para lado nenhum.
+ */
+const NASCIMENTO = '1986-04'
+
+/** Anos completos à data indicada. */
+function idadeEm(iso: string): number {
+  const [anoN, mesN] = NASCIMENTO.split('-').map(Number) as [number, number]
+  const [ano, mes] = iso.split('-').map(Number) as [number, number]
+  return ano - anoN - (mes < mesN ? 1 : 0)
+}
+
+const NAZARE = { inicio: '2007-10', fim: '2015-09' }
+
 export const mandatos = parse(Mandato.array(), [
   {
     id: 'santa-maria-maior',
@@ -28,13 +49,21 @@ export const mandatos = parse(Mandato.array(), [
     id: 'assembleia-nazare',
     cargo: { pt: 'Deputado Municipal', en: 'Municipal Assembly Deputy' },
     organizacao: 'Assembleia Municipal da Nazaré',
-    periodo: { inicio: '2007-10', fim: '2015-09' },
+    periodo: NAZARE,
     linhas: [
-      // A idade é derivada do ano de nascimento, confirmado pelo Fábio; a data
-      // completa fica de fora, que é dado de identidade e não de percurso.
+      /**
+       * Só a idade, e «tomou posse» em vez de «eleito».
+       *
+       * As autárquicas foram em 2005, 2009 e 2013: outubro de 2007 não é
+       * eleição nenhuma, e setembro de 2015 também não. O período confirmado
+       * — 2007-10 a 2015-09 — começa e acaba a meio de mandatos e sobrepõe-se
+       * a três, não a dois. Dizer «eleito» ou contar mandatos era acrescentar
+       * duas afirmações por cima de uma data, e ambas convidavam à
+       * verificação que falha. A idade é aritmética e aguenta-se sozinha.
+       */
       {
-        pt: 'Eleito aos 21 anos, para dois mandatos consecutivos.',
-        en: 'Elected at 21, for two consecutive terms.',
+        pt: `Tomou posse aos ${idadeEm(NAZARE.inicio)} anos.`,
+        en: `Took office at ${idadeEm(NAZARE.inicio)}.`,
       },
     ],
   },

@@ -74,7 +74,7 @@ export const projetos = parse(Projeto.array().min(1), [
       },
       {
         pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa. Renomeado e relançado em 2026, agora de âmbito nacional.',
-        en: 'Born in 2016 as EmCena.pt, a Lisbon theatre listing. Renamed and relaunched in 2026, now nationwide.',
+        en: 'Born in 2016 as EmCena.pt, a listings site for Lisbon theatre. Renamed and relaunched in 2026, now nationwide.',
       },
       {
         pt: 'Um pipeline próprio recolhe e normaliza o cartaz, sala a sala; a revisão final passa por mim.',

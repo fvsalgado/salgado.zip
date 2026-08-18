@@ -515,6 +515,48 @@ function html(rota) {
   decide('conteúdo confirmado (percurso e contacto)', problemas)
 }
 
+/* ══ 16. A data de nascimento não sai da fonte ══════════════════════════
+   O src/data/mandatos.ts guarda o nascimento para derivar a idade da primeira
+   eleição. O que se publica é a idade; a data em bruto fica onde está. Nome
+   completo mais data de nascimento é o par que abre contas em nome de outra
+   pessoa, e um arquivo público não tem de o oferecer.
+
+   A verificação lê o valor da própria fonte — não o repete à mão — e procura-o
+   em tudo o que é servido: páginas, resume.json e o conteúdo do .zip. */
+{
+  const problemas = []
+  const fonte = readFileSync(raiz + 'src/data/mandatos.ts', 'utf8')
+  const nascimento = fonte.match(/const NASCIMENTO = '([\d-]+)'/)?.[1] ?? null
+  if (nascimento === null) {
+    problemas.push('não encontrei NASCIMENTO em src/data/mandatos.ts — a verificação ficou cega')
+  } else {
+    const agulhas = [nascimento, nascimento.replace('-', '/'), nascimento.slice(0, 4)]
+    const saidas = []
+    const varrer = (dir) => {
+      for (const e of readdirSync(dir, { withFileTypes: true })) {
+        const c = dir + e.name
+        if (e.isDirectory()) varrer(c + '/')
+        else if (/\.(html|json|txt|xml)$/.test(c)) saidas.push([c.slice(dist.length), readFileSync(c, 'utf8')])
+      }
+    }
+    varrer(dist)
+    try {
+      const z = lerZip(readFileSync(pub + 'salgado.zip'))
+      for (const e of z.entradas) {
+        if (/\.(json|txt)$/.test(e.nome)) saidas.push([`salgado.zip/${e.nome}`, z.ler(e.nome).toString('utf8')])
+      }
+    } catch {
+      /* a verificação 12 é que responde pelo .zip */
+    }
+    for (const [nome, texto] of saidas) {
+      for (const agulha of agulhas) {
+        if (texto.includes(agulha)) problemas.push(`${nome} contém «${agulha}»`)
+      }
+    }
+  }
+  decide('a data de nascimento fica na fonte e não é publicada', problemas)
+}
+
 await browser.close()
 if (servidor) servidor.kill()
 
