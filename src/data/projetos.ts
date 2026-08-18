@@ -45,15 +45,18 @@ export const projetos = parse(Projeto.array().min(1), [
     papel: { pt: 'fundador e criador · produto', en: 'founder and maker · product' },
     estado: 'ativo',
     periodo: { inicio: '2016-11', fim: null },
+    // A cobertura nacional — todos os distritos e regiões autónomas — é facto
+    // confirmado pelo Fábio (18/08/2026); a homepage não expõe um contador de
+    // distritos que se possa ler à máquina, ao contrário dos três números.
     linha: {
       pt:
         centena && cobertura
-          ? `A agenda cultural de Portugal num sítio só: mais de ${centena} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos.`
-          : 'A agenda cultural de Portugal num sítio só: teatros, salas de concerto, museus e cinemas.',
+          ? `A agenda cultural de Portugal num sítio só: mais de ${centena} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos — todos os distritos e regiões autónomas.`
+          : 'A agenda cultural de Portugal num sítio só, de todos os distritos e regiões autónomas: teatros, salas de concerto, museus e cinemas.',
       en:
         centena && cobertura
-          ? `Portugal's cultural agenda in one place: over ${centena.replace(/\u00a0|\s/g, ',')} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities.`
-          : "Portugal's cultural agenda in one place: theatres, concert halls, museums and cinemas.",
+          ? `Portugal's cultural agenda in one place: over ${centena.replace(/\u00a0|\s/g, ',')} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities — every district and autonomous region.`
+          : "Portugal's cultural agenda in one place, from every district and autonomous region: theatres, concert halls, museums and cinemas.",
     },
     detalhe: [
       {
