@@ -1,5 +1,9 @@
 import { z } from 'zod'
 import { Lang, parse } from './schema.ts'
+import linhas from '../generated/linhas.json' with { type: 'json' }
+
+const n = (linhas as { total: number }).total.toLocaleString('pt-PT')
+const m = (linhas as { ficheiros: number }).ficheiros
 
 /**
  * O colofão é a prova do método: como este site é feito. É aqui que o Claude
@@ -13,6 +17,10 @@ export const colofao = parse(z.array(Lang).min(1), [
   {
     pt: 'Uma fonte de dados, várias saídas: esta página, o CV e o portefólio em PDF, o resume.json e o próprio salgado.zip.',
     en: 'One data source, several outputs: this page, the CV and portfolio PDFs, the resume.json and salgado.zip itself.',
+  },
+  {
+    pt: `Ao todo, ${n} linhas de código em ${m} ficheiros — contadas antes de cada publicação, como tudo o resto aqui.`,
+    en: `In all, ${n.replace(/\u00a0|\s/g, ',')} lines of code across ${m} files — counted before every release, like everything else here.`,
   },
   {
     pt: 'Uma bateria de verificações corre antes de cada publicação: contraste, ligações, navegação sem JavaScript, fugas de conteúdo privado.',
