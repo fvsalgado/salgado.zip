@@ -41,7 +41,9 @@ const cobertura =
  * Cada entrada que tem um motivo diz o motivo, na primeira pessoa. É a parte
  * que faltava: a listagem provava competência à exaustão e não provava
  * apetite, e ninguém funda nada sem um. Os motivos são do Fábio, ditos por
- * ele; onde não houver motivo confirmado, não se inventa nenhum.
+ * ele; onde não houver motivo confirmado, não se inventa nenhum. E um motivo
+ * não pode trazer atrás de si o que a ficha protege: no Travertina diz-se
+ * porque foi feito, nunca de quem é a casa.
  *
  * Cada entrada fecha com uma LINHA DE ASSINATURA: uma frase curta, na
  * primeira pessoa, que diz o papel real em verbos conjugados e sem um único
@@ -74,8 +76,10 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       {
-        pt: 'Fi-lo porque gosto de teatro e não conseguia saber o que estava em cena: a agenda nacional vive espalhada pelo sítio de cada estrutura e de cada sala.',
-        en: "I made it because I love theatre and could never find out what was on: the national listings live scattered across each company's and each venue's own site.",
+        // O tempo verbal é que faz a afirmação: «vivia». O que este projeto é
+        // está dito no passado do problema que resolveu.
+        pt: 'Fi-lo porque gosto de teatro e não conseguia saber o que estava em cena: a agenda nacional vivia espalhada pelo sítio de cada estrutura e de cada sala.',
+        en: "I made it because I love theatre and could never find out what was on: the national listings used to live scattered across each company's and each venue's own site.",
       },
       {
         pt: 'Filtros por dia, por entrada livre e por acessibilidade. Seguir artistas e salas. Newsletter semanal.',
@@ -187,8 +191,11 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       {
-        pt: 'Fi-lo por autonomia: a obra, a manutenção dos equipamentos, as vacinas dos animais e a domótica no mesmo sítio — e no telemóvel. Cada módulo funciona como uma aplicação; estão todos ligados.',
-        en: 'I made it for autonomy: the building work, equipment upkeep, the animals\u2019 vaccines and the home automation in one place — and on the phone. Each module works like an app; they are all connected.',
+        // O motivo entra; o dono não. Esta é a única ficha em que a regra de
+        // despersonalização se aplica ao próprio autor: um motivo em primeira
+        // pessoa é assinatura, mas «as vacinas dos meus animais» é morada.
+        pt: 'Fi-lo como resposta a um problema de autonomia: pôr obra, manutenção de equipamentos, compromissos dos animais — vacinas e afins — e domótica no mesmo sítio, e no telemóvel. Cada módulo funciona como uma aplicação; estão todos ligados.',
+        en: 'I made it as an answer to a problem of autonomy: putting building work, equipment upkeep, animal appointments — vaccines and the like — and home automation in one place, and on the phone. Each module works like an app; they are all connected.',
       },
       {
         pt: 'Módulo de obra: capítulos por fase, orçamento contra pago, registo de despesa e fichas por divisão.',
