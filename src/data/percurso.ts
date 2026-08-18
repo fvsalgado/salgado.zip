@@ -20,13 +20,16 @@ export const posicoes = parse(Posicao.array(), [
     organizacao: 'ATREVIA',
     periodo: { inicio: '2022-06', fim: null },
     linhas: [
-      {
-        pt: 'Regulação, relação institucional e comunicação para clientes de vários setores — do aconselhamento à execução.',
-        en: 'Regulation, institutional relations and communication for clients across sectors — from advice to delivery.',
-      },
+      // O gesto próprio primeiro. «Regulação e relação institucional para
+      // clientes de vários setores» escreve-o qualquer consultor de qualquer
+      // consultora: é enquadramento, e enquadramento vem depois do que se faz.
       {
         pt: 'Acompanho o processo legislativo e regulatório português e desenho a resposta: com quem falar, quando e com quê.',
         en: 'I follow the Portuguese legislative and regulatory process and design the response: whom to talk to, when, and with what.',
+      },
+      {
+        pt: 'Do aconselhamento à execução, para clientes de vários setores — regulação, relação institucional, comunicação com decisores.',
+        en: 'From advice to delivery, for clients across sectors — regulation, institutional relations, communication with decision-makers.',
       },
       {
         pt: 'Mapeio quem decide e quem influencia, com equipas de várias disciplinas.',
@@ -73,8 +76,8 @@ export const posicoes = parse(Posicao.array(), [
     periodo: { inicio: '2010-02', fim: '2014-12' },
     linhas: [
       {
-        pt: 'Loja própria em Lisboa: compras, vendas, contas e balcão.',
-        en: 'My own shop in Lisbon: buying, selling, the books and the counter.',
+        pt: 'O primeiro negócio próprio, em Lisboa: compras, vendas, contas e balcão.',
+        en: 'The first business of my own, in Lisbon: buying, selling, the books and the counter.',
       },
     ],
   },
