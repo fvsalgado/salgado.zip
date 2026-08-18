@@ -41,28 +41,28 @@ export const posicoes = parse(Posicao.array(), [
     periodo: { inicio: '2018-03', fim: '2022-04' },
     linhas: [
       {
-        pt: 'Assessoria a vereadores e deputados municipais: Cultura, Habitação, Direitos Humanos e Direitos Sociais.',
-        en: 'Adviser to city councillors and municipal deputies: Culture, Housing, Human Rights and Social Rights.',
+        pt: 'Assessoria ao vereador com os pelouros da Cultura, Habitação, Direitos Humanos e Direitos Sociais.',
+        en: 'Adviser to the councillor for Culture, Housing, Human Rights and Social Rights.',
       },
       {
-        pt: 'Do enquadramento à letra final: análise legislativa, relatórios, moções e propostas.',
-        en: 'From framing to final wording: legislative analysis, reports, motions and proposals.',
+        pt: 'Análise legislativa, relatórios, moções e propostas — do enquadramento à letra final.',
+        en: 'Legislative analysis, reports, motions and proposals — from framing to final wording.',
       },
       {
-        pt: 'Acompanhamento de imprensa e gestão das redes institucionais.',
-        en: 'Press monitoring and management of institutional channels.',
+        pt: 'Em paralelo, a comunicação e as redes do gabinete, e a produção dos eventos do pelouro.',
+        en: 'Alongside it, the office\'s communications and social channels, and producing the portfolio\'s events.',
       },
     ],
   },
   {
     id: 'chapito',
-    cargo: { pt: 'Barman e direção de cena', en: 'Barman and stage manager' },
-    organizacao: 'Chapitô',
+    cargo: { pt: 'Barman', en: 'Barman' },
+    organizacao: 'Bartô',
     periodo: { inicio: '2015-01', fim: '2017-12' },
     linhas: [
       {
-        pt: 'Bar e direção de cena no Bartô, a sala de espetáculos do Chapitô. A cultura vista do lado de quem monta e desmonta.',
-        en: 'Bar and stage management at Bartô, the Chapitô venue. Culture seen from the side that sets up and tears down.',
+        pt: 'No Bartô, o bar e sala de espetáculos do Chapitô, em Lisboa. Bar, e apoio de palco na própria sala.',
+        en: 'At Bartô, the bar and small venue at Chapitô, in Lisbon. The bar, and stage-hand work in the room itself.',
       },
     ],
   },
