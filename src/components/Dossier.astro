@@ -5,6 +5,7 @@
  * URL que se cola numa candidatura.
  */
 import { cabecalho, projetos, posicoes, mandatos, formacao, contacto } from '../data'
+import { colofao } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodoLongo, estado } from '../data/formato'
 
@@ -13,8 +14,8 @@ const { idioma } = Astro.props
 const en = idioma === 'en'
 
 const rot = en
-  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates', formacao: 'Certificates', contacto: 'Contact' }
-  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais', formacao: 'Certificados', contacto: 'Contacto' }
+  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates', formacao: 'Certificates', contacto: 'Contact', colofao: 'Colophon' }
+  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais', formacao: 'Certificados', contacto: 'Contacto', colofao: 'Colofão' }
 ---
 
 <article>
@@ -123,5 +124,10 @@ const rot = en
       )}
       <li><a href="https://salgado.zip">salgado.zip</a></li>
     </ul>
+  </section>
+
+  <section data-seccao="colofao">
+    <h2>{rot.colofao}</h2>
+    {colofao.map((l) => <p>{t(l, idioma)}</p>)}
   </section>
 </article>

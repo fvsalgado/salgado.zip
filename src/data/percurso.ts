@@ -21,16 +21,16 @@ export const posicoes = parse(Posicao.array(), [
     periodo: { inicio: '2022-06', fim: null },
     linhas: [
       {
-        pt: 'Aconselhamento estratégico e execução de iniciativas de relações públicas para uma carteira diversificada de clientes.',
-        en: 'Strategic advice and delivery of public relations work for a diverse client portfolio.',
+        pt: 'Regulação, relação institucional e comunicação para clientes de vários setores — do aconselhamento à execução.',
+        en: 'Regulation, institutional relations and communication for clients across sectors — from advice to delivery.',
       },
       {
-        pt: 'Desenho e implementação de estratégias de comunicação para navegar ambientes regulatórios complexos, a partir do conhecimento do quadro regulatório português.',
-        en: 'Design and implementation of communication strategies to navigate complex regulatory environments, grounded in the Portuguese regulatory framework.',
+        pt: 'Acompanho o processo legislativo e regulatório português e desenho a resposta: com quem falar, quando e com quê.',
+        en: 'I follow the Portuguese legislative and regulatory process and design the response: whom to talk to, when, and with what.',
       },
       {
-        pt: 'Identificação de partes interessadas e monitorização de desenvolvimentos legislativos, com equipas multidisciplinares.',
-        en: 'Stakeholder mapping and monitoring of legislative developments, working across multidisciplinary teams.',
+        pt: 'Mapeio quem decide e quem influencia, com equipas de várias disciplinas.',
+        en: 'I map who decides and who influences, working with teams across disciplines.',
       },
     ],
   },
@@ -41,16 +41,16 @@ export const posicoes = parse(Posicao.array(), [
     periodo: { inicio: '2018-03', fim: '2022-04' },
     linhas: [
       {
-        pt: 'Assessoria a vereadores e deputados municipais em políticas de Cultura, Habitação, Direitos Humanos e Direitos Sociais.',
-        en: 'Advice to city councillors and municipal deputies on Culture, Housing, Human Rights and Social Rights policy.',
+        pt: 'Assessoria a vereadores e deputados municipais: Cultura, Habitação, Direitos Humanos e Direitos Sociais.',
+        en: 'Adviser to city councillors and municipal deputies: Culture, Housing, Human Rights and Social Rights.',
       },
       {
-        pt: 'Análise e enquadramento legislativo, político e social; redação de relatórios, projetos, moções e propostas.',
-        en: 'Legislative, political and social analysis and framing; drafting of reports, projects, motions and proposals.',
+        pt: 'Do enquadramento à letra final: análise legislativa, relatórios, moções e propostas.',
+        en: 'From framing to final wording: legislative analysis, reports, motions and proposals.',
       },
       {
-        pt: 'Monitorização do impacto na imprensa e gestão das redes institucionais.',
-        en: 'Press impact monitoring and management of institutional social channels.',
+        pt: 'Acompanhamento de imprensa e gestão das redes institucionais.',
+        en: 'Press monitoring and management of institutional channels.',
       },
     ],
   },
@@ -61,8 +61,8 @@ export const posicoes = parse(Posicao.array(), [
     periodo: { inicio: '2015-01', fim: '2017-12' },
     linhas: [
       {
-        pt: 'Bartô, a sala do Chapitô: serviço de bar e direção de cena.',
-        en: 'Bartô, the Chapitô venue: bar service and stage management.',
+        pt: 'Bar e direção de cena no Bartô, a sala de espetáculos do Chapitô. A cultura vista do lado de quem monta e desmonta.',
+        en: 'Bar and stage management at Bartô, the Chapitô venue. Culture seen from the side that sets up and tears down.',
       },
     ],
   },
@@ -73,8 +73,8 @@ export const posicoes = parse(Posicao.array(), [
     periodo: { inicio: '2010-02', fim: '2014-12' },
     linhas: [
       {
-        pt: 'Loja própria em Lisboa. Atendimento e gestão corrente do negócio.',
-        en: 'Own shop in Lisbon. Customer service and day-to-day management.',
+        pt: 'Loja própria em Lisboa: compras, vendas, contas e balcão.',
+        en: 'My own shop in Lisbon: buying, selling, the books and the counter.',
       },
     ],
   },

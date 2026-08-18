@@ -81,3 +81,73 @@ addEventListener('afterprint', () => {
 for (const c of document.querySelectorAll<HTMLElement>('[data-controlos]')) {
   c.hidden = false
 }
+
+/* ── Filtro ───────────────────────────────────────────────────────────────
+   `/` foca, escrever filtra, Esc limpa e repõe o estado anterior. Sem JS o
+   campo nem aparece, portanto nada disto é promessa que o HTML não cumpra. */
+const filtro = document.querySelector<HTMLInputElement>('[data-filtro]')
+const arvore = document.querySelector<HTMLElement>('[data-arvore]')
+
+if (filtro && arvore) {
+  const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+  let antes: Map<HTMLDetailsElement, boolean> | null = null
+
+  const aplicar = (bruto: string) => {
+    const q = norm(bruto.trim())
+    const nos = Array.from(arvore.querySelectorAll<HTMLLIElement>('li.no'))
+
+    if (!q) {
+      nos.forEach((li) => li.classList.remove('no--oculto'))
+      if (antes) {
+        antes.forEach((estado, d) => (d.open = estado))
+        antes = null
+      }
+      return
+    }
+
+    if (!antes) {
+      antes = new Map(todos().map((d) => [d, d.open]))
+    }
+
+    // O texto próprio de um nó é a linha mais o corpo direto — sem os filhos
+    // aninhados, senão «fado» acenderia projetos/ inteiro e nada se filtrava.
+    const textoProprio = (li: HTMLLIElement) =>
+      Array.from(
+        li.querySelectorAll(
+          ':scope > details > summary .linha, :scope > .linha, :scope > a.linha, ' +
+            ':scope > details > .no__corpo > .no__texto, :scope > details > .no__corpo > .no__campos'
+        )
+      )
+        .map((n) => n.textContent ?? '')
+        .join(' ')
+
+    nos.forEach((li) => li.classList.add('no--oculto'))
+    for (const li of nos) {
+      if (!norm(textoProprio(li)).includes(q)) continue
+      li.classList.remove('no--oculto')
+      // Descendentes visíveis, ascendentes visíveis e abertos.
+      li.querySelectorAll('li.no').forEach((filho) => filho.classList.remove('no--oculto'))
+      for (let n: HTMLElement | null = li.parentElement; n && n !== arvore; n = n.parentElement) {
+        if (n instanceof HTMLLIElement) n.classList.remove('no--oculto')
+        if (n instanceof HTMLDetailsElement) n.open = true
+      }
+    }
+  }
+
+  filtro.addEventListener('input', () => aplicar(filtro.value))
+  filtro.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      filtro.value = ''
+      aplicar('')
+      filtro.blur()
+    }
+  })
+
+  addEventListener('keydown', (e) => {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return
+    const alvo = e.target as HTMLElement
+    if (alvo instanceof HTMLInputElement || alvo instanceof HTMLTextAreaElement) return
+    e.preventDefault()
+    filtro.focus()
+  })
+}

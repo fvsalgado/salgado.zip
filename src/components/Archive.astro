@@ -1,6 +1,7 @@
 ---
 import Node from './Node.astro'
 import { projetos, posicoes, mandatos, formacao, contacto, ficheiros } from '../data'
+import { leiaMe, colofao } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
 
@@ -8,18 +9,33 @@ interface Props { idioma: Idioma }
 const { idioma } = Astro.props
 const en = idioma === 'en'
 
+// O tamanho do leia-me é o tamanho real do texto que se lê. Nenhum número é
+// escrito à mão — nem este.
+const leiaMeBytes = Buffer.byteLength(leiaMe.map((l) => t(l, idioma)).join('\n'), 'utf8')
+
 const rot = en
-  ? { projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/', contacto: 'contact/', ficheiros: 'files/',
+  ? { projetos: 'projects/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/', contacto: 'contact/', ficheiros: 'files/', leiame: 'read-me.txt', colofao: 'colophon/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
       papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
       privado: 'private, behind authentication', abrir: 'Open' }
-  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/',
+  : { projetos: 'projetos/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/', contacto: 'contacto/', ficheiros: 'ficheiros/', leiame: 'leia-me.txt', colofao: 'colofao/',
       entradas: (n: number) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
       papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
       privado: 'privado, atrás de autenticação', abrir: 'Abrir' }
 ---
 
 <ul class="arvore" role="list" data-arvore>
+  <Node
+    id="leia-me"
+    nome={rot.leiame}
+    aberto={true}
+    colunas={[{ classe: 'tam', valor: tamanho(leiaMeBytes) }]}
+  >
+    <div class="no__texto">
+      {leiaMe.map((l) => <p>{t(l, idioma)}</p>)}
+    </div>
+  </Node>
+
   <Node
     id="projetos"
     nome={rot.projetos}
@@ -220,5 +236,11 @@ const rot = en
         ? 'Every size above is read from the real file at build time. Nothing here is typed by hand.'
         : 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.'}
     </p>
+  </Node>
+
+  <Node id="colofao" nome={rot.colofao}>
+    <div class="no__texto">
+      {colofao.map((l) => <p>{t(l, idioma)}</p>)}
+    </div>
   </Node>
 </ul>

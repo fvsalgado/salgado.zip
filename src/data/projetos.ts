@@ -25,23 +25,22 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2016-11', fim: null },
     linha: {
-      pt: 'Agregador de eventos culturais em Portugal: teatros, salas de concerto, museus, cinemas.',
-      en: 'Aggregator of cultural events in Portugal: theatres, concert halls, museums, cinemas.',
+      pt: 'A agenda cultural de Portugal num sítio só: teatros, salas de concerto, museus e cinemas.',
+      en: "Portugal's cultural agenda in one place: theatres, concert halls, museums and cinemas.",
     },
     detalhe: [
       {
-        pt: 'Filtros por dia, por eventos gratuitos e por acessibilidade; seguir artistas e salas; newsletter semanal.',
-        en: 'Filters by day, by free admission and by accessibility; follow artists and venues; weekly newsletter.',
+        pt: 'Filtros por dia, por entrada livre e por acessibilidade. Seguir artistas e salas. Newsletter semanal.',
+        en: 'Filter by day, by free admission and by accessibility. Follow artists and venues. Weekly newsletter.',
       },
       {
-        pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa. Renomeado e reanimado em 2026, agora de âmbito nacional.',
-        en: 'Started in 2016 as EmCena.pt, a Lisbon theatre listing. Renamed and relaunched in 2026, now nationwide.',
+        pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa. Renomeado e relançado em 2026, agora de âmbito nacional.',
+        en: 'Born in 2016 as EmCena.pt, a Lisbon theatre listing. Renamed and relaunched in 2026, now nationwide.',
       },
       {
-        pt: 'Duas dimensões: fundar e gerir o projeto, e construir o produto.',
-        en: 'Two dimensions: founding and running the project, and building the product.',
+        pt: 'Fundei-o, giro-o e construí-o. Código público.',
+        en: 'I founded it, I run it, I built it. Public source code.',
       },
-      { pt: 'Código público.', en: 'Public source code.' },
     ],
     stack: [],
     url: 'https://primeiraplateia.pt',
@@ -54,8 +53,8 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2026-07', fim: null },
     linha: {
-      pt: 'Curadoria, produção e programação de fado.',
-      en: 'Fado curation, production and programming.',
+      pt: 'Fado: curadoria, produção e programação de espetáculos.',
+      en: 'Fado: curation, production and programming.',
     },
     detalhe: [
       {
@@ -64,8 +63,8 @@ export const projetos = parse(Projeto.array().min(1), [
       },
       { pt: 'Curadoria artística de Marta Rosa.', en: 'Artistic curation by Marta Rosa.' },
       {
-        pt: 'Duas dimensões: cofundar e produzir a programação, e construir o site.',
-        en: 'Two dimensions: co-founding and producing the programme, and building the site.',
+        pt: 'Cofundei-o e produzo-o; o site também é meu.',
+        en: 'I co-founded it and I produce it; the site is mine too.',
       },
     ],
     stack: [],
@@ -79,8 +78,8 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2026', fim: null },
     linha: {
-      pt: 'Site de atleta: época a época, rankings WAGR e europeu, parcerias, imprensa e WITB.',
-      en: 'Athlete site: season by season, WAGR and European rankings, partnerships, press and WITB.',
+      pt: 'O percurso de uma atleta de golfe, época a época: rankings WAGR e europeu, parcerias, imprensa e WITB.',
+      en: "A golfer's path, season by season: WAGR and European rankings, partnerships, press and WITB.",
     },
     detalhe: [],
     stack: [],
@@ -94,10 +93,12 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2026', fim: null },
     linha: {
-      pt: 'Fadista, viola de fado e letrista. Agenda, discografia, press kit e booking.',
-      en: 'Fado singer, fado viola player and lyricist. Calendar, discography, press kit and booking.',
+      pt: 'O sítio de uma fadista que escreve o que canta: agenda, discografia, press kit e booking.',
+      en: 'The site of a fado singer who writes what she sings: calendar, discography, press kit and booking.',
     },
-    detalhe: [],
+    detalhe: [
+      { pt: 'Voz, viola de fado e letra própria.', en: 'Voice, fado viola, and her own lyrics.' },
+    ],
     stack: [],
     url: 'https://martarosa.pt',
     shot: 'martarosa.webp',
@@ -109,17 +110,17 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'privado',
     periodo: { inicio: '2026', fim: null },
     linha: {
-      pt: 'Aplicação de gestão por módulos, com mais de vinte áreas: agenda, tarefas e calendário; contactos, contratos e alojamento; carteira, cash-flow, crédito, consumos e obrigações fiscais; compras e transportes.',
-      en: 'Modular management application spanning more than twenty areas: calendar, tasks and agenda; contacts, contracts and lodging; wallet, cash flow, credit, utilities and tax obligations; shopping and transport.',
+      pt: 'Uma casa gerida como uma empresa: agenda e tarefas, contactos e contratos, carteira e cash-flow, crédito, consumos, impostos, compras e transportes.',
+      en: 'A house run like a company: calendar and tasks, contacts and contracts, wallet and cash flow, credit, utilities, taxes, shopping and transport.',
     },
     detalhe: [
       {
-        pt: 'Módulo de gestão de obra: capítulos por fase, orçamento contra pago em burndown, registo de despesa e fichas por divisão.',
-        en: 'Construction module: chapters by phase, budget-versus-paid burndown, expense logging and per-room sheets.',
+        pt: 'Módulo de obra: capítulos por fase, orçamento contra pago, registo de despesa e fichas por divisão.',
+        en: 'Construction module: chapters by phase, budget versus paid, expense log and per-room sheets.',
       },
       {
-        pt: 'Integrações por API com serviços externos, incluindo avisos meteorológicos e de risco de incêndio, com automações e alertas.',
-        en: 'API integrations with external services, including weather and wildfire-risk warnings, with automations and alerts.',
+        pt: 'Liga-se ao exterior por API: meteorologia, risco de incêndio, automações e alertas.',
+        en: 'It reaches outside through APIs: weather, wildfire risk, automations and alerts.',
       },
       {
         pt: 'Aplicação privada, atrás de autenticação. Sem ligação e sem captura: um ecrã de acesso não mostra nada e os registos reais não se mostram.',
