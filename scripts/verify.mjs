@@ -121,8 +121,10 @@ function html(rota) {
   const mortas = []
   for (const url of externas) {
     let r = await fetch(url, { method: 'HEAD', redirect: 'follow' }).catch(() => null)
-    // Nem toda a gente responde a HEAD: 405 pede uma segunda tentativa com GET.
-    if (r && r.status === 405) {
+    // Nem toda a gente responde a HEAD: uns devolvem 405, outros — a gnu.org
+    // entre eles — fecham a ligação sem dizer nada. Nos dois casos a segunda
+    // tentativa é com GET, que é como um leitor a abriria.
+    if (!r || r.status === 405) {
       r = await fetch(url, { redirect: 'follow' }).catch(() => null)
     }
     // 999 é o bloqueio a leitura automática do LinkedIn e 403 é o equivalente

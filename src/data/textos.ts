@@ -64,3 +64,20 @@ export const notaCertificados = parse(Lang, {
 
 /** O código deste site é público: a prova do colofão está no repositório. */
 export const codigoDoSite = 'https://github.com/fvsalgado/salgado.zip'
+
+/**
+ * A mesma licença do Primeira Plateia — o ficheiro LICENSE deste repositório é
+ * byte a byte o de lá. A AGPL é a escolha coerente para software que se serve
+ * pela rede: quem o correr por cima de um servidor tem de dar o código a quem o
+ * usa, e não só a quem o descarrega.
+ *
+ * A ligação não vai ao ficheiro no GitHub — dependia do nome do ramo e morria
+ * se o repositório mudasse de sítio — nem à gnu.org, que não responde de forma
+ * fiável à verificação 3 e por isso não passa a regra da casa: uma ligação que
+ * o build não consegue confirmar não se publica. Vai à Open Source Initiative,
+ * que é quem aprova a licença e responde sempre.
+ */
+export const licenca = {
+  nome: 'AGPL-3.0',
+  url: 'https://opensource.org/license/agpl-v3',
+}

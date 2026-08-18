@@ -1,7 +1,7 @@
 ---
 import Node from './Node.astro'
 import { projetos, posicoes, mandatos, formacao, contacto, ficheiros, CANONICO } from '../data'
-import { colofaoSite, codigoDoSite, notaCertificados } from '../data/textos.ts'
+import { colofaoSite, codigoDoSite, licenca, notaCertificados } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
 
@@ -285,6 +285,8 @@ const totais = [
     <dl class="no__campos">
       <dt>{en ? 'source' : 'código'}</dt>
       <dd><a href={codigoDoSite} rel="noopener">{codigoDoSite.replace('https://', '')}</a></dd>
+      <dt>{en ? 'licence' : 'licença'}</dt>
+      <dd><a href={licenca.url} rel="noopener">{licenca.nome}</a></dd>
     </dl>
   </Node>
 </ul>

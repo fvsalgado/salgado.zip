@@ -64,6 +64,17 @@ Projetos privados entram na listagem pelo que fazem, sem endereço e sem
 captura. A verificação 7 confirma que não há `href`, `src` nem `"url"` a
 apontar-lhes — no site, no `resume.json` e dentro do `.zip`.
 
+## Licença
+
+O código está sob **AGPL-3.0** — o ficheiro `LICENSE` é byte a byte o do
+[primeiraplateia.pt](https://github.com/fvsalgado/primeiraplateia), por opção:
+os dois projetos servem-se pela rede, e a AGPL é a licença que fecha essa
+porta — quem correr este código num servidor tem de dar o código a quem o usa,
+e não só a quem o descarrega.
+
+As fontes IBM Plex não entram nesse âmbito: têm licença própria, a SIL Open
+Font License 1.1, em `public/fonts/OFL.txt`.
+
 ## Tipografia
 
 IBM Plex Mono e IBM Plex Serif, SIL Open Font License 1.1, auto-alojadas.
