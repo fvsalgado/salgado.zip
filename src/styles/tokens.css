@@ -1,0 +1,77 @@
+/* ── Tokens ──────────────────────────────────────────────────────────────────
+   Sem acento em repouso. A página parada é tinta sobre papel e mais nada.
+   O ardósia só aparece em :hover, :focus-visible e no marcador do nó aberto.
+
+   Consequência não-negociável: as ligações em repouso levam sublinhado. Sem
+   cor, o sublinhado é a única afordância — retirá-lo torna as ligações
+   invisíveis, e isso é uma falha de acessibilidade, não uma escolha estética.
+
+   Contrastes verificados por scripts/verify.mjs (verificação 5), calculados a
+   partir deste ficheiro nos dois temas. Alterar um valor aqui pode partir o
+   build; é para isso que a verificação existe.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  --paper: #fbfaf7;
+  --paper-fundo: #f3f1ea;
+  --ink: #14130f;
+  --ink-soft: #55504a;
+  --rule: #dcd6ca;
+  --guia: #b9b1a1;
+  --rule-forte: #918876;
+  --accent: #2b3a4a;
+  --accent-fundo: #e8ecf1;
+
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --serif: 'IBM Plex Serif', Iowan Old Style, Palatino, Georgia, serif;
+
+  --t-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --t-mono: clamp(0.82rem, 0.78rem + 0.2vw, 0.9rem);
+  --t-meta: clamp(0.7rem, 0.68rem + 0.14vw, 0.775rem);
+  --t-titulo: clamp(1.3rem, 1.1rem + 1vw, 1.9rem);
+
+  --larg: 54rem;
+  --esp: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --recuo: 1.35rem;
+
+  --foco: 2px;
+  --transicao: 120ms ease-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --paper: #14130f;
+    --paper-fundo: #1c1a16;
+    --ink: #f2efe8;
+    --ink-soft: #a9a294;
+    --rule: #33302a;
+    --guia: #4f4b42;
+    --rule-forte: #6b6559;
+    --accent: #9db6d0;
+    --accent-fundo: #1e242c;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: #14130f;
+  --paper-fundo: #1c1a16;
+  --ink: #f2efe8;
+  --ink-soft: #a9a294;
+  --rule: #33302a;
+  --guia: #4f4b42;
+  --rule-forte: #6b6559;
+  --accent: #9db6d0;
+  --accent-fundo: #1e242c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transicao: 0ms;
+  }
+}

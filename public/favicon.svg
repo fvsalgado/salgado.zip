@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="salgado.zip">
+  <style>
+    .fundo { fill: #14130f }
+    .marca { fill: #fbfaf7 }
+    @media (prefers-color-scheme: dark) {
+      .fundo { fill: #f2efe8 }
+      .marca { fill: #14130f }
+    }
+  </style>
+  <rect class="fundo" width="32" height="32" rx="6" />
+  <path class="marca" d="M11 8.5 18.5 16 11 23.5v-4.2L14.3 16 11 12.7z" />
+  <rect class="marca" x="19.5" y="20.6" width="6.5" height="2.9" rx="1.45" />
+</svg>

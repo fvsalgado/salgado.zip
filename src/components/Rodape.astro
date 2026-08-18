@@ -1,0 +1,25 @@
+---
+import { datas, ficheiros } from '../data'
+import type { Idioma } from '../data'
+import { dataCurta, tamanho } from '../data/formato'
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props
+const en = idioma === 'en'
+
+const maisRecente = Object.values(datas).sort().at(-1)
+const quando = dataCurta(maisRecente, idioma)
+const zip = ficheiros.find((f) => f.id === 'salgado-zip')
+---
+
+<footer class="rodape">
+  <span>
+    salgado.zip{quando ? ` · ${en ? 'updated' : 'atualizado'} ${quando}` : ''}
+  </span>
+  <span class="rodape__ecra">
+    <a href="/salgado.zip">{en ? 'download the archive' : 'descarregar o arquivo'}</a>
+    {zip?.bytes !== null && zip !== undefined ? ` (${tamanho(zip.bytes)})` : ''}
+    <span aria-hidden="true"> · </span>
+    {en ? 'no cookies, no tracking' : 'sem cookies, sem rastreio'}
+  </span>
+</footer>

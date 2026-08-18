@@ -1,0 +1,99 @@
+---
+/**
+ * A segunda renderização. Mesmo conteúdo, mesma fonte, prosa corrida: sem
+ * mono, sem árvore, sem metáfora. É o que se imprime, é o que vira PDF, e é o
+ * URL que se cola numa candidatura.
+ */
+import { cabecalho, projetos, posicoes, formacao, contacto } from '../data'
+import type { Idioma } from '../data'
+import { t, periodoLongo, estado } from '../data/formato'
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props
+const en = idioma === 'en'
+
+const rot = en
+  ? { percurso: 'Career', projetos: 'Projects', formacao: 'Education', contacto: 'Contact' }
+  : { percurso: 'Percurso', projetos: 'Projetos', formacao: 'Formação', contacto: 'Contacto' }
+---
+
+<article>
+  <h1>{cabecalho.nome}</h1>
+  <div class="cabecalho cabecalho--dossie">
+    {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+  </div>
+
+  <section data-seccao="projetos">
+    <h2>{rot.projetos}</h2>
+    {
+      projetos.map((p) => (
+        <div class="entrada" id={`d-${p.id}`}>
+          <div class="entrada__cabeca">
+            <h3>
+              {p.url !== null ? <a href={p.url} rel="noopener">{p.dominio}</a> : p.dominio}
+            </h3>
+            <span class="entrada__quando">
+              {periodoLongo(p.periodo, idioma)} · {estado(p.estado, idioma)}
+            </span>
+          </div>
+          <p class="entrada__onde">{t(p.papel, idioma)}</p>
+          <div class="entrada__corpo">
+            <p>{t(p.linha, idioma)}</p>
+            {p.detalhe.map((d) => <p>{t(d, idioma)}</p>)}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  {
+    posicoes.length > 0 && (
+      <section data-seccao="percurso">
+        <h2>{rot.percurso}</h2>
+        {posicoes.map((p) => (
+          <div class="entrada" id={`d-${p.id}`}>
+            <div class="entrada__cabeca">
+              <h3>{t(p.cargo, idioma)}</h3>
+              <span class="entrada__quando">{periodoLongo(p.periodo, idioma)}</span>
+            </div>
+            <p class="entrada__onde">{p.organizacao}</p>
+            <div class="entrada__corpo">
+              {p.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+            </div>
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    formacao.length > 0 && (
+      <section data-seccao="formacao">
+        <h2>{rot.formacao}</h2>
+        {formacao.map((f) => (
+          <div class="entrada" id={`d-${f.id}`}>
+            <div class="entrada__cabeca">
+              <h3>{t(f.curso, idioma)}</h3>
+              <span class="entrada__quando">{periodoLongo(f.periodo, idioma)}</span>
+            </div>
+            <p class="entrada__onde">{f.instituicao}</p>
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  <section data-seccao="contacto">
+    <h2>{rot.contacto}</h2>
+    <ul class="lista-limpa">
+      {contacto.email && (
+        <li><a href={`mailto:${contacto.email}`}>{contacto.email}</a></li>
+      )}
+      {contacto.linkedin && (
+        <li><a href={contacto.linkedin} rel="noopener">{contacto.linkedin.replace(/^https:\/\//, '')}</a></li>
+      )}
+      <li>{t(contacto.concelho, idioma)}</li>
+      <li><a href="https://salgado.zip">salgado.zip</a></li>
+    </ul>
+  </section>
+</article>

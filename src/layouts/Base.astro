@@ -1,0 +1,75 @@
+---
+import '../styles/base.css'
+import '../styles/print.css'
+import { cabecalho, contacto, projetos, CANONICO } from '../data'
+import type { Idioma } from '../data'
+import { t } from '../data/formato'
+
+interface Props {
+  idioma: Idioma
+  titulo: string
+  descricao: string
+  caminho: string
+  classe?: string
+}
+
+const { idioma, titulo, descricao, caminho, classe = '' } = Astro.props
+const canonical = CANONICO + caminho
+
+const sameAs = [
+  ...(contacto.linkedin ? [contacto.linkedin] : []),
+  ...projetos.filter((p) => p.url !== null).map((p) => p.url as string),
+]
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: cabecalho.nome,
+  jobTitle: t(cabecalho.cargo, idioma),
+  url: CANONICO,
+  address: { '@type': 'PostalAddress', addressRegion: t(contacto.concelho, idioma), addressCountry: 'PT' },
+  ...(contacto.email ? { email: `mailto:${contacto.email}` } : {}),
+  ...(sameAs.length ? { sameAs } : {}),
+}
+---
+
+<!doctype html>
+<html lang={idioma === 'en' ? 'en' : 'pt-PT'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={canonical} />
+
+    <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={CANONICO + '/og.png'} />
+    <meta property="og:locale" content={idioma === 'en' ? 'en_GB' : 'pt_PT'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/json" href="/resume.json" title="JSON Resume" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/ibm-plex-mono-latin-400-normal.woff2"
+      crossorigin
+    />
+
+    <script is:inline src="/tema.js"></script>
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class={classe}>
+    <a class="salta" href="#conteudo">{idioma === 'en' ? 'Skip to content' : 'Saltar para o conteúdo'}</a>
+    <slot />
+  </body>
+</html>
