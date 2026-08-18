@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url'
 import { abrirBrowser, BASE } from './browser.mjs'
 import { lerZip } from './zip-ler.mjs'
 import { definicoes } from '../src/data/ficheiros.ts'
+import { IDIOMAS, LINGUAS } from '../src/data/idiomas.ts'
 import { posicoes } from '../src/data/percurso.ts'
 import { contacto } from '../src/data/contacto.ts'
 import { projetos } from '../src/data/projetos.ts'
@@ -90,7 +91,8 @@ if (!(await esperar(BASE + '/', 1))) {
 }
 
 const browser = await abrirBrowser()
-const paginas = ['/']
+/** Uma rota por língua: o que não se verifica nas quatro só está verificado numa. */
+const paginas = IDIOMAS.map((i) => LINGUAS[i].raiz)
 
 function html(rota) {
   return readFileSync(dist + (rota === '/' ? 'index.html' : rota.slice(1) + 'index.html'), 'utf8')
@@ -360,21 +362,26 @@ function html(rota) {
   decide(`orçamento de JS abaixo de ${LIMITE / 1024} kB, sem scripts inline`, problemas9, `${total} B`)
 }
 
-/* ══ 10. hreflang ═══════════════════════════════════════════════════════ */
+/* ══ 10. hreflang ═══════════════════════════════════════════════════════
+   Simétrico: cada página aponta a todas as línguas, a própria incluída, mais
+   o x-default. Uma língua que só é apontada por metade das páginas é uma
+   língua que os motores de busca tratam como acidente. */
 {
-  const temEn = existsSync(dist + 'en/index.html')
-  if (!temEn) {
-    aviso('hreflang e x-default', ['/en/ ainda não existe: fase EN por fazer'])
-  } else {
-    const problemas = []
-    for (const rota of [...paginas, '/en/']) {
-      const h = html(rota)
-      for (const esperado of ['hreflang="pt-PT"', 'hreflang="en"', 'hreflang="x-default"']) {
-        if (!h.includes(esperado)) problemas.push(`${rota} sem ${esperado}`)
-      }
+  const problemas = []
+  const esperados = [...IDIOMAS.map((i) => `hreflang="${LINGUAS[i].html}"`), 'hreflang="x-default"']
+  for (const i of IDIOMAS) {
+    const rota = LINGUAS[i].raiz
+    const ficheiro = dist + (rota === '/' ? 'index.html' : rota.slice(1) + 'index.html')
+    if (!existsSync(ficheiro)) {
+      problemas.push(`${rota} não foi gerada`)
+      continue
     }
-    decide('hreflang simétrico com x-default', problemas)
+    const h = html(rota)
+    for (const esperado of esperados) {
+      if (!h.includes(esperado)) problemas.push(`${rota} sem ${esperado}`)
+    }
   }
+  decide('hreflang simétrico com x-default', problemas, `${IDIOMAS.length} línguas`)
 }
 
 /* ══ 11. PDFs ═══════════════════════════════════════════════════════════ */

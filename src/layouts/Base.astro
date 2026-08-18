@@ -1,7 +1,7 @@
 ---
 import '../styles/base.css'
 import '../styles/print.css'
-import { cabecalho, contacto, projetos, posicoes, datas, CANONICO } from '../data'
+import { cabecalho, contacto, projetos, posicoes, datas, CANONICO, IDIOMAS, LINGUAS, PADRAO } from '../data'
 import type { Idioma } from '../data'
 import { t } from '../data/formato'
 import dimensoes from '../generated/og.json' with { type: 'json' }
@@ -13,8 +13,13 @@ interface Props {
   caminho: string
   classe?: string
   robots?: string
-  /** Rotas equivalentes nas duas línguas. Quando presente, emite hreflang. */
-  alternos?: { pt: string; en: string }
+  /**
+   * A mesma página nas quatro línguas. Quando presente, emite hreflang — e as
+   * quatro chaves são obrigatórias, porque um hreflang que aponta a três
+   * línguas de quatro é pior do que hreflang nenhum: diz ao motor de busca que
+   * a quarta não existe.
+   */
+  alternos?: Record<Idioma, string>
 }
 
 const { idioma, titulo, descricao, caminho, classe = '', robots, alternos } = Astro.props
@@ -23,8 +28,16 @@ const canonical = CANONICO + caminho
 const maiuscula = (frase: string) => frase[0]!.toUpperCase() + frase.slice(1)
 
 const og = dimensoes as { largura?: number; altura?: number }
-const lang = idioma === 'en' ? 'en' : 'pt-PT'
+const lang = LINGUAS[idioma].html
 const modificado = Object.values(datas).sort().at(-1)
+
+/** A frase do salto para o conteúdo. Primeira coisa que um leitor de ecrã lê. */
+const SALTAR: Record<Idioma, string> = {
+  pt: 'Saltar para o conteúdo',
+  en: 'Skip to content',
+  fr: 'Aller au contenu',
+  es: 'Saltar al contenido',
+}
 
 /** Perfis e sítios noutros domínios. O próprio não entra: já é o `url`. */
 const sameAs = [
@@ -108,9 +121,10 @@ const jsonLd = {
     {
       alternos && (
         <>
-          <link rel="alternate" hreflang="pt-PT" href={CANONICO + alternos.pt} />
-          <link rel="alternate" hreflang="en" href={CANONICO + alternos.en} />
-          <link rel="alternate" hreflang="x-default" href={CANONICO + alternos.pt} />
+          {IDIOMAS.map((i) => (
+            <link rel="alternate" hreflang={LINGUAS[i].html} href={CANONICO + alternos[i]} />
+          ))}
+          <link rel="alternate" hreflang="x-default" href={CANONICO + alternos[PADRAO]} />
         </>
       )
     }
@@ -127,7 +141,12 @@ const jsonLd = {
     <meta property="og:image:alt" content={`${cabecalho.nome} — ${t(cabecalho.areas, idioma)}`} />
     {og.largura && <meta property="og:image:width" content={String(og.largura)} />}
     {og.altura && <meta property="og:image:height" content={String(og.altura)} />}
-    <meta property="og:locale" content={idioma === 'en' ? 'en_GB' : 'pt_PT'} />
+    <meta property="og:locale" content={LINGUAS[idioma].og} />
+    {
+      IDIOMAS.filter((i) => i !== idioma).map((i) => (
+        <meta property="og:locale:alternate" content={LINGUAS[i].og} />
+      ))
+    }
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -153,7 +172,7 @@ const jsonLd = {
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   </head>
   <body class={classe}>
-    <a class="salta" href="#conteudo">{idioma === 'en' ? 'Skip to content' : 'Saltar para o conteúdo'}</a>
+    <a class="salta" href="#conteudo">{SALTAR[idioma]}</a>
     <slot />
   </body>
 </html>

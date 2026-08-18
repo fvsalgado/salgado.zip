@@ -1,9 +1,16 @@
 import { z } from 'zod'
 
-/** Texto bilingue. As duas línguas são obrigatórias: chave em falta = erro de build. */
+/**
+ * Texto traduzido. As quatro línguas são obrigatórias: chave em falta = erro
+ * de build. Uma língua opcional é uma língua que fica a meio — a página
+ * francesa acabaria com parágrafos em português no meio, e ninguém repara
+ * até estar publicado.
+ */
 export const Lang = z.object({
   pt: z.string().min(1),
   en: z.string().min(1),
+  fr: z.string().min(1),
+  es: z.string().min(1),
 })
 export type Lang = z.infer<typeof Lang>
 

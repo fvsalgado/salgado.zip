@@ -7,11 +7,19 @@ Site pessoal de Fábio Salgado. Astro estático, sem CMS, sem analytics, sem coo
 Uma fonte, cinco saídas.
 
 ```
-src/data/*.ts  ──┬──►  /             a página: listagem com tudo à vista
- fonte única     ├──►  /docs/*.pdf   CV e projetos, impressos de /cv/ (interno)
-                 ├──►  /resume.json  o mesmo em JSON Resume
-                 └──►  /salgado.zip  os três empacotados
+src/data/*.ts  ──┬──►  /  /en/  /fr/  /es/   a página: listagem com tudo à vista
+ fonte única     ├──►  /docs/*.pdf           CV, impresso de /cv/ e /en/cv/ (internas)
+                 ├──►  /resume.json          o mesmo em JSON Resume
+                 └──►  /salgado.zip          os três empacotados
 ```
+
+A página existe em quatro línguas — português, inglês, francês e espanhol —, e
+o esquema de `src/data` exige as quatro: uma chave em falta é erro de build, e
+não um parágrafo em português no meio da página francesa. Os documentos em PDF
+continuam a ser dois, em português e em inglês, que são as línguas em que se
+envia um CV; a ficha de contacto e o rodapé oferecem os dois em qualquer das
+quatro páginas. Acrescentar uma quinta língua é mexer em `src/data/idiomas.ts`,
+nas traduções e em mais nada.
 
 Nenhum texto vive num componente e **nenhum número é escrito à mão**: os
 tamanhos da listagem saem de um `statSync` sobre os ficheiros reais, as datas

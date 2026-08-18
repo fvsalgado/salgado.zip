@@ -14,19 +14,26 @@ import { Mandato, parse } from './schema.ts'
 export const mandatos = parse(Mandato.array(), [
   {
     id: 'santa-maria-maior',
-    cargo: { pt: 'Membro', en: 'Member' },
+    cargo: { pt: 'Membro', en: 'Member', fr: 'Membre', es: 'Miembro' },
     organizacao: 'Assembleia de Freguesia de Santa Maria Maior, Lisboa',
     periodo: { inicio: '2017-10', fim: '2021-09' },
     linhas: [
       {
         pt: 'A freguesia do centro histórico de Lisboa — Alfama incluída.',
         en: "The parish of Lisbon's historic centre — Alfama included.",
+        fr: 'La paroisse du centre historique de Lisbonne — Alfama comprise.',
+        es: 'La parroquia del centro histórico de Lisboa — Alfama incluida.',
       },
     ],
   },
   {
     id: 'assembleia-nazare',
-    cargo: { pt: 'Deputado Municipal', en: 'Municipal Assembly Deputy' },
+    cargo: {
+      pt: 'Deputado Municipal',
+      en: 'Municipal Assembly Deputy',
+      fr: 'Élu à l’assemblée municipale',
+      es: 'Diputado Municipal',
+    },
     organizacao: 'Assembleia Municipal da Nazaré',
     periodo: { inicio: '2007-10', fim: '2015-09' },
     linhas: [
@@ -35,6 +42,8 @@ export const mandatos = parse(Mandato.array(), [
       {
         pt: 'Eleito aos 21 anos, para dois mandatos consecutivos.',
         en: 'Elected at 21, for two consecutive terms.',
+        fr: 'Élu à 21 ans, pour deux mandats consécutifs.',
+        es: 'Elegido a los 21 años, para dos mandatos consecutivos.',
       },
     ],
   },

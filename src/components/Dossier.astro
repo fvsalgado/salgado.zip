@@ -6,13 +6,18 @@
  * É o documento que sai em PDF — um por língua, com tudo lá dentro. Quem
  * recruta descarrega um ficheiro, não três, e o que abre está paginado,
  * numerado e pronto a imprimir.
+ *
+ * Só em português e em inglês. A página existe em quatro línguas; os
+ * documentos, não — e o tipo diz isso em vez de o deixar ao cuidado de quem
+ * criar a próxima rota. Um PDF em francês passa a existir no dia em que
+ * alguém o peça, e nesse dia é este tipo que se alarga.
  */
 import { cabecalho, projetos, posicoes, mandatos, formacao, contacto } from '../data'
 import { colofaoDocumento, notaCertificados } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodoLongo, estado } from '../data/formato'
 
-interface Props { idioma: Idioma }
+interface Props { idioma: Extract<Idioma, 'pt' | 'en'> }
 const { idioma } = Astro.props
 const en = idioma === 'en'
 

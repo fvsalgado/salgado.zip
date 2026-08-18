@@ -18,6 +18,8 @@ export const definicoes = [
     descricao: {
       pt: 'O documento completo, em português: projetos, percurso, mandatos, certificados e contacto.',
       en: 'The full document, in Portuguese: projects, career, mandates, certificates and contact.',
+      fr: 'Le document complet, en portugais : projets, parcours, mandats, certificats et contact.',
+      es: 'El documento completo, en portugués: proyectos, trayectoria, mandatos, certificados y contacto.',
     },
   },
   {
@@ -27,6 +29,8 @@ export const definicoes = [
     descricao: {
       pt: 'O mesmo documento, em inglês.',
       en: 'The same document, in English.',
+      fr: 'Le même document, en anglais.',
+      es: 'El mismo documento, en inglés.',
     },
   },
   {
@@ -36,6 +40,8 @@ export const definicoes = [
     descricao: {
       pt: 'O mesmo conteúdo em JSON Resume, para quem lê por máquina.',
       en: 'The same content in JSON Resume format, for machines.',
+      fr: 'Le même contenu au format JSON Resume, pour la lecture machine.',
+      es: 'El mismo contenido en formato JSON Resume, para lectura automática.',
     },
   },
   {
@@ -45,6 +51,8 @@ export const definicoes = [
     descricao: {
       pt: 'Tudo o que está acima, num arquivo. O domínio a cumprir o que promete.',
       en: 'Everything above, in one archive. The domain doing what it says.',
+      fr: 'Tout ce qui précède, en une seule archive. Le domaine qui tient sa promesse.',
+      es: 'Todo lo anterior, en un solo archivo. El dominio cumpliendo lo que promete.',
     },
   },
 ] as const satisfies ReadonlyArray<{ id: string; nome: string; caminho: string; descricao: Lang }>

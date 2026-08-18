@@ -1,0 +1,33 @@
+---
+/**
+ * O alternador de língua, no canto superior esquerdo, ao lado da marca.
+ *
+ * As outras três, cada uma escrita na sua própria língua: ninguém procura
+ * «French» num menu, procura «français». Não há bandeiras — uma bandeira é um
+ * país e não uma língua, e o espanhol de Espanha não é a bandeira do espanhol.
+ *
+ * São ligações normais, sem JS e sem deteção de idioma do navegador: quem
+ * escolhe a língua é quem lê, e a escolha fica no endereço.
+ */
+import { IDIOMAS, LINGUAS } from '../data'
+import type { Idioma } from '../data'
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props
+
+const outras = IDIOMAS.filter((i) => i !== idioma)
+---
+
+<span class="marca">
+  salgado.zip
+  {
+    outras.map((i) => (
+      <>
+        <span aria-hidden="true"> · </span>
+        {/* Sem quebra de linha dentro do <a>: o espaço sublinhado ao lado da
+            palavra é visível e não é nada. */}
+        <a href={LINGUAS[i].raiz} hreflang={LINGUAS[i].html} lang={LINGUAS[i].html}>{LINGUAS[i].etiqueta}</a>
+      </>
+    ))
+  }
+</span>
