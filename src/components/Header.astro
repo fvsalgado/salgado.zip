@@ -18,7 +18,7 @@ const [primeira, ...resto] = cabecalho.linhas
     decoding="async"
   />
   <div class="cabecalho__texto">
-    <p>{cabecalho.nome}. {t(primeira!, idioma)}</p>
+    <h1>{cabecalho.nome}. {t(primeira!, idioma)}</h1>
     {resto.map((l) => <p>{t(l, idioma)}</p>)}
   </div>
 </header>

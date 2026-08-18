@@ -31,7 +31,7 @@ colar numa candidatura.
 | `npm run build` | `pack.mjs` (resume.json + salgado.zip) e depois o Astro |
 | `npm run preview` | serve o `dist/` em `localhost:4321` |
 | `npm run artifacts` | capturas, PDFs e `og.png` — precisa de browser |
-| `npm run verify` | as catorze verificações |
+| `npm run verify` | as quinze verificações |
 
 `npm run artifacts` aceita `--sem-shots` (salta os sites externos), `--so=<id>`
 (recaptura um só) e `DEBUG_TEMPO=1` (mostra o tempo de cada passo).
@@ -47,7 +47,7 @@ browsers no build.
 
 ## Verificação
 
-`npm run verify` corre catorze verificações e devolve código de saída não-zero
+`npm run verify` corre quinze verificações e devolve código de saída não-zero
 em qualquer falha. Treze são binárias; só a última — a revisão à vista das oito
 capturas em `.verify/` — precisa de olho humano.
 

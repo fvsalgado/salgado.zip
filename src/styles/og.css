@@ -25,3 +25,12 @@
   display: flex;
   justify-content: space-between;
 }
+
+.og__cabeca { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; }
+.og__foto {
+  width: 150px;
+  height: 150px;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  filter: grayscale(1) contrast(0.95);
+}
