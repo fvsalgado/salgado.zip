@@ -1,7 +1,7 @@
 ---
 import Node from './Node.astro'
 import { projetos, posicoes, mandatos, formacao, contacto, ficheiros, CANONICO } from '../data'
-import { colofao, codigoDoSite } from '../data/textos.ts'
+import { colofao, codigoDoSite, notaCertificados } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado } from '../data/formato'
 
@@ -207,9 +207,7 @@ const totais = [
           ))}
         </ul>
         <p class="no__texto no__texto--nota">
-          {en
-            ? 'Online courses, taken independently. Not degrees from these institutions.'
-            : 'Cursos online, feitos por conta própria. Não são graus destas instituições.'}
+          {t(notaCertificados, idioma)}
         </p>
       </Node>
     )

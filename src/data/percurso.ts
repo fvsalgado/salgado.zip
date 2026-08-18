@@ -50,7 +50,7 @@ export const posicoes = parse(Posicao.array(), [
       },
       {
         pt: 'Em paralelo, a comunicação e as redes do gabinete, e a produção dos eventos do pelouro.',
-        en: 'Alongside it, the office\'s communications and social channels, and producing the portfolio\'s events.',
+        en: 'Alongside that, the office\'s communications and social media, and producing the events those areas ran.',
       },
     ],
   },
@@ -61,8 +61,8 @@ export const posicoes = parse(Posicao.array(), [
     periodo: { inicio: '2015-01', fim: '2017-12' },
     linhas: [
       {
-        pt: 'No Bartô, o bar e sala de espetáculos do Chapitô, em Lisboa. Bar, e apoio de palco na própria sala.',
-        en: 'At Bartô, the bar and small venue at Chapitô, in Lisbon. The bar, and stage-hand work in the room itself.',
+        pt: 'No Bartô, o bar e sala de espetáculos que fica no Chapitô, em Lisboa. Ao balcão, e apoio de palco na própria sala.',
+        en: 'At Bartô, the bar and small venue inside Chapitô, in Lisbon. Behind the counter, and stage-hand work in the room itself.',
       },
     ],
   },
