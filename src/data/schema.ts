@@ -98,6 +98,17 @@ export const Idioma = z.object({
 })
 export type IdiomaFalado = z.infer<typeof Idioma>
 
+/**
+ * Um lugar no mapa. Graus decimais, WGS 84 — a mesma convenção que qualquer
+ * mapa aceita colado na caixa de pesquisa.
+ */
+export const Lugar = z.object({
+  nome: z.string().min(1),
+  lat: z.number().min(-90).max(90),
+  lon: z.number().min(-180).max(180),
+})
+export type Lugar = z.infer<typeof Lugar>
+
 export const Contacto = z.object({
   /** `null` até estar confirmado. `verify.mjs` falha enquanto o for. */
   email: z.email().nullable(),
@@ -113,6 +124,8 @@ export const Contacto = z.object({
    * estruturados querem um nome de região, não a frase que se lê no ecrã.
    */
   regiao: z.string().min(1),
+  /** Os lugares do rodapé, por ordem biográfica. Sem eles, o rodapé não os inventa. */
+  lugares: z.array(Lugar).default([]),
   idiomas: z.array(Idioma).default([]),
 })
 export type Contacto = z.infer<typeof Contacto>
