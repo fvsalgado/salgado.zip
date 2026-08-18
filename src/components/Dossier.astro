@@ -33,7 +33,7 @@ const rot = en
               {p.url !== null ? <a href={p.url} rel="noopener">{p.dominio}</a> : p.dominio}
             </h3>
             <span class="entrada__quando">
-              {periodoLongo(p.periodo, idioma)} · {estado(p.estado, idioma)}
+              {p.periodo ? `${periodoLongo(p.periodo, idioma)} · ` : ''}{estado(p.estado, idioma)}
             </span>
           </div>
           <p class="entrada__onde">{t(p.papel, idioma)}</p>

@@ -34,7 +34,7 @@ const rot = en
             nome={p.dominio}
             colunas={[
               { classe: 'papel', valor: t(p.papel, idioma) },
-              { classe: 'periodo', valor: periodo(p.periodo) },
+              ...(p.periodo ? [{ classe: 'periodo' as const, valor: periodo(p.periodo) }] : []),
               { classe: 'estado', valor: estado(p.estado, idioma), dataEstado: p.estado },
             ]}
           >
@@ -45,8 +45,12 @@ const rot = en
             <dl class="no__campos">
               <dt>{rot.papel}</dt>
               <dd>{t(p.papel, idioma)}</dd>
-              <dt>{rot.periodo}</dt>
-              <dd>{periodoLongo(p.periodo, idioma)}</dd>
+              {p.periodo && (
+                <>
+                  <dt>{rot.periodo}</dt>
+                  <dd>{periodoLongo(p.periodo, idioma)}</dd>
+                </>
+              )}
               {p.stack.length > 0 && (
                 <>
                   <dt>{rot.stack}</dt>

@@ -7,6 +7,9 @@ import { Projeto, parse } from './schema.ts'
  * descreveria um projeto entregue a terceiros. É despersonalização, não
  * invenção: o papel continua a ser autor e em lado nenhum se afirma ou
  * insinua um cliente que não existe.
+ *
+ * `periodo: null` em todos: os anos ainda não estão confirmados e não se
+ * publicam por adivinhação. Entram quando o percurso entrar.
  */
 export const projetos = parse(Projeto.array().min(1), [
   {
@@ -14,7 +17,7 @@ export const projetos = parse(Projeto.array().min(1), [
     dominio: 'primeiraplateia.pt',
     papel: { pt: 'fundador, criador', en: 'founder, maker' },
     estado: 'ativo',
-    periodo: { inicio: '2024', fim: null },
+    periodo: null,
     linha: {
       pt: 'Agregador de eventos culturais em Portugal: teatros, salas de concerto, museus, cinemas.',
       en: 'Aggregator of cultural events in Portugal: theatres, concert halls, museums, cinemas.',
@@ -35,7 +38,7 @@ export const projetos = parse(Projeto.array().min(1), [
     dominio: 'onofriana.pt',
     papel: { pt: 'cofundador, produtor', en: 'co-founder, producer' },
     estado: 'ativo',
-    periodo: { inicio: '2023', fim: null },
+    periodo: null,
     linha: {
       pt: 'Curadoria, produção e programação de fado.',
       en: 'Fado curation, production and programming.',
@@ -56,7 +59,7 @@ export const projetos = parse(Projeto.array().min(1), [
     dominio: 'franciscasalgado.golf',
     papel: { pt: 'autor', en: 'author' },
     estado: 'ativo',
-    periodo: { inicio: '2024', fim: null },
+    periodo: null,
     linha: {
       pt: 'Site de atleta: época a época, rankings WAGR e europeu, parcerias, imprensa e WITB.',
       en: 'Athlete site: season by season, WAGR and European rankings, partnerships, press and WITB.',
@@ -71,7 +74,7 @@ export const projetos = parse(Projeto.array().min(1), [
     dominio: 'martarosa.pt',
     papel: { pt: 'autor', en: 'author' },
     estado: 'ativo',
-    periodo: { inicio: '2024', fim: null },
+    periodo: null,
     linha: {
       pt: 'Fadista, viola de fado e letrista. Agenda, discografia, press kit e booking.',
       en: 'Fado singer, fado viola player and lyricist. Calendar, discography, press kit and booking.',
@@ -86,7 +89,7 @@ export const projetos = parse(Projeto.array().min(1), [
     dominio: 'travertina.casa',
     papel: { pt: 'autor', en: 'author' },
     estado: 'privado',
-    periodo: { inicio: '2025', fim: null },
+    periodo: null,
     linha: {
       pt: 'Plataforma de gestão por módulos: agenda e tarefas, ativos e manutenção, orçamentos e despesa, e um CRM de microempresa com contactos, propostas e faturação.',
       en: 'Modular management platform: calendar and tasks, assets and maintenance, budgets and spending, plus a micro-business CRM with contacts, proposals and invoicing.',

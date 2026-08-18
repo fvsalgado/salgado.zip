@@ -66,8 +66,8 @@ const resume = {
     description: p.linha.en ?? p.linha.pt,
     highlights: p.detalhe.map((d) => d.en ?? d.pt),
     keywords: p.stack,
-    startDate: p.periodo.inicio,
-    ...(p.periodo.fim ? { endDate: p.periodo.fim } : {}),
+    ...(p.periodo ? { startDate: p.periodo.inicio } : {}),
+    ...(p.periodo?.fim ? { endDate: p.periodo.fim } : {}),
     roles: [p.papel.en ?? p.papel.pt],
     // Projetos privados entram sem `url`. A entrada é legítima; o endereço não sai.
     ...(p.url ? { url: p.url } : {}),

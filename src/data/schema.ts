@@ -40,7 +40,12 @@ export const Projeto = z.object({
   dominio: z.string().min(1),
   papel: Lang,
   estado: Estado,
-  periodo: Periodo,
+  /**
+   * `null` enquanto não estiver confirmado. Um período não confirmado não se
+   * publica: é informação sobre o percurso de uma pessoa real, e uma data
+   * errada num site que vai para candidaturas custa mais do que a data vale.
+   */
+  periodo: Periodo.nullable(),
   linha: Lang,
   /** Parágrafos extra, só visíveis no nó expandido e no dossiê. */
   detalhe: z.array(Lang).default([]),
