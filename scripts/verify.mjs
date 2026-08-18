@@ -379,29 +379,29 @@ function html(rota) {
 {
   const problemas = []
   const conta = (buf, re) => (buf.toString('latin1').match(re) ?? []).length
-  for (const nome of ['Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf', 'Fabio-Salgado-Projetos-PT.pdf']) {
+  const esperadas = projetos.filter((x) => x.shot !== null).length
+  for (const nome of ['Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf']) {
     const caminho = pub + 'docs/' + nome
     if (!existsSync(caminho)) {
       problemas.push(`${nome} não existe — corre \`npm run artifacts\``)
       continue
     }
     const buf = readFileSync(caminho)
-    if (!buf.subarray(0, 5).toString() === '%PDF-') problemas.push(`${nome} não é um PDF`)
+    if (buf.subarray(0, 5).toString() !== '%PDF-') problemas.push(`${nome} não é um PDF`)
     const paginas = conta(buf, /\/Type\s*\/Page[^s]/g)
-    if (paginas < 1) problemas.push(`${nome} sem páginas`)
+    if (paginas < 2) problemas.push(`${nome} tem ${paginas} página(s) — o documento completo tem mais`)
+    // Retrato, QR e uma captura por projeto que a tenha. O Chromium pode
+    // codificar uma imagem como par imagem+máscara, por isso a conta é um
+    // mínimo, não uma igualdade.
     const imagens = conta(buf, /\/Subtype\s*\/Image/g)
-    // No CV entra o retrato e nada mais — as capturas de projetos são ruído
-    // num CV. O Chromium pode codificar uma imagem como par imagem+máscara,
-    // por isso o limite é 2 objetos, não 1. No ficheiro de projetos as quatro
-    // capturas são o conteúdo: menos do que isso é regressão.
-    if (nome.includes('CV') && imagens > 2) problemas.push(`${nome} tem ${imagens} imagens — só o retrato devia lá estar`)
-    if (nome.includes('CV') && imagens === 0) problemas.push(`${nome} devia levar o retrato e não leva imagem nenhuma`)
-    const esperadas = projetos.filter((x) => x.shot !== null).length
-    if (nome.includes('Projetos') && imagens < esperadas) {
-      problemas.push(`${nome} devia levar as ${esperadas} capturas e tem ${imagens} imagens`)
+    if (imagens < esperadas + 1) {
+      problemas.push(`${nome} devia levar o retrato e as ${esperadas} capturas; tem ${imagens} imagens`)
     }
   }
-  decide('PDFs legíveis, CV com retrato, projetos com capturas', problemas)
+  if (existsSync(pub + 'docs/Fabio-Salgado-Projetos-PT.pdf')) {
+    problemas.push('Fabio-Salgado-Projetos-PT.pdf ainda existe — foi fundido nos dois documentos')
+  }
+  decide('os dois documentos abrem, com retrato e capturas', problemas)
 }
 
 /* ══ 12. O .zip e os tamanhos publicados ════════════════════════════════ */
@@ -413,7 +413,7 @@ function html(rota) {
   } else {
     const z = lerZip(readFileSync(caminho))
     const nomes = z.entradas.map((e) => e.nome)
-    for (const esperado of ['LEIA-ME.txt', 'Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf', 'Fabio-Salgado-Projetos-PT.pdf', 'resume.json']) {
+    for (const esperado of ['LEIA-ME.txt', 'Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf', 'resume.json']) {
       if (!nomes.includes(esperado)) problemas.push(`o .zip não traz ${esperado}`)
     }
     try {

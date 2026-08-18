@@ -109,6 +109,22 @@ async function paraWebp(pngBuffer, largura, altura) {
 const comCaptura = projetos.filter((p) => p.shot !== null && p.url !== null && (so === null || p.id === so))
 const comShot = projetos.filter((p) => p.shot !== null)
 
+/**
+ * Recusa o banner de cookies, quando existe. Recusa-se, não se aceita — e
+ * procura-se em `button`, `a` e `[role=button]`, porque metade destes banners
+ * não usa um <button> nenhum e o getByRole('button') não lhes toca.
+ */
+async function recusarCookies(p) {
+  for (const texto of ['Decline measurement', 'Decline', 'Recusar', 'Rejeitar', 'Only essential', 'Apenas essenciais']) {
+    const b = p.locator('button, a, [role="button"]').filter({ hasText: texto }).first()
+    if (await b.isVisible().catch(() => false)) {
+      await b.click({ timeout: 3000 }).catch(() => {})
+      await p.waitForTimeout(400)
+      return
+    }
+  }
+}
+
 if (semShots) {
   console.log('· capturas: saltadas (--sem-shots)')
 } else {
@@ -124,15 +140,7 @@ if (semShots) {
       await p.goto(proj.url, { waitUntil: 'domcontentloaded', timeout: 60000 })
       await p.waitForLoadState('networkidle', { timeout: 20000 }).catch(() => {})
 
-      // Recusar o banner de cookies, quando existe: uma captura com banner por
-      // cima lê-se como descuido. Recusa-se, não se aceita.
-      for (const texto of ['Decline measurement', 'Decline', 'Recusar', 'Rejeitar', 'Only essential', 'Apenas essenciais']) {
-        const b = p.getByRole('button', { name: texto, exact: false }).first()
-        if (await b.isVisible().catch(() => false)) {
-          await b.click({ timeout: 3000 }).catch(() => {})
-          break
-        }
-      }
+      await recusarCookies(p)
 
       // Descer um pouco e voltar a subir dispara carregamento diferido e
       // animações de entrada. Limitado a 8 passos: há páginas muito longas e
@@ -148,6 +156,13 @@ if (semShots) {
       await p.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {})
       // As animações de entrada destes sites demoram alguns segundos.
       await p.waitForTimeout(5000)
+      // Segunda tentativa: há banners que só aparecem passados uns segundos,
+      // e um deles por cima da captura lê-se como descuido.
+      await recusarCookies(p)
+      // Voltar ao topo já depois das animações: há páginas com cabeçalho
+      // preso ao scroll que não voltam ao sítio com o primeiro scrollTo.
+      await p.evaluate(() => window.scrollTo(0, 0))
+      await p.waitForTimeout(700)
       // Esperar que as imagens do primeiro ecrã estejam descodificadas — com
       // limite: `decode()` numa <img> com carregamento diferido que nunca
       // chega a arrancar não resolve nem rejeita, e fica pendurado para sempre.
@@ -187,87 +202,57 @@ if (semShots) {
 }
 
 /* ── 3. PDFs ─────────────────────────────────────────────────────────────
-   Sobre /dossie/, nunca sobre a árvore. Quem recruta pede ficheiro, e o
-   ficheiro que se manda é o dossiê. */
-const qrSvg = await QRCode.toString(CANONICO, {
-  type: 'svg',
-  margin: 0,
-  errorCorrectionLevel: 'M',
-  color: { dark: '#14130f', light: '#00000000' },
-})
+   Um documento por língua, sobre /cv/ e /en/cv/. Quem recruta descarrega um
+   ficheiro, não três, e o que abre vem paginado e numerado.
 
-async function pdf(nome, esconder, { comShots = false, rota = '/cv/' } = {}) {
+   A numeração é do Chromium (`displayHeaderFooter`): as caixas de margem do
+   @page não existem em motores WebKit, e o modelo do rodapé é um documento à
+   parte — sem acesso às fontes da página, e com corpo 0 por omissão, o que
+   obriga a declarar o estilo à mão. */
+const rodape = `<div style="width:100%;margin:0 16mm;font:7pt Georgia,serif;color:#8c8577;display:flex;justify-content:space-between">
+  <span>${cabecalho.nome} · ${CANONICO.replace('https://', '')}</span>
+  <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
+</div>`
+
+async function pdf(nome, rota) {
   const ctx = await browser.newContext({ colorScheme: 'light' })
   const p = await ctx.newPage()
   await p.goto(BASE + rota, { waitUntil: 'networkidle' })
   await p.emulateMedia({ media: 'print', colorScheme: 'light' })
-  await p.evaluate(
-    async ([svg, url, esconder, nome, shots]) => {
-      document.documentElement.dataset.theme = 'light'
-      for (const sel of esconder) document.querySelectorAll(sel).forEach((n) => n.remove())
-      // O ficheiro de projetos leva as capturas; o CV não — num CV são ruído.
-      const aDecodificar = []
-      for (const [id, src] of shots) {
-        const entrada = document.getElementById('d-' + id)
-        if (!entrada) continue
-        const img = document.createElement('img')
-        img.src = src
-        img.style.cssText =
-          'margin-top:.6rem;width:100%;max-width:118mm;border:1px solid #ccc;border-radius:3px'
-        entrada.append(img)
-        aDecodificar.push(img)
-      }
-      // Sem isto o page.pdf() dispara antes de as capturas chegarem, e saem PDFs
-      // sem imagem nenhuma — em silêncio.
-      await Promise.all(aDecodificar.map((i) => i.decode().catch(() => {})))
-      // O Chromium embute o bitmap descodificado: 4 capturas a 1440px dão um PDF
-      // de 2,4 MB. Reamostrar para 900px em JPEG deixa-o em ~350 kB, e a 118 mm
-      // de largura continua acima dos 190 dpi.
-      for (const img of aDecodificar) {
-        if (!img.naturalWidth) continue
-        const c = document.createElement('canvas')
-        c.width = 900
-        c.height = Math.round((img.naturalHeight / img.naturalWidth) * 900)
-        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height)
-        img.src = c.toDataURL('image/jpeg', 0.72)
-        await img.decode().catch(() => {})
-      }
-      const pe = document.createElement('div')
-      pe.style.cssText =
-        'margin-top:2rem;padding-top:1rem;border-top:1px solid #bbb;display:flex;gap:.9rem;align-items:center;font-size:9pt;color:#333'
-      const qr = document.createElement('div')
-      qr.style.cssText = 'width:64px;height:64px;flex:0 0 64px'
-      qr.innerHTML = svg
-      const txt = document.createElement('div')
-      txt.textContent = `${nome} · ${url}`
-      pe.append(qr, txt)
-      document.querySelector('main')?.append(pe)
-    },
-    [qrSvg, CANONICO, esconder, cabecalho.nome, comShots ? shotsDisponiveis : []]
-  )
+  await p.evaluate(async () => {
+    document.documentElement.dataset.theme = 'light'
+    // As capturas estão no marcado a 1440px e o Chromium embute o bitmap
+    // descodificado: seis delas davam um PDF de vários MB. Reamostrar para
+    // 760px em JPEG deixa-o abaixo de 400 kB, e a 84 mm de largura continua
+    // acima dos 220 dpi. Sem o decode() o pdf() dispara antes das imagens
+    // chegarem e sai um documento sem capturas nenhumas, em silêncio.
+    const imgs = Array.from(document.querySelectorAll('.captura img'))
+    await Promise.all(imgs.map((i) => i.decode().catch(() => {})))
+    for (const img of imgs) {
+      if (!img.naturalWidth) continue
+      const c = document.createElement('canvas')
+      c.width = 760
+      c.height = Math.round((img.naturalHeight / img.naturalWidth) * 760)
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height)
+      img.src = c.toDataURL('image/jpeg', 0.72)
+      await img.decode().catch(() => {})
+    }
+  })
   await p.pdf({
     path: pub + 'docs/' + nome,
     format: 'A4',
     printBackground: false,
-    margin: { top: '16mm', right: '15mm', bottom: '18mm', left: '15mm' },
+    displayHeaderFooter: true,
+    headerTemplate: '<span></span>',
+    footerTemplate: rodape,
+    margin: { top: '17mm', right: '16mm', bottom: '16mm', left: '16mm' },
   })
   await ctx.close()
   console.log(`· ${nome}`)
 }
 
-const shotsDisponiveis = comShot.map((p) => [p.id, `${BASE}/shots/${p.shot}`])
-
-await pdf('Fabio-Salgado-CV-PT.pdf', ['.vista', '.controlos', '.rodape'])
-await pdf('Fabio-Salgado-CV-EN.pdf', ['.vista', '.controlos', '.rodape'], { rota: '/en/cv/' })
-// O ficheiro de projetos leva projetos e contacto; percurso e formação ficam
-// para o CV, que é onde alguém os procura.
-await pdf('Fabio-Salgado-Projetos-PT.pdf', [
-  '.vista',
-  '.controlos',
-  '.rodape',
-  '[data-seccao="percurso"]',
-  '[data-seccao="formacao"]',
-], { comShots: true })
+await pdf('Fabio-Salgado-CV-PT.pdf', '/cv/')
+await pdf('Fabio-Salgado-CV-EN.pdf', '/en/cv/')
 
 await browser.close()
 if (servidor) servidor.kill()

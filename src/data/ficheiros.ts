@@ -16,8 +16,8 @@ export const definicoes = [
     nome: 'Fabio-Salgado-CV-PT.pdf',
     caminho: 'docs/Fabio-Salgado-CV-PT.pdf',
     descricao: {
-      pt: 'O percurso completo, pronto a enviar. Com QR de volta a este endereço.',
-      en: 'The full track record, ready to send. With a QR code back to this address.',
+      pt: 'O documento completo: projetos, percurso, mandatos, certificados e contacto. Com QR de volta a este endereço.',
+      en: 'The full document in Portuguese: projects, career, mandates, certificates and contact.',
     },
   },
   {
@@ -25,17 +25,8 @@ export const definicoes = [
     nome: 'Fabio-Salgado-CV-EN.pdf',
     caminho: 'docs/Fabio-Salgado-CV-EN.pdf',
     descricao: {
-      pt: 'O mesmo percurso, em inglês.',
-      en: 'The same track record, in English.',
-    },
-  },
-  {
-    id: 'projetos-pt',
-    nome: 'Fabio-Salgado-Projetos-PT.pdf',
-    caminho: 'docs/Fabio-Salgado-Projetos-PT.pdf',
-    descricao: {
-      pt: 'Os projetos, com capturas, em ficheiro.',
-      en: 'The projects, with screenshots, as a file.',
+      pt: 'O mesmo documento, em inglês.',
+      en: 'The same document, in English. With a QR code back to this address.',
     },
   },
   {

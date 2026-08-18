@@ -1,8 +1,11 @@
 ---
 /**
  * A segunda renderização. Mesmo conteúdo, mesma fonte, prosa corrida: sem
- * mono, sem árvore, sem metáfora. É o que se imprime, é o que vira PDF, e é o
- * URL que se cola numa candidatura.
+ * mono, sem árvore, sem metáfora.
+ *
+ * É o documento que sai em PDF — um por língua, com tudo lá dentro. Quem
+ * recruta descarrega um ficheiro, não três, e o que abre está paginado,
+ * numerado e pronto a imprimir.
  */
 import { cabecalho, projetos, posicoes, mandatos, formacao, contacto } from '../data'
 import { colofao } from '../data/textos.ts'
@@ -14,13 +17,18 @@ const { idioma } = Astro.props
 const en = idioma === 'en'
 
 const rot = en
-  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates', formacao: 'Certificates', contacto: 'Contact', colofao: 'Colophon' }
-  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais', formacao: 'Certificados', contacto: 'Contacto', colofao: 'Colofão' }
+  ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates',
+      formacao: 'Certificates', idiomas: 'Languages', colofao: 'Colophon', capturas: 'The projects, at a glance' }
+  : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais',
+      formacao: 'Certificados', idiomas: 'Idiomas', colofao: 'Colofão', capturas: 'Os projetos, à vista' }
+
+const comCaptura = projetos.filter((p) => p.shot !== null)
+const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
 ---
 
-<article>
+<article class="dossie__doc">
   <header class="dossie__cabeca">
-    <div>
+    <div class="dossie__intro">
       <h1>{cabecalho.nome}</h1>
       <p class="cabecalho__areas">{t(cabecalho.areas, idioma)}</p>
       <div class="cabecalho cabecalho--dossie">
@@ -30,12 +38,25 @@ const rot = en
     <img
       class="retrato retrato--dossie"
       src="/fabio-salgado.jpg"
-      alt=""
+      alt={en ? `Portrait of ${cabecalho.nome}` : `Retrato de ${cabecalho.nome}`}
       width="200"
       height="200"
       decoding="async"
     />
   </header>
+
+  <!-- Quem recruta procura o contacto na primeira página, não na última. -->
+  <div class="tarja">
+    <div class="tarja__campos">
+      <p>
+        {contacto.email && <a href={`mailto:${contacto.email}`}>{contacto.email}</a>}
+        {contacto.linkedin && <a href={contacto.linkedin} rel="noopener">{curto(contacto.linkedin)}</a>}
+        <a href="https://salgado.zip">salgado.zip</a>
+      </p>
+      <p class="tarja__onde">{t(contacto.concelho, idioma)} · {t(contacto.naturalidade, idioma)}</p>
+    </div>
+    <img class="tarja__qr" src="/qr.svg" alt={en ? 'QR code for salgado.zip' : 'Código QR para salgado.zip'} width="120" height="120" />
+  </div>
 
   <section data-seccao="projetos">
     <h2>{rot.projetos}</h2>
@@ -43,11 +64,11 @@ const rot = en
       projetos.map((p) => (
         <div class="entrada" id={`d-${p.id}`}>
           <div class="entrada__cabeca">
-            <h3>
-              {p.url !== null ? <a href={p.url} rel="noopener">{p.dominio}</a> : p.dominio}
-            </h3>
+            <h3>{p.url !== null ? <a href={p.url} rel="noopener">{p.dominio}</a> : p.dominio}</h3>
             <span class="entrada__quando">
-              {p.periodo ? `${periodoLongo(p.periodo, idioma)} · ` : ''}{estado(p.estado, idioma)}
+              {p.periodo ? periodoLongo(p.periodo, idioma) : ''}
+              {/* «em curso · ativo» dizia duas vezes a mesma coisa: só o privado acrescenta. */}
+              {p.estado === 'privado' ? `${p.periodo ? ' · ' : ''}${estado(p.estado, idioma)}` : ''}
             </span>
           </div>
           <p class="entrada__onde">{t(p.papel, idioma)}</p>
@@ -59,6 +80,22 @@ const rot = en
       ))
     }
   </section>
+
+  {
+    comCaptura.length > 0 && (
+      <section data-seccao="capturas">
+        <h2>{rot.capturas}</h2>
+        <div class="capturas">
+          {comCaptura.map((p) => (
+            <figure class="captura">
+              <img src={`/shots/${p.shot}`} alt={`${en ? 'Screenshot of' : 'Captura de ecrã de'} ${p.dominio}`} decoding="async" />
+              <figcaption>{p.dominio}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    )
+  }
 
   {
     posicoes.length > 0 && (
@@ -85,7 +122,7 @@ const rot = en
       <section data-seccao="mandatos">
         <h2>{rot.mandatos}</h2>
         {mandatos.map((m) => (
-          <div class="entrada" id={`d-${m.id}`}>
+          <div class:list={['entrada', m.linhas.length === 0 && 'entrada--linha']} id={`d-${m.id}`}>
             <div class="entrada__cabeca">
               <h3>{t(m.cargo, idioma)}</h3>
               <span class="entrada__quando">{periodoLongo(m.periodo, idioma)}</span>
@@ -107,7 +144,7 @@ const rot = en
       <section data-seccao="formacao">
         <h2>{rot.formacao}</h2>
         {formacao.map((f) => (
-          <div class="entrada" id={`d-${f.id}`}>
+          <div class="entrada entrada--linha" id={`d-${f.id}`}>
             <div class="entrada__cabeca">
               <h3>{t(f.curso, idioma)}</h3>
               <span class="entrada__quando">{periodoLongo(f.periodo, idioma)}</span>
@@ -115,32 +152,27 @@ const rot = en
             <p class="entrada__onde">{f.instituicao}</p>
           </div>
         ))}
+        <p class="nota">
+          {en
+            ? 'Online courses, taken independently. Not degrees from these institutions.'
+            : 'Cursos online, feitos por conta própria. Não são graus destas instituições.'}
+        </p>
       </section>
     )
   }
 
-  <section data-seccao="contacto">
-    <h2>{rot.contacto}</h2>
-    <ul class="lista-limpa">
-      {contacto.email && (
-        <li><a href={`mailto:${contacto.email}`}>{contacto.email}</a></li>
-      )}
-      {contacto.linkedin && (
-        <li><a href={contacto.linkedin} rel="noopener">{contacto.linkedin.replace(/^https:\/\//, '')}</a></li>
-      )}
-      <li>{t(contacto.concelho, idioma)}</li>
-      <li>{t(contacto.naturalidade, idioma)}</li>
-      {contacto.idiomas.length > 0 && (
-        <li>
-          {contacto.idiomas.map((i) => `${t(i.lingua, idioma)} (${t(i.nivel, idioma)})`).join(' · ')}
-        </li>
-      )}
-      <li><a href="https://salgado.zip">salgado.zip</a></li>
-    </ul>
-  </section>
+  {
+    contacto.idiomas.length > 0 && (
+      <section data-seccao="idiomas">
+        <h2>{rot.idiomas}</h2>
+        <p>{contacto.idiomas.map((i) => `${t(i.lingua, idioma)} (${t(i.nivel, idioma)})`).join(' · ')}</p>
+      </section>
+    )
+  }
 
   <section data-seccao="colofao">
     <h2>{rot.colofao}</h2>
     {colofao.map((l) => <p>{t(l, idioma)}</p>)}
   </section>
+
 </article>

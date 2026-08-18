@@ -12,6 +12,7 @@
 import { createWriteStream, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { ZipArchive } from 'archiver'
+import QRCode from 'qrcode'
 
 import { cabecalho } from '../src/data/cabecalho.ts'
 import { projetos } from '../src/data/projetos.ts'
@@ -94,6 +95,20 @@ const resume = {
 mkdirSync(pub, { recursive: true })
 writeFileSync(pub + 'resume.json', JSON.stringify(resume, null, 2) + '\n')
 
+/* ── qr.svg ───────────────────────────────────────────────────────────────
+   O caminho de volta ao site a partir do papel. Vive na tarja de contacto do
+   dossiê e sai do mesmo endereço canónico, portanto é sempre o mesmo ficheiro
+   para o mesmo destino. */
+writeFileSync(
+  pub + 'qr.svg',
+  await QRCode.toString(CANONICO, {
+    type: 'svg',
+    margin: 0,
+    errorCorrectionLevel: 'M',
+    color: { dark: '#14130f', light: '#00000000' },
+  })
+)
+
 /* ── salgado.zip ──────────────────────────────────────────────────────────
    Lista explícita de ficheiros. Nunca empacotar public/ inteiro: o próprio
    .zip vive lá dentro. */
@@ -106,10 +121,9 @@ const leiaMe = [
   contacto.linkedin ? `LinkedIn: ${contacto.linkedin}` : null,
   '',
   'Conteúdo deste arquivo:',
-  '  Fabio-Salgado-CV-PT.pdf        o percurso, impresso',
-  '  Fabio-Salgado-CV-EN.pdf        the same, in English',
-  '  Fabio-Salgado-Projetos-PT.pdf  os projetos, em ficheiro',
-  '  resume.json                    o mesmo conteúdo em formato JSON Resume',
+  '  Fabio-Salgado-CV-PT.pdf  o documento completo, em português',
+  '  Fabio-Salgado-CV-EN.pdf  the same document, in English',
+  '  resume.json              o mesmo conteúdo em formato JSON Resume',
   '',
   'Gerado a partir da mesma fonte que o site. Nenhum número foi escrito à mão.',
   '',
@@ -121,7 +135,6 @@ const entradas = [
   { origem: null, conteudo: leiaMe, nome: 'LEIA-ME.txt' },
   { origem: pub + 'docs/Fabio-Salgado-CV-PT.pdf', nome: 'Fabio-Salgado-CV-PT.pdf' },
   { origem: pub + 'docs/Fabio-Salgado-CV-EN.pdf', nome: 'Fabio-Salgado-CV-EN.pdf' },
-  { origem: pub + 'docs/Fabio-Salgado-Projetos-PT.pdf', nome: 'Fabio-Salgado-Projetos-PT.pdf' },
   { origem: pub + 'resume.json', nome: 'resume.json' },
 ]
 
