@@ -14,9 +14,13 @@ const rot =
 ---
 
 <div class="controlos" data-controlos hidden>
-  <button type="button" data-abrir-tudo>{rot.abrir}</button>
+  <button type="button" data-abrir-tudo aria-label={rot.abrir}>
+    {idioma === 'en' ? 'expand' : 'abrir'}<span class="so-largo">{idioma === 'en' ? ' all' : ' tudo'}</span>
+  </button>
   <span aria-hidden="true">·</span>
-  <button type="button" data-fechar-tudo>{rot.fechar}</button>
+  <button type="button" data-fechar-tudo aria-label={rot.fechar}>
+    {idioma === 'en' ? 'collapse' : 'fechar'}<span class="so-largo">{idioma === 'en' ? ' all' : ' tudo'}</span>
+  </button>
   <span aria-hidden="true">·</span>
   <button type="button" class="tema" data-tema aria-label={rot.tema} title={rot.tema}>◐</button>
 </div>

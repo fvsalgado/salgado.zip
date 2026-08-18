@@ -11,12 +11,9 @@ export const cabecalho = parse(Cabecalho, {
     pt: 'políticas públicas, cultura e produtos digitais',
     en: 'public policy, culture and digital products',
   },
+  // O nome é o <h1> e `areas` é a linha de ofício por baixo — a abertura que o
+  // cartão social já fazia bem. As linhas abaixo são a prosa, não o título.
   linhas: [
-    {
-      // Sem o nome: no arquivo entra como prefixo, no CV é o <h1>.
-      pt: 'Trabalho entre políticas públicas, produção cultural e produtos digitais.',
-      en: 'I work across public policy, cultural production and digital products.',
-    },
     {
       pt: 'O que junta os três mundos é o mesmo gesto: perceber um sistema, encontrar-lhe as regras e fazer alguma coisa com isso.',
       en: 'What joins the three worlds is the same move: understand a system, find its rules, and make something with it.',

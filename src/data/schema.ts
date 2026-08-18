@@ -24,8 +24,8 @@ export const Cabecalho = z.object({
   nome: z.string().min(1),
   /** Os ofícios numa linha, para o <title>. */
   areas: Lang,
-  /** Três linhas em prosa. Quem és → o que fazes → onde estás e o que procuras. */
-  linhas: z.array(Lang).min(3).max(4),
+  /** A prosa por baixo do título. Duas a quatro linhas. */
+  linhas: z.array(Lang).min(2).max(4),
   cargo: Lang,
 })
 export type Cabecalho = z.infer<typeof Cabecalho>
