@@ -196,10 +196,10 @@ const qrSvg = await QRCode.toString(CANONICO, {
   color: { dark: '#14130f', light: '#00000000' },
 })
 
-async function pdf(nome, esconder, { comShots = false } = {}) {
+async function pdf(nome, esconder, { comShots = false, rota = '/cv/' } = {}) {
   const ctx = await browser.newContext({ colorScheme: 'light' })
   const p = await ctx.newPage()
-  await p.goto(BASE + '/cv/', { waitUntil: 'networkidle' })
+  await p.goto(BASE + rota, { waitUntil: 'networkidle' })
   await p.emulateMedia({ media: 'print', colorScheme: 'light' })
   await p.evaluate(
     async ([svg, url, esconder, nome, shots]) => {
@@ -258,6 +258,7 @@ async function pdf(nome, esconder, { comShots = false } = {}) {
 const shotsDisponiveis = comShot.map((p) => [p.id, `${BASE}/shots/${p.shot}`])
 
 await pdf('Fabio-Salgado-CV-PT.pdf', ['.vista', '.controlos', '.rodape'])
+await pdf('Fabio-Salgado-CV-EN.pdf', ['.vista', '.controlos', '.rodape'], { rota: '/en/cv/' })
 // O ficheiro de projetos leva projetos e contacto; percurso e formação ficam
 // para o CV, que é onde alguém os procura.
 await pdf('Fabio-Salgado-Projetos-PT.pdf', [

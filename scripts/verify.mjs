@@ -379,7 +379,7 @@ function html(rota) {
 {
   const problemas = []
   const conta = (buf, re) => (buf.toString('latin1').match(re) ?? []).length
-  for (const nome of ['Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-Projetos-PT.pdf']) {
+  for (const nome of ['Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf', 'Fabio-Salgado-Projetos-PT.pdf']) {
     const caminho = pub + 'docs/' + nome
     if (!existsSync(caminho)) {
       problemas.push(`${nome} não existe — corre \`npm run artifacts\``)
@@ -413,7 +413,7 @@ function html(rota) {
   } else {
     const z = lerZip(readFileSync(caminho))
     const nomes = z.entradas.map((e) => e.nome)
-    for (const esperado of ['LEIA-ME.txt', 'Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-Projetos-PT.pdf', 'resume.json']) {
+    for (const esperado of ['LEIA-ME.txt', 'Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf', 'Fabio-Salgado-Projetos-PT.pdf', 'resume.json']) {
       if (!nomes.includes(esperado)) problemas.push(`o .zip não traz ${esperado}`)
     }
     try {

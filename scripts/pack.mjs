@@ -106,7 +106,8 @@ const leiaMe = [
   contacto.linkedin ? `LinkedIn: ${contacto.linkedin}` : null,
   '',
   'Conteúdo deste arquivo:',
-  '  Fabio-Salgado-CV-PT.pdf        o dossiê, impresso',
+  '  Fabio-Salgado-CV-PT.pdf        o percurso, impresso',
+  '  Fabio-Salgado-CV-EN.pdf        the same, in English',
   '  Fabio-Salgado-Projetos-PT.pdf  os projetos, em ficheiro',
   '  resume.json                    o mesmo conteúdo em formato JSON Resume',
   '',
@@ -119,6 +120,7 @@ const leiaMe = [
 const entradas = [
   { origem: null, conteudo: leiaMe, nome: 'LEIA-ME.txt' },
   { origem: pub + 'docs/Fabio-Salgado-CV-PT.pdf', nome: 'Fabio-Salgado-CV-PT.pdf' },
+  { origem: pub + 'docs/Fabio-Salgado-CV-EN.pdf', nome: 'Fabio-Salgado-CV-EN.pdf' },
   { origem: pub + 'docs/Fabio-Salgado-Projetos-PT.pdf', nome: 'Fabio-Salgado-Projetos-PT.pdf' },
   { origem: pub + 'resume.json', nome: 'resume.json' },
 ]

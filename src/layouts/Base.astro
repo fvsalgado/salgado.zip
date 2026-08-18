@@ -12,9 +12,11 @@ interface Props {
   caminho: string
   classe?: string
   robots?: string
+  /** Rotas equivalentes nas duas línguas. Quando presente, emite hreflang. */
+  alternos?: { pt: string; en: string }
 }
 
-const { idioma, titulo, descricao, caminho, classe = '', robots } = Astro.props
+const { idioma, titulo, descricao, caminho, classe = '', robots, alternos } = Astro.props
 const canonical = CANONICO + caminho
 
 const sameAs = [
@@ -44,6 +46,15 @@ const jsonLd = {
     <meta name="description" content={descricao} />
     <link rel="canonical" href={canonical} />
     {robots && <meta name="robots" content={robots} />}
+    {
+      alternos && (
+        <>
+          <link rel="alternate" hreflang="pt-PT" href={CANONICO + alternos.pt} />
+          <link rel="alternate" hreflang="en" href={CANONICO + alternos.en} />
+          <link rel="alternate" hreflang="x-default" href={CANONICO + alternos.pt} />
+        </>
+      )
+    }
 
     <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)" />

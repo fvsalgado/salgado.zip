@@ -1,0 +1,21 @@
+---
+/**
+ * Fonte do CV em PDF. Não está ligada de lado nenhum nem entra no sitemap:
+ * o site público é um só, e esta rota existe para o scripts/artifacts.mjs
+ * imprimir o dossiê em prosa.
+ */
+import Base from '../../layouts/Base.astro'
+import Dossier from '../../components/Dossier.astro'
+import { cabecalho } from '../../data'
+import { t } from '../../data/formato'
+
+const idioma = 'en' as const
+const titulo = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}`
+const descricao = `${cabecalho.nome}. ${t(cabecalho.linhas[0]!, idioma)}`
+---
+
+<Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/en/cv/" classe="dossie" robots="noindex, nofollow">
+  <main class="folha" id="conteudo">
+    <Dossier idioma={idioma} />
+  </main>
+</Base>

@@ -21,6 +21,15 @@ export const definicoes = [
     },
   },
   {
+    id: 'cv-en',
+    nome: 'Fabio-Salgado-CV-EN.pdf',
+    caminho: 'docs/Fabio-Salgado-CV-EN.pdf',
+    descricao: {
+      pt: 'O mesmo percurso, em inglês.',
+      en: 'The same track record, in English.',
+    },
+  },
+  {
     id: 'projetos-pt',
     nome: 'Fabio-Salgado-Projetos-PT.pdf',
     caminho: 'docs/Fabio-Salgado-Projetos-PT.pdf',
