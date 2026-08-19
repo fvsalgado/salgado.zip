@@ -85,6 +85,13 @@ export const notaCertificados = parse(Lang, {
 export const codigoDoSite = 'https://github.com/fvsalgado/salgado.zip'
 
 /**
+ * O perfil, derivado do repositório e não escrito outra vez. Serve o `sameAs`
+ * do JSON-LD e o ícone do rodapé — e derivá-lo é o que garante que os dois
+ * apontam sempre ao mesmo sítio.
+ */
+export const perfilGithub = codigoDoSite.replace(/\/[^/]+$/, '')
+
+/**
  * A mesma licença do Primeira Plateia — o ficheiro LICENSE deste repositório é
  * byte a byte o de lá. A AGPL é a escolha coerente para software que se serve
  * pela rede: quem o correr por cima de um servidor tem de dar o código a quem o

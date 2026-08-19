@@ -1,32 +1,47 @@
 ---
-import { datas, contacto, ficheiros } from '../data'
+/**
+ * O rodapé.
+ *
+ * Três linhas centradas e uma de coordenadas. A ordem é a da utilidade: quem
+ * chega ao fim da página quer levar o CV, ou falar comigo, ou ver o código —
+ * por essa ordem.
+ *
+ * Os dois CV têm linha só para eles, com um ícone à frente: partilhavam antes
+ * a linha com a nota de privacidade, e o que se quer levar de um sítio destes
+ * não pode ir a meio de uma frase sobre cookies.
+ *
+ * A hora de atualização saiu. Dizia a data do último commit de conteúdo, que é
+ * informação sobre o repositório e não sobre quem lê — e o `lastmod` do
+ * sitemap continua a dá-la a quem a usa mesmo, que são os motores de busca.
+ *
+ * Os ícones são desenho vetorial em linha, e não imagens: seguem a cor do
+ * texto nos dois temas, não fazem um pedido, e não têm ficheiro para se
+ * perder. O do GitHub vem do conjunto Simple Icons, sob CC0; o do LinkedIn é a
+ * marca em domínio público; o envelope e a folha são desenhados aqui. As duas
+ * marcas aparecem para identificar as plataformas onde tenho perfil, que é o
+ * uso para que existem.
+ */
+import { contacto, ficheiros } from '../data'
 import type { Idioma } from '../data'
-import { dataCurta, coordenadas } from '../data/formato'
+import { coordenadas } from '../data/formato'
+import { codigoDoSite, perfilGithub, licenca } from '../data/textos.ts'
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
 
-const ROTULOS: Record<Idioma, { atualizado: string; semRastreio: string }> = {
-  pt: { atualizado: 'atualizado', semRastreio: 'sem cookies, sem publicidade' },
-  en: { atualizado: 'updated', semRastreio: 'no cookies, no advertising' },
-  fr: { atualizado: 'mis à jour', semRastreio: 'sans cookies, sans publicité' },
-  es: { atualizado: 'actualizado', semRastreio: 'sin cookies, sin publicidad' },
+const ROTULOS: Record<Idioma, { sem: string; aberto: string; licenca: string }> = {
+  pt: { sem: 'sem cookies, sem publicidade', aberto: 'código aberto', licenca: 'licença' },
+  en: { sem: 'no cookies, no advertising', aberto: 'open source', licenca: 'licence' },
+  fr: { sem: 'sans cookies, sans publicité', aberto: 'code ouvert', licenca: 'licence' },
+  es: { sem: 'sin cookies, sin publicidad', aberto: 'código abierto', licenca: 'licencia' },
 }
 const rot = ROTULOS[idioma]
 
-const maisRecente = Object.values(datas).sort().at(-1)
-const quando = dataCurta(maisRecente, idioma)
-
 /**
- * Os dois documentos, e não o arquivo inteiro: quem chega ao fim da página é
- * quem quer levar alguma coisa, e o que se leva de um sítio destes é o CV. O
- * .zip continua em `ficheiros/`, com o tamanho ao lado.
- *
- * Os dois saem sempre, seja qual for a língua da interface — cada um rotulado
- * na sua, que é a maneira mais curta de dizer o que está lá dentro sem o
- * traduzir. Quem lê inglês reconhece «CV in English» numa página portuguesa, e
- * ao contrário também; quem lê a página em francês percebe pelo rótulo que os
- * documentos são dois e nenhum deles é em francês, que é a verdade.
+ * Cada um rotulado na sua língua, seja qual for a da página: é a maneira mais
+ * curta de dizer o que está lá dentro sem o traduzir. «CV in English» e não
+ * «English CV» — o segundo lê-se como um CV feito à maneira inglesa, e o que
+ * se está a dizer é a língua do documento, a par de «CV em português».
  */
 const cvs = [
   { id: 'cv-pt', rotulo: 'CV em português' },
@@ -34,25 +49,65 @@ const cvs = [
 ]
   .map((d) => ({ ...d, href: ficheiros.find((f) => f.id === d.id)?.href ?? null }))
   .filter((d): d is { id: string; rotulo: string; href: string } => d.href !== null)
+
+/** Os sítios onde se me encontra, e só os que estão confirmados. */
+const contactos = [
+  contacto.email ? { nome: 'email', href: `mailto:${contacto.email}`, icone: 'mail' as const } : null,
+  contacto.linkedin ? { nome: 'LinkedIn', href: contacto.linkedin, icone: 'linkedin' as const } : null,
+  { nome: 'GitHub', href: perfilGithub, icone: 'github' as const },
+].filter((c): c is { nome: string; href: string; icone: 'mail' | 'linkedin' | 'github' } => c !== null)
 ---
 
 <footer class="rodape">
-  <span>
-    salgado.zip{quando ? ` · ${rot.atualizado} ${quando}` : ''}
-  </span>
-  <span class="rodape__ecra">
-    {cvs.map((c, i) => (
-      <>
-        {i > 0 && <span aria-hidden="true"> · </span>}
-        <a href={c.href}>{c.rotulo}</a>
-      </>
+  <p class="rodape__cv rodape__ecra">
+    {cvs.map((c) => (
+      <a class="rodape__doc" href={c.href}>
+        {/* Uma folha com o canto dobrado: o desenho mais curto que diz «documento». */}
+        <svg class="icone" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path
+            fill="currentColor"
+            d="M4 1h5l3.5 3.5V15H4V1zm4.6 1.2v2.9h2.9L8.6 2.2zM5.2 2.2v11.6h6.1V6.3H7.4V2.2H5.2z"
+          />
+        </svg>
+        {c.rotulo}
+      </a>
     ))}
+  </p>
+
+  <p class="rodape__contactos rodape__ecra">
+    {contactos.map((c) => (
+      <a href={c.href} rel="noopener" aria-label={c.nome} title={c.nome}>
+        {c.icone === 'mail' && (
+          <svg class="icone icone--maior" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path
+              fill="currentColor"
+              d="M1 3h14v10H1V3zm1.6 1.2L8 8.4l5.4-4.2H2.6zM2.2 5v6.8h11.6V5L8 9.6 2.2 5z"
+            />
+          </svg>
+        )}
+        {c.icone === 'linkedin' && (
+          <svg class="icone icone--maior" viewBox="0 0 36.1 36" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M 33.3,0 H 2.7 C 1.2,0 0,1.2 0,2.6 V 33.4 C 0,34.8 1.2,36 2.7,36 h 30.7 c 1.5,0 2.7,-1.2 2.7,-2.6 V 2.6 C 36,1.2 34.8,0 33.3,0 Z M 10.7,30.7 H 5.3 V 13.5 h 5.3 V 30.7 Z M 8,11.1 C 6.3,11.1 4.9,9.7 4.9,8 4.9,6.3 6.3,5 8,5 c 1.7,0 3.1,1.4 3.1,3.1 0,1.7 -1.4,3 -3.1,3 z m 22.7,19.6 h -5.3 v -8.4 c 0,-2 0,-4.6 -2.8,-4.6 -2.8,0 -3.2,2.2 -3.2,4.4 v 8.5 H 14 V 13.5 h 5.1 v 2.3 h 0.1 c 0.7,-1.4 2.5,-2.8 5.1,-2.8 5.4,0 6.4,3.6 6.4,8.2 z" />
+          </svg>
+        )}
+        {c.icone === 'github' && (
+          <svg class="icone icone--maior" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+          </svg>
+        )}
+      </a>
+    ))}
+  </p>
+
+  <p class="rodape__nota">
+    <a href="#privacidade">{rot.sem}</a>
     <span aria-hidden="true"> · </span>
-    {/* A frase passou a ser uma ligação: dizer «sem cookies» e não dar o
-        caminho para quem quer confirmar é pedir confiança em vez de a merecer. */}
-    <a href="#privacidade">{rot.semRastreio}</a>
-  </span>
+    <a href={codigoDoSite} rel="noopener">{rot.aberto}</a>
+    <span aria-hidden="true"> · </span>
+    <a href={licenca.url} rel="noopener">{`${rot.licenca} ${licenca.nome}`}</a>
+  </p>
+
   {contacto.lugares.length > 0 && (
-    <span class="rodape__lugares">{coordenadas(contacto.lugares)}</span>
+    <p class="rodape__lugares">{coordenadas(contacto.lugares)}</p>
   )}
 </footer>
