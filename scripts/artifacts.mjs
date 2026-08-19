@@ -237,19 +237,27 @@ async function pdf(nome, rota, idioma) {
     // 760px em JPEG deixa-o abaixo de 400 kB, e a 84 mm de largura continua
     // acima dos 220 dpi. Sem o decode() o pdf() dispara antes das imagens
     // chegarem e sai um documento sem capturas nenhumas, em silêncio.
-    // As capas entram no mesmo ciclo desde que passaram a sair no documento:
-    // em webp cru levavam o PDF de ~300 kB para 637 kB, porque o Chromium
-    // embute o bitmap descodificado e não o ficheiro. Não se reamostram — a
-    // 34mm os 280px de altura já dão perto de 300 ppp, e ampliar não
-    // acrescenta detalhe nenhum; o que poupa os bytes é trocar o lossless
-    // pelo JPEG. Menos compressão do que as capturas (0,82 contra 0,72)
-    // porque uma capa é tipografia sobre fotografia e marca os artefactos.
-    const imgs = Array.from(document.querySelectorAll('.captura img, .capa-doc img'))
+    // As capas e os registos da voz entram no mesmo ciclo desde que passaram a
+    // sair no documento: em webp cru levavam o PDF de ~300 kB para 637 kB,
+    // porque o Chromium embute o bitmap descodificado e não o ficheiro. O que
+    // poupa os bytes é trocar o lossless pelo JPEG, e a 0,82 — menos compressão
+    // do que as capturas — porque uma capa e um cartaz são tipografia sobre
+    // fotografia, e a tipografia é onde os artefactos se veem primeiro.
+    //
+    // Os tetos de largura saem da largura impressa, não de gosto: uma capa sai
+    // no máximo a 30mm de mancha e 280px dão-lhe 237 ppp; um registo da voz sai
+    // até 44mm, onde os mesmos 280px cairiam para 162 — daí os 440, que ali dão
+    // 254. Nenhum dos dois se amplia: `Math.min` com a largura natural garante
+    // que uma imagem pequena fica como está, porque esticar não inventa detalhe.
+    const imgs = Array.from(
+      document.querySelectorAll('.captura img, .capa-doc img, .registo-doc img')
+    )
     await Promise.all(imgs.map((i) => i.decode().catch(() => {})))
     for (const img of imgs) {
       if (!img.naturalWidth) continue
       const captura = img.closest('.captura') !== null
-      const alvo = captura ? 760 : Math.min(img.naturalWidth, 280)
+      const registo = img.closest('.registo-doc') !== null
+      const alvo = captura ? 760 : Math.min(img.naturalWidth, registo ? 440 : 280)
       const c = document.createElement('canvas')
       c.width = alvo
       c.height = Math.round((img.naturalHeight / img.naturalWidth) * alvo)

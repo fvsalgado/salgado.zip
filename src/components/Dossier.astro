@@ -96,6 +96,49 @@ const comCaptura = projetos.filter((p) => p.shot !== null)
  * intercalar imagens partia-a em cinco pedaços numa página que já é apertada.
  */
 const comCapa = leituras.filter((l) => l.capa !== null)
+
+/**
+ * O que se viu, e não só o que se leu.
+ *
+ * A secção da voz dizia, em prosa, que houve dois vídeos e três noites em
+ * palco, e depois mostrava quatro capas de livros — ou seja, mostrava a parte
+ * de que não há imagem e calava a parte de que há. Entram as provas visuais
+ * que existem: o fotograma de cada vídeo, e a primeira imagem de cada leitura
+ * em palco que trouxe alguma.
+ *
+ * PRIMEIRA e não todas, por regra e não por gosto: das noites com registo há
+ * duas fotografias de uma e um cartaz de outra, e publicar tudo dava a uma
+ * noite o dobro do espaço da outra por acidente de arquivo. Quem quiser as
+ * restantes tem-nas no nó `voz/` da página, que é onde vivem ao tamanho a que
+ * foram feitas.
+ *
+ * A legenda leva o crédito por baixo do título, e o crédito não traduz: é o
+ * nome de quem fez a fotografia. Nos vídeos leva a casa que os encomendou.
+ * As Quartas da Palavra ficam de fora deste bloco por não ter aparecido
+ * cartaz nenhum — a prosa acima continua a contá-las, que é o que importa.
+ */
+const registosVoz = leituras.flatMap((l) => {
+  if (l.formato === 'video') {
+    return [{
+      chave: l.id,
+      src: `/voz/${l.id}.webp`,
+      alt: en ? `A frame from the film ${l.titulo}` : `Fotograma do vídeo ${l.titulo}`,
+      titulo: l.titulo,
+      nota: l.editor,
+    }]
+  }
+  if (l.formato === 'presencial' && l.imagens.length > 0) {
+    const img = l.imagens[0]
+    return [{
+      chave: l.id,
+      src: `/voz/${img.ficheiro}`,
+      alt: t(img.alt, idioma),
+      titulo: l.titulo,
+      nota: img.credito,
+    }]
+  }
+  return []
+})
 const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
 ---
 
@@ -204,6 +247,19 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
         {linhaPalco && <p>{linhaPalco}</p>}
         {linhaAutor && <p>{linhaAutor}</p>}
         <p>{linhaFicheiros}</p>
+        {registosVoz.length > 0 && (
+          <div class="registos">
+            {registosVoz.map((r) => (
+              <figure class="registo-doc">
+                <img src={r.src} alt={r.alt} decoding="async" />
+                <figcaption>
+                  <span class="registo-doc__titulo">{r.titulo}</span>
+                  <span class="registo-doc__nota">{r.nota}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
         {comCapa.length > 0 && (
           <div class="capas">
             {comCapa.map((l) => (

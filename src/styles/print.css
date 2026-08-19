@@ -113,20 +113,31 @@
   /* ── Onde as folhas partem ─────────────────────────────────────────────
      Três dos pedidos — o percurso com a apresentação, os projetos em duas
      folhas com as imagens, e as capas no fim da voz — são todos sobre
-     paginação, e nenhum se aguenta a fluxo livre. Sem estas quebras o
-     documento dá as mesmas quatro folhas nos sítios errados: bastou apertar a
+     paginação, e nenhum se aguenta a fluxo livre: bastou apertar a
      apresentação sessenta pixels para o primeiro projeto subir ao pé da folha
-     1, e para as capas se partirem ao meio, com metade órfã no cimo da 4,
-     longe da frase que nomeia os autores. Custa o branco no fim da 1 e da 3, e
-     compra em troca uma paginação que não muda quando o conteúdo muda.
+     1, e para as capas se partirem ao meio, com metade órfã no cimo da 4.
+
+     A quebra estava na secção da voz e passou para as capas, quando os
+     registos entraram. Medido, e não suposto: com a voz a abrir folha, a
+     folha 4 tinha de levar a prosa, quatro registos, quatro capas, os
+     mandatos, os certificados, os idiomas e o colofão — e a folga que lá
+     havia era de menos de vinte pixels. Aliviar as margens, encolher as
+     imagens para 16mm, pôr as capturas a duas por linha: nada disso chegou,
+     porque o que não cabia era a fila inteira, não a altura dela.
+
+     Assim, a voz volta a fluir a seguir às capturas e são as capas que abrem
+     folha. O documento fecha em quatro com [1, 0, 10, 4] imagens por folha:
+     o retrato; os projetos em texto; as seis capturas com os quatro registos
+     da voz; e as quatro capas. As capas continuam no fim da secção, que era o
+     pedido, e continuam a abrir folha, que é o que impede que se partam.
 
      O `margin-top: 0` não aparece em medição de fluxo contínuo, só no PDF: o
-     Chromium honra a margem de topo do rótulo no cimo da folha que a quebra
-     abriu, e um rótulo encostado ao papel não tem de se separar de nada. Tem
-     de ficar DEPOIS do bloco `.dossie h2` — ambos são (0,1,1) e quem decide é
-     a ordem no ficheiro. */
-  [data-seccao='projetos'], [data-seccao='voz'] { break-before: page; }
-  [data-seccao='projetos'] h2, [data-seccao='voz'] h2 { margin-top: 0; }
+     Chromium honra a margem de topo de quem abre a folha que a quebra criou,
+     e quem está encostado ao papel não tem de se separar de nada. Tem de
+     ficar DEPOIS do bloco `.dossie h2` — ambos são (0,1,1) e quem decide é a
+     ordem no ficheiro. */
+  [data-seccao='projetos'] { break-before: page; }
+  [data-seccao='projetos'] h2 { margin-top: 0; }
 
   .dossie h3 { font-size: 11pt; }
   .entrada + .entrada { margin-top: 4mm; }
@@ -151,10 +162,22 @@
      livro que se conhece, não para se ler a capa. A legenda é que carrega a
      informação, e traz o autor para ninguém confundir quem escreveu com quem
      leu. Quatro numa linha atravessam a caixa de texto com folga. */
-  .capas { gap: 5mm; margin-top: 2.5mm; }
+  .capas { break-before: page; gap: 5mm; margin-top: 0; }
   .capa-doc { width: 30mm; }
   .capa-doc img { height: 24mm; }
   .capa-doc figcaption { font-size: 7.6pt; margin-top: 1.2mm; line-height: 1.25; }
+
+  /* ── Os registos da voz ────────────────────────────────────────────────
+     40mm de figura e 22mm de imagem, e os dois números saem da mesma conta.
+     Quatro figuras a 40mm com três folgas de 5mm dão 175mm, que é o que cabe
+     nos 178 da mancha. E a 22mm de altura um fotograma 16:9 sai com 39mm, que
+     é o que cabe dentro dos 40 — a 24mm, como as capas, sairia com 43 e
+     transbordava. Os retratos das duas noites ficam estreitos dentro da
+     figura, e é a legenda que ocupa a largura toda. */
+  .registos { gap: 5mm; margin-top: 2.5mm; }
+  .registo-doc { width: 40mm; }
+  .registo-doc img { height: 22mm; }
+  .registo-doc figcaption { font-size: 7.6pt; margin-top: 1.2mm; line-height: 1.25; }
 
   /* O colofão fecha o documento: é o mesmo texto, um corpo abaixo. */
   [data-seccao='colofao'] p { font-size: 9.2pt; color: var(--ink-soft); }
