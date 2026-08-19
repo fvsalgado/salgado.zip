@@ -134,7 +134,35 @@ const jsonLd = {
      * peça que não é dele. É o mesmo erro que a página teve, e que se corrigiu
      * lá quando a rubrica passou a viver na entrada.
      */
-    ...leituras.map((l) => {
+    /* As leituras em palco não são um objeto de media: não há ficheiro, e um
+       `AudioObject` sem `contentUrl` é uma promessa vazia. São eventos que
+       aconteceram, com data, sítio e quem lá esteve — e é isso que se declara,
+       com a peça lida em `workPerformed` e a voz em `performer`. */
+    ...leituras
+      .filter((l) => l.formato === 'presencial')
+      .map((l) => ({
+        '@type': 'Event',
+        name: l.titulo,
+        description: t(l.fonte, idioma),
+        startDate: l.data,
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        ...(l.local ? { location: { '@type': 'Place', name: l.local } } : {}),
+        organizer: { '@type': 'Organization', name: l.editor },
+        ...(l.rubrica ? { superEvent: { '@type': 'EventSeries', name: l.rubrica } } : {}),
+        performer: { '@id': PESSOA },
+        workPerformed: {
+          '@type': 'CreativeWork',
+          name: l.titulo,
+          author: { '@type': 'Person', name: l.autoria },
+        },
+        inLanguage: 'pt-PT',
+        ...(l.imagens.length > 0 ? { image: `${CANONICO}/voz/${l.imagens[0].ficheiro}` } : {}),
+        url: l.origem,
+      })),
+    ...leituras
+      .filter((l) => l.formato !== 'presencial')
+      .map((l) => {
       const video = l.formato === 'video'
       return {
         '@type': video ? 'VideoObject' : 'AudioObject',

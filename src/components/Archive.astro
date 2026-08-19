@@ -66,7 +66,12 @@ interface Rotulos {
   ouvir: string
   ver: string
   dimensoes: string
-  notaVoz: (leituras: number, videos: number) => string
+  ondeLbl: string
+  imagensLbl: string
+  organizaLbl: string
+  quandoLbl: string
+  paginaLbl: string
+  notaVoz: (leituras: number, videos: number, palcos: number) => string
 }
 
 const ROTULOS: Record<Idioma, Rotulos> = {
@@ -74,7 +79,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     projetos: 'projetos/', voz: 'voz/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/',
     contacto: 'contacto/', privacidade: 'privacidade/', ficheiros: 'ficheiros/', colofao: 'colofão/',
     entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
-    contaProjetos: 'projetos', contaLeituras: 'gravações', contaCargos: 'cargos', contaMandatos: 'mandatos',
+    contaProjetos: 'projetos', contaLeituras: 'peças de voz', contaCargos: 'cargos', contaMandatos: 'mandatos',
     nascido: (ano) => `nascido em ${ano}`,
     abrirTudo: 'abrir tudo', fecharTudo: 'fechar tudo',
     papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
@@ -85,14 +90,16 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     notaFicheiros: 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.',
     autor: 'autoria', rubricaLbl: 'rubrica', publicado: 'publicado', duracaoLbl: 'duração',
     ficheiroLbl: 'ficheiro', original: 'no editor', ouvir: 'Ouvir', ver: 'Ver', dimensoes: 'imagem',
-    notaVoz: (n, v) =>
-      `As ${n} leituras são os ficheiros originais, byte a byte, do que o esquerda.net publicou — vivem aqui porque o feed do podcast só guarda os episódios mais recentes, e estas caíram fora dele. Os ${v} vídeos vieram da página do Transborda e foram recodificados uma vez, para tocarem em todos os browsers. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
+    ondeLbl: 'onde', imagensLbl: 'imagens',
+    organizaLbl: 'organização', quandoLbl: 'quando', paginaLbl: 'página',
+    notaVoz: (n, v, p) =>
+      `As ${n} leituras são os ficheiros originais, byte a byte, do que o esquerda.net publicou — vivem aqui porque o feed do podcast só guarda os episódios mais recentes, e estas caíram fora dele. Os ${v} vídeos vieram da página do Transborda e foram recodificados uma vez, para tocarem em todos os browsers. Das ${p} leituras em palco não ficou gravação nenhuma: ficaram as imagens, e a página do festival que prova que aconteceram. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
   },
   en: {
     projetos: 'projects/', voz: 'voice/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/',
     contacto: 'contact/', privacidade: 'privacy/', ficheiros: 'files/', colofao: 'colophon/',
     entradas: (n) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
-    contaProjetos: 'projects', contaLeituras: 'recordings', contaCargos: 'positions', contaMandatos: 'mandates',
+    contaProjetos: 'projects', contaLeituras: 'voice pieces', contaCargos: 'positions', contaMandatos: 'mandates',
     nascido: (ano) => `born ${ano}`,
     abrirTudo: 'expand all', fecharTudo: 'collapse all',
     papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
@@ -103,14 +110,16 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     notaFicheiros: 'Every size above is read from the real file at build time. Nothing here is typed by hand.',
     autor: 'author', rubricaLbl: 'series', publicado: 'published', duracaoLbl: 'length',
     ficheiroLbl: 'file', original: 'at the publisher', ouvir: 'Listen to', ver: 'Watch', dimensoes: 'picture',
-    notaVoz: (n, v) =>
-      `The ${n} readings are the original files, byte for byte, of what esquerda.net published — they live here because the podcast feed keeps only the most recent episodes, and these dropped out of it. The ${v} films came from the Transborda page and were re-encoded once, so they play in every browser. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
+    ondeLbl: 'where', imagensLbl: 'pictures',
+    organizaLbl: 'organiser', quandoLbl: 'when', paginaLbl: 'page',
+    notaVoz: (n, v, p) =>
+      `The ${n} readings are the original files, byte for byte, of what esquerda.net published — they live here because the podcast feed keeps only the most recent episodes, and these dropped out of it. The ${v} films came from the Transborda page and were re-encoded once, so they play in every browser. Of the ${p} readings on stage no recording survives: what is left are the pictures, and the festival page that proves they happened. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
   },
   fr: {
     projetos: 'projets/', voz: 'voix/', percurso: 'parcours/', mandatos: 'mandats/', formacao: 'certificats/',
     contacto: 'contact/', privacidade: 'confidentialite/', ficheiros: 'fichiers/', colofao: 'colophon/',
     entradas: (n) => `${n} ${n === 1 ? 'entrée' : 'entrées'}`,
-    contaProjetos: 'projets', contaLeituras: 'enregistrements', contaCargos: 'postes', contaMandatos: 'mandats',
+    contaProjetos: 'projets', contaLeituras: 'pièces de voix', contaCargos: 'postes', contaMandatos: 'mandats',
     nascido: (ano) => `né en ${ano}`,
     abrirTudo: 'tout ouvrir', fecharTudo: 'tout fermer',
     papel: 'rôle', periodo: 'période', stack: 'stack', endereco: 'adresse', acesso: 'accès',
@@ -121,14 +130,16 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     notaFicheiros: 'Toutes les tailles ci-dessus sont lues sur le fichier réel au build. Rien ici n’est saisi à la main.',
     autor: 'auteur', rubricaLbl: 'rubrique', publicado: 'publié', duracaoLbl: 'durée',
     ficheiroLbl: 'fichier', original: 'chez l’éditeur', ouvir: 'Écouter', ver: 'Regarder', dimensoes: 'image',
-    notaVoz: (n, v) =>
-      `Les ${n} lectures sont les fichiers originaux, octet par octet, de ce qu’esquerda.net a publié — ils vivent ici parce que le flux du podcast ne garde que les épisodes les plus récents, et ceux-ci en sont sortis. Les ${v} vidéos viennent de la page de Transborda et ont été réencodées une fois, pour être lues par tous les navigateurs. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
+    ondeLbl: 'où', imagensLbl: 'images',
+    organizaLbl: 'organisation', quandoLbl: 'quand', paginaLbl: 'page',
+    notaVoz: (n, v, p) =>
+      `Les ${n} lectures sont les fichiers originaux, octet par octet, de ce qu’esquerda.net a publié — ils vivent ici parce que le flux du podcast ne garde que les épisodes les plus récents, et ceux-ci en sont sortis. Les ${v} vidéos viennent de la page de Transborda et ont été réencodées une fois, pour être lues par tous les navigateurs. Des ${p} lectures sur scène il ne reste aucun enregistrement : il reste les images, et la page du festival qui prouve qu’elles ont eu lieu. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
   },
   es: {
     projetos: 'proyectos/', voz: 'voz/', percurso: 'trayectoria/', mandatos: 'mandatos/', formacao: 'certificados/',
     contacto: 'contacto/', privacidade: 'privacidad/', ficheiros: 'archivos/', colofao: 'colofón/',
     entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
-    contaProjetos: 'proyectos', contaLeituras: 'grabaciones', contaCargos: 'cargos', contaMandatos: 'mandatos',
+    contaProjetos: 'proyectos', contaLeituras: 'piezas de voz', contaCargos: 'cargos', contaMandatos: 'mandatos',
     nascido: (ano) => `nacido en ${ano}`,
     abrirTudo: 'abrir todo', fecharTudo: 'cerrar todo',
     papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'dirección', acesso: 'acceso',
@@ -139,12 +150,17 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     notaFicheiros: 'Todos los tamaños de arriba se leen del fichero real en el build. Nada aquí se escribe a mano.',
     autor: 'autoría', rubricaLbl: 'sección', publicado: 'publicado', duracaoLbl: 'duración',
     ficheiroLbl: 'fichero', original: 'en el editor', ouvir: 'Escuchar', ver: 'Ver', dimensoes: 'imagen',
-    notaVoz: (n, v) =>
-      `Las ${n} lecturas son los ficheros originales, byte a byte, de lo que esquerda.net publicó — viven aquí porque el feed del podcast solo guarda los episodios más recientes, y estas quedaron fuera. Los ${v} vídeos vinieron de la página de Transborda y se recodificaron una vez, para reproducirse en todos los navegadores. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
+    ondeLbl: 'dónde', imagensLbl: 'imágenes',
+    organizaLbl: 'organización', quandoLbl: 'cuándo', paginaLbl: 'página',
+    notaVoz: (n, v, p) =>
+      `Las ${n} lecturas son los ficheros originales, byte a byte, de lo que esquerda.net publicó — viven aquí porque el feed del podcast solo guarda los episodios más recientes, y estas quedaron fuera. Los ${v} vídeos vinieron de la página de Transborda y se recodificaron una vez, para reproducirse en todos los navegadores. De las ${p} lecturas en escena no quedó ninguna grabación: quedaron las imágenes, y la página del festival que prueba que ocurrieron. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
   },
 }
 const rot = ROTULOS[idioma]
 
+/* «peças de voz» e não «gravações»: desde que o nó tem leituras em palco, duas
+   das entradas não são gravação nenhuma, e contá-las com esse nome dizia à
+   entrada da página um número que a própria página desmente lá em baixo. */
 const totais = [
   `${projetos.length} ${rot.contaProjetos}`,
   `${leituras.length} ${rot.contaLeituras}`,
@@ -298,7 +314,9 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
         ]}
       >
         <ul class="arvore arvore--filha" role="list">
-          {leituras.map((l) => (
+          {leituras.map((l) => {
+            const palco = l.formato === 'presencial'
+            return (
             <Node
               id={l.id}
               nivel={3}
@@ -306,7 +324,13 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               colunas={[
                 { classe: 'papel', valor: l.autoria },
                 { classe: 'periodo', valor: l.data.slice(0, 4) },
-                { classe: 'tam', valor: duracao(medidasVoz[l.id].segundos) },
+                /* Sem duração nas leituras em palco: não há ficheiro para a
+                   medir, e o que esta casa não deriva não escreve. A coluna
+                   fica vazia em vez de levar um travessão — um travessão a
+                   fingir de número era um número escrito à mão. */
+                ...(medidasVoz[l.id]
+                  ? [{ classe: 'tam' as const, valor: duracao(medidasVoz[l.id].segundos) }]
+                  : []),
               ]}
             >
               <Fragment slot="resumo">
@@ -314,9 +338,10 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                     projetos/. Onze linhas com um parágrafo por baixo eram uma
                     parede de texto onde não se via o que ali estava.
 
-                    A capa da edição onde há uma, o fotograma onde é vídeo, e
-                    nada onde não há imagem nenhuma: a linha já traz autoria,
-                    ano e duração, e uma frase repetida ali só a estica.
+                    A capa da edição onde há uma, a primeira fotografia nas
+                    leituras em palco, o fotograma onde é vídeo, e nada onde não
+                    há imagem nenhuma: a linha já traz autoria, ano e duração, e
+                    uma frase repetida ali só a estica.
 
                     Um `<audio controls>` aqui dentro seria o que parecia
                     óbvio, e não pode ser: dentro de um `<summary>` é um
@@ -328,6 +353,15 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                     <img
                       src={`/capas/${l.capa.ficheiro}`}
                       alt={rot.capaDe(l.capa.obra, l.autoria)}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                ) : l.imagens.length > 0 ? (
+                  <span class="capa capa--resumo">
+                    <img
+                      src={`/voz/${l.imagens[0].ficheiro}`}
+                      alt={t(l.imagens[0].alt, idioma)}
                       loading="lazy"
                       decoding="async"
                     />
@@ -351,8 +385,22 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               {/* Leitor nativo, áudio ou vídeo: sem uma linha de JavaScript, e
                   com preload="none" não faz pedido nenhum enquanto ninguém
                   carregar em tocar. O vídeo leva capa — sem ela, um `<video>`
-                  que não pré-carrega é um retângulo preto na listagem. */}
-              {l.formato === 'video' ? (
+                  que não pré-carrega é um retângulo preto na listagem.
+
+                  Nas leituras em palco não há leitor porque não há ficheiro. O
+                  que ficou delas foram as imagens, e são elas que ocupam este
+                  lugar — incluindo a primeira, que já se viu pequena na linha
+                  fechada: aqui vê-se ao tamanho a que foi feita. */}
+              {l.formato === 'presencial' ? (
+                <div class="registo">
+                  {l.imagens.map((img) => (
+                    <figure class="registo__peca">
+                      <img src={`/voz/${img.ficheiro}`} alt={t(img.alt, idioma)} loading="lazy" decoding="async" />
+                      <figcaption>{img.credito}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              ) : l.formato === 'video' ? (
                 <video
                   class="leitor leitor--video"
                   controls
@@ -381,34 +429,66 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                 <dd>{l.autoria}</dd>
                 <dt>{rot.papel}</dt>
                 <dd>{t(l.papel, idioma)}</dd>
-                <dt>{rot.rubricaLbl}</dt>
+                {/* Uma leitura em palco não tem rubrica, nem editor, nem data
+                    de publicação, nem página do editor: tem organização, sítio,
+                    dia, e a página de quem a fez. Os rótulos mudam com o
+                    formato porque descrevem coisas diferentes — deixá-los
+                    fixos era pôr «publicado» em cima de uma noite. */}
+                <dt>{palco ? rot.organizaLbl : rot.rubricaLbl}</dt>
                 <dd>{l.rubrica ? `${l.rubrica} · ${l.editor}` : l.editor}</dd>
-                <dt>{rot.publicado}</dt>
-                <dd>{dataCurta(l.data, idioma)}</dd>
-                <dt>{rot.duracaoLbl}</dt>
-                <dd>{duracao(medidasVoz[l.id].segundos)}</dd>
-                {l.formato === 'video' && (
+                {l.local && (
                   <>
-                    <dt>{rot.dimensoes}</dt>
-                    <dd>{`${medidasVoz[l.id].largura}×${medidasVoz[l.id].altura}`}</dd>
+                    <dt>{rot.ondeLbl}</dt>
+                    <dd>{l.local}</dd>
                   </>
                 )}
-                <dt>{rot.ficheiroLbl}</dt>
-                <dd>
-                  <a href={`/voz/${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}`} download>
-                    {`${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}`}
-                  </a>
-                  {` · ${tamanho(medidasVoz[l.id].bytes)}`}
-                </dd>
-                <dt>{rot.original}</dt>
+                <dt>{palco ? rot.quandoLbl : rot.publicado}</dt>
+                <dd>{dataCurta(l.data, idioma)}</dd>
+                {/* Duração, dimensões e ficheiro saem todos do voz.json, e o
+                    voz.json só conhece o que tem ficheiro. Numa leitura em
+                    palco estas três linhas não existem — em vez de existirem
+                    vazias, que seria prometer um número e não o dar. */}
+                {medidasVoz[l.id] && (
+                  <>
+                    <dt>{rot.duracaoLbl}</dt>
+                    <dd>{duracao(medidasVoz[l.id].segundos)}</dd>
+                    {l.formato === 'video' && (
+                      <>
+                        <dt>{rot.dimensoes}</dt>
+                        <dd>{`${medidasVoz[l.id].largura}×${medidasVoz[l.id].altura}`}</dd>
+                      </>
+                    )}
+                    <dt>{rot.ficheiroLbl}</dt>
+                    <dd>
+                      <a href={`/voz/${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}`} download>
+                        {`${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}`}
+                      </a>
+                      {` · ${tamanho(medidasVoz[l.id].bytes)}`}
+                    </dd>
+                  </>
+                )}
+                {l.imagens.length > 0 && (
+                  <>
+                    <dt>{rot.imagensLbl}</dt>
+                    <dd>{[...new Set(l.imagens.map((i) => i.credito))].join(' · ')}</dd>
+                  </>
+                )}
+                <dt>{palco ? rot.paginaLbl : rot.original}</dt>
                 <dd>
                   <a href={l.origem} rel="noopener">{l.origem.replace(/^https:\/\/(www\.)?/, '')}</a>
                 </dd>
               </dl>
             </Node>
-          ))}
+            )
+          })}
         </ul>
-        <p class="no__texto no__texto--nota">{rot.notaVoz(leituras.filter((l) => l.formato === 'audio').length, leituras.filter((l) => l.formato === 'video').length)}</p>
+        <p class="no__texto no__texto--nota">
+          {rot.notaVoz(
+            leituras.filter((l) => l.formato === 'audio').length,
+            leituras.filter((l) => l.formato === 'video').length,
+            leituras.filter((l) => l.formato === 'presencial').length
+          )}
+        </p>
       </Node>
     )
   }

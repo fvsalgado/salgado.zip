@@ -480,13 +480,29 @@ function html(rota) {
 /* ══ 16. As gravações batem certo com os ficheiros em disco ═════════════
    O nó `voz/` publica quatro coisas que ninguém escreveu à mão — o tamanho, a
    duração, as dimensões da imagem e o sha256 — e duas que ninguém deve poder
-   desfazer sem dar por isso: nada pré-carrega, e todo o vídeo leva capa. */
+   desfazer sem dar por isso: nada pré-carrega, e todo o vídeo leva capa.
+
+   As leituras em palco não têm nada disso, e é justamente por não terem que
+   precisam de guarda própria: sem ficheiro para as ancorar, o que as prova são
+   as imagens, e uma imagem que desapareça do disco não daria erro em lado
+   nenhum. */
 {
   const problemas = []
   const dirVoz = pub + 'voz/'
   const medidas = JSON.parse(readFileSync(raiz + 'src/generated/voz.json', 'utf8'))
 
   for (const l of leituras) {
+    /* As leituras em palco não têm ficheiro: o que se lhes verifica é que as
+       imagens declaradas existem, e que nenhuma passou sem crédito. O `alt` e
+       o crédito são obrigatórios no schema; aqui confirma-se o que o schema não
+       alcança, que é o disco. */
+    if (l.formato === 'presencial') {
+      if (medidas[l.id]) problemas.push(`${l.id}: é presencial e mesmo assim tem medida em voz.json`)
+      for (const img of l.imagens) {
+        if (!existsSync(dirVoz + img.ficheiro)) problemas.push(`${l.id}: falta a imagem ${img.ficheiro}`)
+      }
+      continue
+    }
     const video = l.formato === 'video'
     const caminho = dirVoz + `${l.id}.${video ? 'mp4' : 'mp3'}`
     if (!existsSync(caminho)) {
@@ -518,7 +534,10 @@ function html(rota) {
 
   // Um ficheiro sem entrada é som ou imagem publicados que não dizem de quem são.
   const declarados = new Set(
-    leituras.flatMap((l) => (l.formato === 'video' ? [`${l.id}.mp4`, `${l.id}.webp`] : [`${l.id}.mp3`]))
+    leituras.flatMap((l) => {
+      if (l.formato === 'presencial') return l.imagens.map((i) => i.ficheiro)
+      return l.formato === 'video' ? [`${l.id}.mp4`, `${l.id}.webp`] : [`${l.id}.mp3`]
+    })
   )
   if (existsSync(dirVoz)) {
     for (const f of readdirSync(dirVoz)) {
@@ -539,6 +558,15 @@ function html(rota) {
   for (const rota of paginas) {
     const h = html(rota)
     for (const l of leituras) {
+      // Uma leitura em palco não tem leitor porque não tem ficheiro. O que se
+      // exige é que as imagens dela estejam mesmo na página: uma entrada sem
+      // gravação e sem imagem não mostrava nada a ninguém.
+      if (l.formato === 'presencial') {
+        for (const img of l.imagens) {
+          if (!h.includes(`/voz/${img.ficheiro}`)) problemas.push(`${rota}: ${l.id} sem a imagem ${img.ficheiro}`)
+        }
+        continue
+      }
       const video = l.formato === 'video'
       const tag = video ? 'video' : 'audio'
       const ext = video ? 'mp4' : 'mp3'
@@ -556,7 +584,7 @@ function html(rota) {
   decide(
     'as gravações batem certo com os ficheiros em disco, e nada pré-carrega',
     problemas,
-    `${leituras.length} gravações · ${Math.floor(totalSegundos / 3600)}h${String(Math.round((totalSegundos % 3600) / 60)).padStart(2, '0')}`
+    `${Object.keys(medidas).length} gravações · ${Math.floor(totalSegundos / 3600)}h${String(Math.round((totalSegundos % 3600) / 60)).padStart(2, '0')} · ${leituras.filter((l) => l.formato === 'presencial').length} em palco`
   )
 }
 
