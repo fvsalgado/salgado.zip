@@ -93,7 +93,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     ondeLbl: 'onde', imagensLbl: 'imagens',
     organizaLbl: 'organização', quandoLbl: 'quando', paginaLbl: 'página',
     notaVoz: (n, v, p) =>
-      `As ${n} leituras são os ficheiros originais, byte a byte, do que o esquerda.net publicou — vivem aqui porque o feed do podcast só guarda os episódios mais recentes, e estas caíram fora dele. Os ${v} vídeos vieram da página do Transborda e foram recodificados uma vez, para tocarem em todos os browsers. Das ${p} leituras em palco não ficou gravação nenhuma: ficaram as imagens, e a página do festival que prova que aconteceram. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
+      `As ${n} leituras são os ficheiros originais, byte a byte, do que o esquerda.net publicou — vivem aqui porque o feed do podcast só guarda os episódios mais recentes, e estas caíram fora dele. Os ${v} vídeos vieram da página do Transborda e foram recodificados uma vez, para tocarem em todos os browsers. Das ${p} leituras em palco não ficou gravação nenhuma — ficaram as imagens que houve, e a página de quem as acolheu ou escreveu sobre elas. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
   },
   en: {
     projetos: 'projects/', voz: 'voice/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/',
@@ -113,7 +113,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     ondeLbl: 'where', imagensLbl: 'pictures',
     organizaLbl: 'organiser', quandoLbl: 'when', paginaLbl: 'page',
     notaVoz: (n, v, p) =>
-      `The ${n} readings are the original files, byte for byte, of what esquerda.net published — they live here because the podcast feed keeps only the most recent episodes, and these dropped out of it. The ${v} films came from the Transborda page and were re-encoded once, so they play in every browser. Of the ${p} readings on stage no recording survives: what is left are the pictures, and the festival page that proves they happened. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
+      `The ${n} readings are the original files, byte for byte, of what esquerda.net published — they live here because the podcast feed keeps only the most recent episodes, and these dropped out of it. The ${v} films came from the Transborda page and were re-encoded once, so they play in every browser. Of the ${p} readings on stage no recording survives — what is left are whatever pictures there were, and the page of whoever hosted them or wrote about them. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
   },
   fr: {
     projetos: 'projets/', voz: 'voix/', percurso: 'parcours/', mandatos: 'mandats/', formacao: 'certificats/',
@@ -133,7 +133,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     ondeLbl: 'où', imagensLbl: 'images',
     organizaLbl: 'organisation', quandoLbl: 'quand', paginaLbl: 'page',
     notaVoz: (n, v, p) =>
-      `Les ${n} lectures sont les fichiers originaux, octet par octet, de ce qu’esquerda.net a publié — ils vivent ici parce que le flux du podcast ne garde que les épisodes les plus récents, et ceux-ci en sont sortis. Les ${v} vidéos viennent de la page de Transborda et ont été réencodées une fois, pour être lues par tous les navigateurs. Des ${p} lectures sur scène il ne reste aucun enregistrement : il reste les images, et la page du festival qui prouve qu’elles ont eu lieu. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
+      `Les ${n} lectures sont les fichiers originaux, octet par octet, de ce qu’esquerda.net a publié — ils vivent ici parce que le flux du podcast ne garde que les épisodes les plus récents, et ceux-ci en sont sortis. Les ${v} vidéos viennent de la page de Transborda et ont été réencodées une fois, pour être lues par tous les navigateurs. Des ${p} lectures sur scène il ne reste aucun enregistrement — il reste les images qu’il y avait, et la page de qui les a accueillies ou en a écrit. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
   },
   es: {
     projetos: 'proyectos/', voz: 'voz/', percurso: 'trayectoria/', mandatos: 'mandatos/', formacao: 'certificados/',
@@ -153,7 +153,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     ondeLbl: 'dónde', imagensLbl: 'imágenes',
     organizaLbl: 'organización', quandoLbl: 'cuándo', paginaLbl: 'página',
     notaVoz: (n, v, p) =>
-      `Las ${n} lecturas son los ficheros originales, byte a byte, de lo que esquerda.net publicó — viven aquí porque el feed del podcast solo guarda los episodios más recientes, y estas quedaron fuera. Los ${v} vídeos vinieron de la página de Transborda y se recodificaron una vez, para reproducirse en todos los navegadores. De las ${p} lecturas en escena no quedó ninguna grabación: quedaron las imágenes, y la página del festival que prueba que ocurrieron. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
+      `Las ${n} lecturas son los ficheros originales, byte a byte, de lo que esquerda.net publicó — viven aquí porque el feed del podcast solo guarda los episodios más recientes, y estas quedaron fuera. Los ${v} vídeos vinieron de la página de Transborda y se recodificaron una vez, para reproducirse en todos los navegadores. De las ${p} lecturas en escena no quedó ninguna grabación — quedaron las imágenes que hubo, y la página de quien las acogió o escribió sobre ellas. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
   },
 }
 const rot = ROTULOS[idioma]
@@ -392,6 +392,10 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                   lugar — incluindo a primeira, que já se viu pequena na linha
                   fechada: aqui vê-se ao tamanho a que foi feita. */}
               {l.formato === 'presencial' ? (
+                /* Sem imagens não se abre a caixa: um `<div>` vazio com
+                   `display: flex` e `gap` deixa na página um buraco do tamanho
+                   da margem, e o nó parece partido em vez de parecer sóbrio. */
+                l.imagens.length > 0 && (
                 <div class="registo">
                   {l.imagens.map((img) => (
                     <figure class="registo__peca">
@@ -400,6 +404,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                     </figure>
                   ))}
                 </div>
+                )
               ) : l.formato === 'video' ? (
                 <video
                   class="leitor leitor--video"

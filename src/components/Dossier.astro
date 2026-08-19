@@ -38,6 +38,13 @@ const rot = en
 const lidas = leituras.filter((l) => l.formato === 'audio')
 const vistos = leituras.filter((l) => l.formato === 'video')
 const palcos = leituras.filter((l) => l.formato === 'presencial')
+/* Separadas por quem assina a peça. Numa só frase davam «sobre a obra de
+   Alberto Pimenta, Fábio Salgado», que põe o meu nome na lista dos autores que
+   fui ler — e chama leitura a uma noite que foi peça montada. */
+const palcosAlheios = palcos.filter((l) => l.autoria !== cabecalho.nome)
+const palcosMeus = palcos.filter((l) => l.autoria === cabecalho.nome)
+const ondeQuando = (ls: typeof leituras) =>
+  ls.map((l) => `${l.rubrica ?? l.editor} (${l.data.slice(0, 4)})`).join(', ')
 const anos = (ls: typeof leituras) => ls.map((l) => Number(l.data.slice(0, 4)))
 const segundosVoz = lidas.reduce((s, l) => s + (medidasVoz[l.id]?.segundos ?? 0), 0)
 const horasVoz = `${Math.floor(segundosVoz / 3600)}h${String(Math.round((segundosVoz % 3600) / 60)).padStart(2, '0')}`
@@ -55,10 +62,15 @@ const linhaVideo = vistos.length
     ? `Voice for ${vistos.length} promotional films for Transborda, the Almada performing arts festival, in ${anos(vistos).sort().join(' and ')}.`
     : `Voz de ${vistos.length} vídeos de promoção do Transborda, a mostra de artes performativas de Almada, em ${anos(vistos).sort().join(' e ')}.`
   : null
-const linhaPalco = palcos.length
+const linhaPalco = palcosAlheios.length
   ? en
-    ? `${palcos.length} readings on stage — ${palcos.map((l) => `${l.rubrica ?? l.editor} (${l.data.slice(0, 4)})`).join(', ')} — on the work of ${[...new Set(palcos.map((l) => l.autoria))].join(', ')}.`
-    : `${palcos.length} leituras em palco — ${palcos.map((l) => `${l.rubrica ?? l.editor} (${l.data.slice(0, 4)})`).join(', ')} — sobre a obra de ${[...new Set(palcos.map((l) => l.autoria))].join(', ')}.`
+    ? `${palcosAlheios.length} readings on stage — ${ondeQuando(palcosAlheios)} — on the work of ${[...new Set(palcosAlheios.map((l) => l.autoria))].join(', ')}.`
+    : `${palcosAlheios.length} leituras em palco — ${ondeQuando(palcosAlheios)} — sobre a obra de ${[...new Set(palcosAlheios.map((l) => l.autoria))].join(', ')}.`
+  : null
+const linhaAutor = palcosMeus.length
+  ? en
+    ? `${palcosMeus.length} solo night${palcosMeus.length > 1 ? 's' : ''} of my own devising — ${ondeQuando(palcosMeus)}.`
+    : `${palcosMeus.length} ${palcosMeus.length > 1 ? 'noites' : 'noite'} a solo, de alinhamento próprio — ${ondeQuando(palcosMeus)}.`
   : null
 /* «Está tudo» e não «os ficheiros»: desde que há leituras em palco, nem tudo
    o que o nó guarda é ficheiro, e a frase apontava para onde ir. */
@@ -157,6 +169,7 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
         <p>{linhaVoz}</p>
         {linhaVideo && <p>{linhaVideo}</p>}
         {linhaPalco && <p>{linhaPalco}</p>}
+        {linhaAutor && <p>{linhaAutor}</p>}
         <p>{linhaFicheiros}</p>
       </section>
     )

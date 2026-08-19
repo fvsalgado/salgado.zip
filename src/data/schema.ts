@@ -179,6 +179,14 @@ export const Leitura = z.object({
    * A primeira ilustra a linha fechada; todas aparecem dentro do nó, porque
    * numa leitura sem gravação a imagem não é enfeite — é o registo.
    *
+   * Podem faltar. Havia aqui uma regra a exigir pelo menos uma, com o argumento
+   * de que uma presencial sem imagens «não tem o que mostrar» — e a regra
+   * confundia duas coisas. O que uma entrada tem de ter é como ser verificada
+   * por outra pessoa, e disso trata a `origem`, que é obrigatória em todas. A
+   * imagem é como aquilo se via, não é a prova de que aconteceu: a noite no
+   * Sagrada Família não tem cartaz à mão e tem uma crítica assinada e publicada
+   * — a prova mais forte de todo o nó.
+   *
    * Chama-se `imagens` e não `fotos` porque nem todas o são: há fotografias de
    * quem lá esteve a fotografar, e há cartazes, que são de quem organizou.
    *
@@ -211,7 +219,6 @@ export const Leitura = z.object({
     if (l.formato === 'presencial') {
       if (l.sha256 !== null) erro('leitura presencial não tem ficheiro, logo não tem sha256', ['sha256'])
       if (l.origemAudio !== null) erro('leitura presencial não tem ficheiro para descarregar', ['origemAudio'])
-      if (l.imagens.length === 0) erro('leitura presencial sem imagens não tem o que mostrar', ['imagens'])
       if (l.local === null) erro('uma leitura presencial aconteceu nalgum sítio', ['local'])
     } else {
       if (l.sha256 === null) erro('uma gravação tem de trazer o sha256 do ficheiro', ['sha256'])
