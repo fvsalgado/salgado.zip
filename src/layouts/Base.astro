@@ -6,6 +6,7 @@ import type { Idioma } from '../data'
 import { t, duracaoISO } from '../data/formato'
 import { codigoDoSite } from '../data/textos.ts'
 import dimensoes from '../generated/og.json' with { type: 'json' }
+import { inject } from '@vercel/analytics'
 
 interface Props {
   idioma: Idioma
@@ -238,21 +239,12 @@ const jsonLd = {
     <script is:inline src="/tema.js"></script>
     {
       /**
-       * Medição de visitas. Só sai no build da Vercel, e é de propósito: fora
-       * de lá o caminho não existe, e a verificação 2 — todas as ligações
-       * internas devolvem 200 — falharia num ficheiro que o preview local não
-       * tem para servir.
-       *
-       * O script e o ponto de recolha vivem no próprio domínio, o que é a razão
-       * de ser este e não outro: a CSP continua `script-src 'self'`, e a
-       * verificação 8 continua a ver zero pedidos a terceiros porque não há
-       * nenhum. Sem cookies, sem localStorage: a visita é identificada por um
-       * resumo do pedido, descartado ao fim de 24 horas.
-       *
-       * São 2 495 bytes que o orçamento de 10 kB não conta, porque não passam
-       * pelo dist/. Ficam escritos aqui para não serem um custo escondido.
+       * Medição de visitas com Vercel Web Analytics. O script e o ponto de
+       * recolha vivem no próprio domínio, mantendo a CSP `script-src 'self'` e
+       * zero pedidos a terceiros. Sem cookies, sem localStorage: a visita é
+       * identificada por um resumo do pedido, descartado ao fim de 24 horas.
        */
-      analytics && <script is:inline defer src="/_vercel/insights/script.js" />
+      analytics && <script is:inline set:html={inject()} />
     }
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   </head>
