@@ -92,15 +92,22 @@ const resume = {
    * próximo do que elas são. O `summary` diz o papel primeiro e de propósito:
    * uma entrada com o título do livro e o meu nome por cima, sem mais nada,
    * lê-se como se eu o tivesse escrito.
+   *
+   * O editor sai de cada entrada. Estava fixo na `RUBRICA`, e isso punha o
+   * esquerda.net como editor dos vídeos do Transborda e das leituras em palco
+   * — o mesmo erro que a página já tinha tido e que os dados estruturados
+   * também tiveram. Um currículo que credita a casa errada é pior do que um
+   * currículo mudo.
    */
   publications: leituras.map((l) => {
     const papel = l.papel.en ?? l.papel.pt
+    const casa = l.rubrica ? `${l.rubrica}, ${l.editor}` : l.editor
     return {
       name: l.titulo,
-      publisher: `${RUBRICA.nome}, ${RUBRICA.editor}`,
+      publisher: casa,
       releaseDate: l.data,
       url: l.origem,
-      summary: `${papel[0].toUpperCase()}${papel.slice(1)} for ${RUBRICA.nome} (${RUBRICA.editor}). ${l.fonte.en ?? l.fonte.pt}`,
+      summary: `${papel[0].toUpperCase()}${papel.slice(1)} for ${casa}. ${l.fonte.en ?? l.fonte.pt}`,
     }
   }),
   meta: {
@@ -165,12 +172,17 @@ const llms = [
   '',
   '## Voz',
   '',
-  `As leituras são da rubrica ${RUBRICA.nome}, do ${RUBRICA.editor}; os vídeos são de outra proveniência e estão identificados.`,
+  `As leituras da rubrica ${RUBRICA.nome} são do ${RUBRICA.editor}; os vídeos e as leituras em palco são de outra proveniência e estão identificados.`,
   '',
-  ...leituras.map(
-    (l) =>
-      `- [${l.titulo}](${CANONICO}/voz/${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}) (${l.data}): ${l.papel.pt}, peça de ${l.autoria}. ${l.fonte.pt} Original: ${l.origem}`
-  ),
+  // A hiperligação vai ao ficheiro onde há ficheiro, e à página do editor onde
+  // não há: as leituras em palco não deixaram gravação, e apontar-lhes um mp3
+  // que não existe era mandar quem lê — pessoa ou máquina — contra um 404.
+  ...leituras.map((l) => {
+    const onde =
+      l.formato === 'presencial' ? l.origem : `${CANONICO}/voz/${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}`
+    const sitio = l.local ? ` ${l.local}.` : ''
+    return `- [${l.titulo}](${onde}) (${l.data}): ${l.papel.pt}, peça de ${l.autoria}.${sitio} ${l.fonte.pt} Original: ${l.origem}`
+  }),
   '',
   '## Ficheiros',
   '',
@@ -236,7 +248,11 @@ const leiaMe = [
   '',
   // O áudio fica de fora, e o arquivo tem de o dizer: um zip que promete
   // «tudo» e cala 100 MB de leituras é um zip que mente por omissão.
-  `As ${leituras.length} gravações do nó voz/ não vêm aqui dentro: são ${vozHoras} de som e imagem,`,
+  //
+  // A conta é das que têm ficheiro, e não de `leituras.length`: as leituras em
+  // palco também estão no nó e não pesam byte nenhum, portanto contá-las aqui
+  // dizia que faltavam ao zip mais gravações do que as que existem.
+  `As ${Object.keys(medidasVoz).length} gravações do nó voz/ não vêm aqui dentro: são ${vozHoras} de som e imagem,`,
   `${vozMB} MB, e quem quer o CV não quer o arquivo sonoro com ele.`,
   `Estão em ${CANONICO}/, no nó voz/, uma a uma e com o tamanho à vista.`,
   '',

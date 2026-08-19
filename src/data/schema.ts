@@ -104,11 +104,17 @@ export const Leitura = z.object({
   rubrica: z.string().nullable().default(null),
   editor: z.string().min(1),
   /**
-   * Áudio ou vídeo. O nó chama-se `voz/` e não `audio/` de propósito: o que o
-   * junta é a voz, não o contentor. O `formato` decide a extensão do ficheiro
-   * em public/voz/ e se a página monta um `<audio>` ou um `<video>`.
+   * Áudio, vídeo, ou uma leitura de que só há a memória e as fotografias.
+   *
+   * O nó chama-se `voz/` e não `audio/` de propósito: o que o junta é a voz,
+   * não o contentor — e uma leitura em palco é voz tanto como um mp3. O
+   * `formato` decide a extensão do ficheiro em public/voz/ e se a página monta
+   * um `<audio>`, um `<video>`, ou nenhum dos dois.
+   *
+   * Em `presencial` não há ficheiro para medir nem para verificar, e é por isso
+   * que o `sha256` deixa de ser obrigatório — ver o `superRefine` no fim.
    */
-  formato: z.enum(['audio', 'video']).default('audio'),
+  formato: z.enum(['audio', 'video', 'presencial']).default('audio'),
   /**
    * Data de publicação no editor, não do ficheiro: os mp3 foram todos remexidos
    * numa migração de servidor em 2024 e trazem essa data.
@@ -118,6 +124,12 @@ export const Leitura = z.object({
    * ficar bonito era pior do que publicar o que se sabe.
    */
   data: z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/, 'usa YYYY, YYYY-MM ou YYYY-MM-DD'),
+  /**
+   * A casa e a morada onde a leitura aconteceu. Só nas presenciais: numa
+   * gravação o sítio onde se gravou não é facto publicado em lado nenhum, e
+   * escrevê-lo era inventar.
+   */
+  local: z.string().min(1).nullable().default(null),
   /** A página do editor: é a fonte, e é para onde vai quem quer o contexto. */
   origem: HttpsUrl,
   /**
@@ -126,8 +138,15 @@ export const Leitura = z.object({
    * serve o ficheiro a quem tem sessão iniciada.
    */
   origemAudio: HttpsUrl.nullable().default(null),
-  /** Do ficheiro guardado. É o que prova que a cópia é a cópia. */
-  sha256: z.string().regex(/^[0-9a-f]{64}$/, 'sha256 em minúsculas, 64 hex'),
+  /**
+   * Do ficheiro guardado. É o que prova que a cópia é a cópia. `null` só nas
+   * leituras presenciais, onde não há ficheiro nenhum para provar.
+   */
+  sha256: z
+    .string()
+    .regex(/^[0-9a-f]{64}$/, 'sha256 em minúsculas, 64 hex')
+    .nullable()
+    .default(null),
   /**
    * A capa da edição de onde saiu o texto, ou `null`.
    *
@@ -153,7 +172,53 @@ export const Leitura = z.object({
     })
     .nullable()
     .default(null),
+  /**
+   * O que sobrou da leitura, em public/voz/, por ordem de importância.
+   *
+   * Só as presenciais as têm: nas gravações o que há para mostrar é o ficheiro.
+   * A primeira ilustra a linha fechada; todas aparecem dentro do nó, porque
+   * numa leitura sem gravação a imagem não é enfeite — é o registo.
+   *
+   * Chama-se `imagens` e não `fotos` porque nem todas o são: há fotografias de
+   * quem lá esteve a fotografar, e há cartazes, que são de quem organizou.
+   *
+   * Cada uma leva crédito próprio e obrigatório. Publicar o trabalho de um
+   * fotógrafo sem o nome dele é o que esta casa recusa fazer aos autores dos
+   * textos, e um cartaz sem dono lê-se como se fosse meu. Onde não se sabe o
+   * nome de quem desenhou, credita-se a casa que o publicou — que é o que se
+   * sabe, e é verificável no próprio cartaz.
+   */
+  imagens: z
+    .array(
+      z.object({
+        /** Em public/voz/, ao lado das gravações. */
+        ficheiro: z.string().regex(/^[a-z0-9-]+\.webp$/),
+        /** O que se vê. Não é o crédito: é para quem não vê a imagem. */
+        alt: Lang,
+        /** «Fotografia de Fulano», «Cartaz de Sicrano». A linha inteira. */
+        credito: z.string().min(1),
+      })
+    )
+    .default([]),
 })
+  /**
+   * O que cada formato obriga. Sem isto, uma entrada presencial passava sem
+   * fotografias — e uma gravação passava sem `sha256`, que é a única coisa que
+   * prova que o ficheiro guardado é o ficheiro publicado.
+   */
+  .superRefine((l, ctx) => {
+    const erro = (message: string, path: string[]) => ctx.addIssue({ code: 'custom', message, path })
+    if (l.formato === 'presencial') {
+      if (l.sha256 !== null) erro('leitura presencial não tem ficheiro, logo não tem sha256', ['sha256'])
+      if (l.origemAudio !== null) erro('leitura presencial não tem ficheiro para descarregar', ['origemAudio'])
+      if (l.imagens.length === 0) erro('leitura presencial sem imagens não tem o que mostrar', ['imagens'])
+      if (l.local === null) erro('uma leitura presencial aconteceu nalgum sítio', ['local'])
+    } else {
+      if (l.sha256 === null) erro('uma gravação tem de trazer o sha256 do ficheiro', ['sha256'])
+      if (l.imagens.length > 0) erro('as imagens são só das leituras presenciais', ['imagens'])
+      if (l.local !== null) erro('o local é só das leituras presenciais', ['local'])
+    }
+  })
 export type Leitura = z.infer<typeof Leitura>
 
 export const Posicao = z.object({

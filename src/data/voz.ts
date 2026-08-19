@@ -266,4 +266,77 @@ export const leituras = parse(Leitura.array(), [
     sha256: '2d0d77c9fbb33d3a4ed548c91cf2cb4ebb0f020166de7a8d8e1f71c396c08370',
     capa: { ficheiro: 'futebol-origens.webp', obra: 'Futebol ao Sol e à Sombra' },
   },
+  {
+    id: 'portugalslam-2016',
+    titulo: 'Destaque poético a Alberto Pimenta',
+    autoria: 'Alberto Pimenta',
+    fonte: {
+      pt: 'Leitura no destaque poético a Alberto Pimenta que abriu a 3.ª edição do PortugalSLAM — Festival Internacional de Poesia e Performance, sob o tema «Linguagem: Fronteiras e Encontros». Conversas, performances e leituras à volta da obra do poeta, com Ana Deus, Cátia Sá, Claudia Madeira, Rosa Azevedo e poetas do colectivo PortugalSLAM.',
+      en: 'A reading in the poetic emphasis on Alberto Pimenta that opened the 3rd PortugalSLAM — International Festival of Poetry and Performance, on the theme “Language: Barriers and Bridges”. Conversations, performances and readings around the poet’s work, with Ana Deus, Cátia Sá, Claudia Madeira, Rosa Azevedo and poets from the PortugalSLAM collective.',
+      fr: 'Lecture dans l’hommage poétique à Alberto Pimenta qui a ouvert la 3ᵉ édition du PortugalSLAM — Festival international de poésie et de performance, sur le thème « Linguagem: Fronteiras e Encontros ». Conversations, performances et lectures autour de l’œuvre du poète, avec Ana Deus, Cátia Sá, Claudia Madeira, Rosa Azevedo et des poètes du collectif PortugalSLAM.',
+      es: 'Lectura en el destaque poético a Alberto Pimenta que abrió la 3.ª edición del PortugalSLAM — Festival Internacional de Poesía y Performance, bajo el tema «Linguagem: Fronteiras e Encontros». Conversaciones, performances y lecturas alrededor de la obra del poeta, con Ana Deus, Cátia Sá, Claudia Madeira, Rosa Azevedo y poetas del colectivo PortugalSLAM.',
+    },
+    papel: LEITURA,
+    rubrica: null,
+    editor: 'PortugalSLAM',
+    formato: 'presencial',
+    data: '2016-10-07',
+    local: 'Casa dos Amigos do Minho, Lisboa',
+    origem: 'https://portugalslam.wordpress.com/programacao-3/',
+    imagens: [
+      {
+        ficheiro: 'portugalslam-2016-1.webp',
+        alt: {
+          pt: 'Fábio Salgado sentado num banco, a ler de um livro aberto ao microfone.',
+          en: 'Fábio Salgado sitting on a bench, reading from an open book into a microphone.',
+          fr: 'Fábio Salgado assis sur un banc, lisant un livre ouvert au micro.',
+          es: 'Fábio Salgado sentado en un banco, leyendo de un libro abierto ante el micrófono.',
+        },
+        credito: 'Fotografia de Raul Pinto',
+      },
+      {
+        ficheiro: 'portugalslam-2016-2.webp',
+        alt: {
+          pt: 'Grande plano de Fábio Salgado a falar ao microfone.',
+          en: 'Close-up of Fábio Salgado speaking into a microphone.',
+          fr: 'Gros plan de Fábio Salgado parlant au micro.',
+          es: 'Primer plano de Fábio Salgado hablando ante el micrófono.',
+        },
+        credito: 'Fotografia de Raul Pinto',
+      },
+    ],
+  },
+  {
+    id: 'poesia-clandestina',
+    titulo: 'Poemas de Alberto Pimenta',
+    autoria: 'Alberto Pimenta',
+    fonte: {
+      pt: 'Leitura na rentrée das Terças de Poesia Clandestina, a sessão em que o ciclo voltou, ao fim de um ano de interregno, para passar a residir na Casa Independente de quinze em quinze dias. Onze leitores, um autor para cada um, e acompanhamento musical de Pedro Anselmo.',
+      en: 'A reading at the rentrée of Terças de Poesia Clandestina, the session where the series returned after a year’s pause to take up a fortnightly residency at Casa Independente. Eleven readers, one author each, with musical accompaniment by Pedro Anselmo.',
+      fr: 'Lecture à la rentrée des Terças de Poesia Clandestina, la séance où le cycle est revenu après un an d’interruption pour s’installer à la Casa Independente tous les quinze jours. Onze lecteurs, un auteur pour chacun, et un accompagnement musical de Pedro Anselmo.',
+      es: 'Lectura en la rentrée de las Terças de Poesia Clandestina, la sesión en que el ciclo volvió, tras un año de interregno, para pasar a residir en la Casa Independente cada quince días. Once lectores, un autor para cada uno, y acompañamiento musical de Pedro Anselmo.',
+    },
+    papel: LEITURA,
+    // A casa fica no `local` e não aqui: com o ciclo em `rubrica` e a Casa
+    // Independente em `editor`, a linha da organização repetia o sítio que a
+    // linha de baixo já dizia. Quem organiza é o ciclo; a casa é onde foi.
+    rubrica: null,
+    editor: 'Terças de Poesia Clandestina',
+    formato: 'presencial',
+    data: '2016-06-07',
+    local: 'Casa Independente, Largo do Intendente 45, Lisboa',
+    origem: 'https://www.facebook.com/TPoesiaClandestina',
+    imagens: [
+      {
+        ficheiro: 'poesia-clandestina-1.webp',
+        alt: {
+          pt: 'Cartaz da noite, sobre a pintura de uma cabeça de olhos fechados, com o alinhamento: cada leitor e o autor que lhe coube.',
+          en: 'The night’s poster, over a painting of a head with closed eyes, listing each reader and the author they were given.',
+          fr: 'L’affiche de la soirée, sur la peinture d’une tête aux yeux fermés, avec le programme : chaque lecteur et l’auteur qui lui revient.',
+          es: 'Cartel de la noche, sobre la pintura de una cabeza con los ojos cerrados, con el alineamiento: cada lector y el autor que le tocó.',
+        },
+        credito: 'Cartaz das Terças de Poesia Clandestina',
+      },
+    ],
+  },
 ], 'voz.leituras')
