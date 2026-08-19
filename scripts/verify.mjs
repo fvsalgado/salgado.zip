@@ -437,7 +437,12 @@ function imagensPorPagina(buf) {
     (l) => l.formato === 'video' || (l.formato === 'presencial' && l.imagens.length > 0)
   ).length
   const FOLHAS = 4
-  for (const nome of ['Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf']) {
+  /* Os nomes trazem o mês da revisão e vêm das definições, não escritos aqui:
+     uma verificação que abre um caminho fixo deixa de verificar o documento no
+     dia em que o documento muda de nome — passa a verificar um fantasma. */
+  const documentos = definicoes.filter((d) => d.id === 'cv-pt' || d.id === 'cv-en')
+  if (documentos.length !== 2) problemas.push('faltam definições dos dois CV')
+  for (const nome of documentos.map((d) => d.nome)) {
     const caminho = pub + 'docs/' + nome
     if (!existsSync(caminho)) {
       problemas.push(`${nome} não existe — corre \`npm run artifacts\``)
@@ -492,6 +497,17 @@ function imagensPorPagina(buf) {
   if (existsSync(pub + 'docs/Fabio-Salgado-Projetos-PT.pdf')) {
     problemas.push('Fabio-Salgado-Projetos-PT.pdf ainda existe — foi fundido nos dois documentos')
   }
+  /* Nenhum documento de uma revisão anterior fica para trás. Um PDF que o site
+     já não nomeia continua a ser servido a quem tiver o endereço, e passa a ser
+     uma versão do currículo a circular sem ninguém saber que existe. */
+  if (existsSync(pub + 'docs')) {
+    const publicados = new Set(documentos.map((d) => d.nome))
+    for (const f of readdirSync(pub + 'docs')) {
+      if (/^Fabio-Salgado-CV-/.test(f) && !publicados.has(f)) {
+        problemas.push(`${f} é de uma revisão anterior e ninguém lhe aponta — corre \`npm run artifacts\``)
+      }
+    }
+  }
   decide('os dois documentos abrem, com retrato e capturas, em 4 folhas', problemas)
 }
 
@@ -504,7 +520,11 @@ function imagensPorPagina(buf) {
   } else {
     const z = lerZip(readFileSync(caminho))
     const nomes = z.entradas.map((e) => e.nome)
-    for (const esperado of ['LEIA-ME.txt', 'Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf', 'resume.json']) {
+    /* Os dois CV entram pelo nome que as definições dizem, que traz o mês da
+       revisão: um nome fixo aqui deixava esta verificação a procurar no zip um
+       ficheiro que o zip deixou de ter, e a falhar por razão errada. */
+    const noZip = ['cv-pt', 'cv-en'].map((id) => definicoes.find((d) => d.id === id)?.nome ?? id)
+    for (const esperado of ['LEIA-ME.txt', ...noZip, 'resume.json']) {
       if (!nomes.includes(esperado)) problemas.push(`o .zip não traz ${esperado}`)
     }
     try {

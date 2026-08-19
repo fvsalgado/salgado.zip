@@ -39,8 +39,15 @@ const cobertura =
  *
  * O `papel` separa as duas dimensões, porque não são a mesma coisa e a
  * distinção é o que interessa a quem lê: no Primeira Plateia e no Onofriana
- * ele funda e gere o projeto além de construir o produto; nos outros três
- * construiu o produto e mais nada.
+ * ele funda e gere o projeto além de construir o produto; nos restantes
+ * construiu o produto e mais nada. Sem contagem escrita aqui: o comentário
+ * dizia «os outros três» quando já eram seis, e um comentário que conta mal
+ * é pior do que um que não conta.
+ *
+ * O próprio salgado.zip saiu da listagem a 19/08/2026. Uma ficha de projeto
+ * dentro do projeto que a mostra é um espelho: quem está a ler a página já
+ * tem a prova à frente, e o colofão continua a dizer como é feita e a apontar
+ * para o código.
  *
  * Cada entrada que tem um motivo diz o motivo, na primeira pessoa. É a parte
  * que faltava: a listagem provava competência à exaustão e não provava
@@ -252,12 +259,6 @@ export const projetos = parse(Projeto.array().min(1), [
         fr: 'Je l’ai fait en réponse à un problème d’autonomie : mettre les travaux, l’entretien des équipements, les rendez-vous des animaux — vaccins et compagnie — et la domotique au même endroit, et sur le téléphone. Chaque module fonctionne comme une application ; ils sont tous reliés.',
         es: 'Lo hice como respuesta a un problema de autonomía: poner la obra, el mantenimiento de los equipos, los compromisos de los animales — vacunas y demás — y la domótica en el mismo sitio, y en el móvil. Cada módulo funciona como una aplicación; están todos conectados.',
       },
-      {
-        pt: 'Módulo de obra: capítulos por fase, orçamento contra pago, registo de despesa e fichas por divisão.',
-        en: 'Construction module: chapters by phase, budget versus paid, expense log and per-room sheets.',
-        fr: 'Module travaux : chapitres par phase, budget contre payé, journal des dépenses et fiches par pièce.',
-        es: 'Módulo de obra: capítulos por fase, presupuesto frente a pagado, registro de gastos y fichas por estancia.',
-      },
     ],
     stack: ['Vite', 'Supabase (RLS)', 'PWA offline-first'],
     url: null,
@@ -276,14 +277,7 @@ export const projetos = parse(Projeto.array().min(1), [
       fr: 'Vente d’expériences de fado à Lisbonne : six maisons, choisies par quelqu’un qui vit à Alfama.',
       es: 'Venta de experiencias de fado en Lisboa: seis casas, elegidas por quien vive en Alfama.',
     },
-    detalhe: [
-      {
-        pt: 'A reserva passa pelas plataformas de experiências que vendem a cidade.',
-        en: 'Booking goes through the experience platforms that sell the city.',
-        fr: 'La réservation passe par les plateformes d’expériences qui vendent la ville.',
-        es: 'La reserva pasa por las plataformas de experiencias que venden la ciudad.',
-      },
-    ],
+    detalhe: [],
     stack: [],
     url: 'https://fado.today',
     shot: 'fado-today.webp',
@@ -317,31 +311,6 @@ export const projetos = parse(Projeto.array().min(1), [
     ],
     stack: ['React', 'Vite'],
     url: null,
-    shot: null,
-  },
-  {
-    id: 'salgado-zip',
-    dominio: 'salgado.zip',
-    papel: { pt: 'autor', en: 'author', fr: 'auteur', es: 'autor' },
-    estado: 'ativo',
-    periodo: { inicio: '2026-08', fim: null },
-    linha: {
-      pt: 'Sítio pessoal e arquivo de projetos: uma fonte de dados e várias saídas — página, PDF, resume.json e um zip —, com uma bateria de verificações antes de cada publicação.',
-      en: 'Personal site and project archive: one data source and several outputs — page, PDFs, resume.json and a zip — with a battery of checks before every release.',
-      fr: 'Site personnel et archive de projets : une source de données et plusieurs sorties — page, PDF, resume.json et un zip —, avec une batterie de vérifications avant chaque publication.',
-      es: 'Sitio personal y archivo de proyectos: una fuente de datos y varias salidas — página, PDF, resume.json y un zip —, con una batería de verificaciones antes de cada publicación.',
-    },
-    detalhe: [
-      {
-        pt: 'Código aberto.',
-        en: 'Open source.',
-        fr: 'Code ouvert.',
-        es: 'Código abierto.',
-      },
-    ],
-    stack: ['Astro', 'TypeScript', 'Claude Code'],
-    url: 'https://salgado.zip',
-    codigo: 'https://github.com/fvsalgado/salgado.zip',
     shot: null,
   },
 ], 'projetos')

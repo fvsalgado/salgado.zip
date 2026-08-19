@@ -8,14 +8,15 @@
  *   npm run artifacts              tudo
  *   npm run artifacts -- --sem-shots   salta as capturas dos sites externos
  */
-import { spawn } from 'node:child_process'
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { execFileSync, spawn } from 'node:child_process'
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import QRCode from 'qrcode'
 
 import { abrirBrowser, BASE } from './browser.mjs'
 import { projetos } from '../src/data/projetos.ts'
 import { cabecalho } from '../src/data/cabecalho.ts'
+import { nomeCV } from '../src/data/ficheiros.ts'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
 const pub = raiz + 'public/'
@@ -337,8 +338,58 @@ async function pdf(nome, rota, idioma) {
   console.log(`· favicon.ico (48px, ${png48.length} B) e apple-touch-icon.png (180px, ${png180.length} B)`)
 }
 
-await pdf('Fabio-Salgado-CV-PT.pdf', '/cv/', 'pt')
-await pdf('Fabio-Salgado-CV-EN.pdf', '/en/cv/', 'en')
+/* ── A data de revisão dos documentos ────────────────────────────────────
+   Os dois PDF trazem o mês no nome, para que quem guardou uma cópia do
+   endereço antigo — uma pré-visualização, um filtro de correio, o proxy de
+   uma empresa — seja obrigado a ir buscar a nova. O raciocínio inteiro está
+   em src/data/ficheiros.ts.
+
+   O mês sai da data do último commit e não do relógio: o relógio dá respostas
+   diferentes ao mesmo repositório, e aqui nenhum número se escreve à mão. É
+   ESTE script que o escreve, e não o build, porque a data que interessa é a
+   da revisão do documento — e rever o documento é exatamente correr isto.
+   Escrito antes de gerar, para que os PDF saiam já com o nome novo.
+
+   Se o git não responder, fica o que já estava versionado: inventar um mês
+   era pior do que repetir o último que se sabe. */
+const mes = (() => {
+  try {
+    return execFileSync('git', ['log', '-1', '--format=%cs'], { cwd: raiz })
+      .toString()
+      .trim()
+      .slice(0, 7)
+  } catch {
+    return null
+  }
+})()
+const revisao = raiz + 'src/generated/revisao.json'
+if (mes !== null && /^\d{4}-\d{2}$/.test(mes)) {
+  writeFileSync(revisao, JSON.stringify({ mes }, null, 2) + '\n')
+} else {
+  console.log('· o git não deu a data; fica o mês já versionado')
+}
+const mesAtual = JSON.parse(readFileSync(revisao, 'utf8')).mes
+
+await pdf(nomeCV('PT', mesAtual), '/cv/', 'pt')
+await pdf(nomeCV('EN', mesAtual), '/en/cv/', 'en')
+
+/* Os documentos do mês passado ficariam no diretório para sempre, e o .zip e
+   o nó ficheiros/ deixariam de os nomear — ou seja, tornavam-se ficheiros
+   publicados que nada no site menciona. Saem daqui, e só os CV: o que não
+   couber neste molde não é deste script e não se toca.
+
+   O molde não exige a data: os primeiros documentos chamavam-se
+   `Fabio-Salgado-CV-PT.pdf`, sem mês nenhum, e uma regra que só apanhasse
+   nomes datados deixava-os para trás para sempre. É a mesma regra que a
+   verificação 11 usa para os denunciar — e as duas têm de concordar, senão
+   uma limpa o que a outra não conhece. */
+const atuais = new Set([nomeCV('PT', mesAtual), nomeCV('EN', mesAtual)])
+for (const f of readdirSync(pub + 'docs')) {
+  if (/^Fabio-Salgado-CV-/.test(f) && !atuais.has(f)) {
+    rmSync(pub + 'docs/' + f)
+    console.log(`· ${f} removido (revisão anterior)`)
+  }
+}
 
 await browser.close()
 if (servidor) servidor.kill()
