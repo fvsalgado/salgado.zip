@@ -35,13 +35,26 @@ const rot = en
  * de podcast desequilibravam o percurso. O que o parágrafo diz — quantas,
  * quando, quanto tempo, de quem são os textos — sai todo dos dados.
  */
-const anosVoz = leituras.map((l) => Number(l.data.slice(0, 4)))
-const segundosVoz = leituras.reduce((s, l) => s + (medidasVoz[l.id]?.segundos ?? 0), 0)
+const lidas = leituras.filter((l) => l.formato === 'audio')
+const vistos = leituras.filter((l) => l.formato === 'video')
+const anos = (ls: typeof leituras) => ls.map((l) => Number(l.data.slice(0, 4)))
+const segundosVoz = lidas.reduce((s, l) => s + (medidasVoz[l.id]?.segundos ?? 0), 0)
 const horasVoz = `${Math.floor(segundosVoz / 3600)}h${String(Math.round((segundosVoz % 3600) / 60)).padStart(2, '0')}`
-const autoresVoz = [...new Set(leituras.map((l) => l.autoria))].join(', ')
+const autoresVoz = [...new Set(lidas.map((l) => l.autoria))].join(', ')
+
+/** Duas frases porque são duas coisas: as leituras de uma rubrica, e a voz de
+ *  dois vídeos de outra casa. Uma contagem só juntava-as e mentia nas duas. */
 const linhaVoz = en
-  ? `${leituras.length} readings for ${RUBRICA.nome}, the ${RUBRICA.editor} podcast, between ${Math.min(...anosVoz)} and ${Math.max(...anosVoz)} — ${horasVoz} of audio. Texts by ${autoresVoz}. The files are at ${CANONICO.replace('https://', '')}, under voz/.`
-  : `${leituras.length} leituras para o ${RUBRICA.nome}, o podcast do ${RUBRICA.editor}, entre ${Math.min(...anosVoz)} e ${Math.max(...anosVoz)} — ${horasVoz} de áudio. Textos de ${autoresVoz}. Os ficheiros estão em ${CANONICO.replace('https://', '')}, no nó voz/.`
+  ? `${lidas.length} readings for ${RUBRICA.nome}, the ${RUBRICA.editor} podcast, between ${Math.min(...anos(lidas))} and ${Math.max(...anos(lidas))} — ${horasVoz} of audio. Texts by ${autoresVoz}.`
+  : `${lidas.length} leituras para o ${RUBRICA.nome}, o podcast do ${RUBRICA.editor}, entre ${Math.min(...anos(lidas))} e ${Math.max(...anos(lidas))} — ${horasVoz} de áudio. Textos de ${autoresVoz}.`
+const linhaVideo = vistos.length
+  ? en
+    ? `Voice for ${vistos.length} promotional films for Transborda, the Almada performing arts festival, in ${anos(vistos).sort().join(' and ')}.`
+    : `Voz de ${vistos.length} vídeos de promoção do Transborda, a mostra de artes performativas de Almada, em ${anos(vistos).sort().join(' e ')}.`
+  : null
+const linhaFicheiros = en
+  ? `The files are at ${CANONICO.replace('https://', '')}, under voz/.`
+  : `Os ficheiros estão em ${CANONICO.replace('https://', '')}, no nó voz/.`
 
 /** O mesmo cargo derivado que a página mostra: quem tem o papel na mão também
  *  tem de saber o que ele faz hoje sem ir procurar à secção do percurso. */
@@ -132,6 +145,8 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
       <section data-seccao="voz">
         <h2>{rot.voz}</h2>
         <p>{linhaVoz}</p>
+        {linhaVideo && <p>{linhaVideo}</p>}
+        <p>{linhaFicheiros}</p>
       </section>
     )
   }

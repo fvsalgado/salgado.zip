@@ -67,6 +67,9 @@ export function duracaoISO(segundos: number): string {
 
 export function dataCurta(iso: string | undefined, idioma: Idioma): string | null {
   if (!iso) return null
+  // Data parcial — «2025», «2025-04» — devolve-se como está. Passá-la ao Intl
+  // dava 01/01/2025, que é um dia que ninguém confirmou.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return null
   return new Intl.DateTimeFormat(LINGUAS[idioma].bcp47, {

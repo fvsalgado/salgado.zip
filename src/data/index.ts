@@ -20,8 +20,15 @@ export const datas: Record<string, string> = stamps
 export const CANONICO = 'https://salgado.zip'
 
 /**
- * Bytes e duração de cada leitura, medidos por scripts/voz.mjs sobre os mp3
- * reais. Nada aqui é escrito à mão — nem sequer a duração, que sai da
- * contagem de frames do próprio ficheiro.
+ * Bytes e duração de cada gravação, medidos por scripts/voz.mjs sobre os
+ * ficheiros reais. Nada aqui é escrito à mão — nem a duração, que sai do
+ * cabeçalho Xing do mp3 ou da caixa `mvhd` do mp4, nem as dimensões, que saem
+ * da `tkhd`.
+ *
+ * `largura` e `altura` só existem no vídeo. São opcionais no tipo porque são
+ * opcionais no ficheiro: quem as ler num áudio tem de o dizer no código.
  */
-export const medidasVoz: Record<string, { bytes: number; segundos: number }> = medidas
+export const medidasVoz: Record<
+  string,
+  { bytes: number; segundos: number; largura?: number; altura?: number }
+> = medidas

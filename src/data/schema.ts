@@ -85,19 +85,47 @@ export const Leitura = z.object({
   id: Slug,
   /** O título como foi publicado. Não traduz. */
   titulo: z.string().min(1),
-  /** De quem é o texto. Nunca é de quem o lê — é esse o ponto deste campo. */
+  /**
+   * De quem é a peça: o texto, nas leituras; quem a produziu, nos vídeos.
+   * Nunca é de quem lhe põe a voz — é esse o ponto deste campo.
+   */
   autoria: z.string().min(1),
   /** A obra, o artigo ou a tradução de onde saiu. */
   fonte: Lang,
   /** O que foi meu nesta peça, e só isso. */
   papel: Lang,
-  /** Data de publicação no editor, não do ficheiro: os mp3 foram todos
-   *  remexidos numa migração de servidor em 2024 e trazem essa data. */
-  data: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'usa YYYY-MM-DD'),
+  /**
+   * A rubrica onde saiu, quando há uma, e quem a publicou.
+   *
+   * Estavam numa constante do módulo, o que funcionou enquanto tudo era do
+   * Alta Voz — e passou a mentir no dia em que entraram dois vídeos de outra
+   * casa, que apareciam na página com a rubrica do podcast por baixo.
+   */
+  rubrica: z.string().nullable().default(null),
+  editor: z.string().min(1),
+  /**
+   * Áudio ou vídeo. O nó chama-se `voz/` e não `audio/` de propósito: o que o
+   * junta é a voz, não o contentor. O `formato` decide a extensão do ficheiro
+   * em public/voz/ e se a página monta um `<audio>` ou um `<video>`.
+   */
+  formato: z.enum(['audio', 'video']).default('audio'),
+  /**
+   * Data de publicação no editor, não do ficheiro: os mp3 foram todos remexidos
+   * numa migração de servidor em 2024 e trazem essa data.
+   *
+   * Aceita ano só. Das nove leituras sei o dia, porque a página do esquerda.net
+   * o diz; dos dois vídeos sei o ano, e escrever um dia inventado para o campo
+   * ficar bonito era pior do que publicar o que se sabe.
+   */
+  data: z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/, 'usa YYYY, YYYY-MM ou YYYY-MM-DD'),
   /** A página do editor: é a fonte, e é para onde vai quem quer o contexto. */
   origem: HttpsUrl,
-  /** De onde a cópia veio, para se poder confrontar com o original. */
-  origemAudio: HttpsUrl,
+  /**
+   * De onde a cópia veio, para se poder confrontar com o original. `null`
+   * quando não há endereço direto — os dois vídeos vieram da página, que só
+   * serve o ficheiro a quem tem sessão iniciada.
+   */
+  origemAudio: HttpsUrl.nullable().default(null),
   /** Do ficheiro guardado. É o que prova que a cópia é a cópia. */
   sha256: z.string().regex(/^[0-9a-f]{64}$/, 'sha256 em minúsculas, 64 hex'),
 })

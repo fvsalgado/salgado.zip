@@ -1,4 +1,16 @@
 {
+  "transborda-2025": {
+    "bytes": 3472905,
+    "segundos": 20,
+    "largura": 1280,
+    "altura": 720
+  },
+  "transborda-2023": {
+    "bytes": 1976513,
+    "segundos": 20,
+    "largura": 960,
+    "altura": 540
+  },
   "alucinar-o-estrume": {
     "bytes": 6217580,
     "segundos": 389
