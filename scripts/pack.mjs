@@ -233,6 +233,28 @@ const vozHoras = `${Math.floor(vozSegundos / 3600)}h${String(Math.round((vozSegu
 /* ── salgado.zip ──────────────────────────────────────────────────────────
    Lista explícita de ficheiros. Nunca empacotar public/ inteiro: o próprio
    .zip vive lá dentro. */
+/* O que vai dentro do arquivo, pela ordem por que se lê. Os nomes vêm das
+   definições e não escritos aqui: desde que os CV trazem o mês da revisão no
+   nome, um nome repetido neste ficheiro passava a mentir no dia em que o
+   documento fosse revisto — e mentia num sítio que ninguém volta a olhar.
+
+   A glosa é que fica aqui, e é propositadamente mais curta do que a descrição
+   do nó ficheiros/: num LEIA-ME de texto corrido, uma linha por artefacto lê-se
+   de relance, e a descrição longa obrigava a mudar de linha. */
+const GLOSA = {
+  'cv-pt': 'o documento completo, em português',
+  'cv-en': 'the same document, in English',
+  'resume-json': 'o mesmo conteúdo em formato JSON Resume',
+}
+const noArquivo = Object.keys(GLOSA).map((id) => {
+  const d = definicoes.find((x) => x.id === id)
+  if (d === undefined) throw new Error(`pack: não há definição para «${id}»`)
+  return d
+})
+/* A coluna alinha-se pelo nome mais comprido, e não por um número: com o mês
+   no nome, o comprimento mudou e os espaços escritos à mão desalinhavam-se. */
+const coluna = Math.max(...noArquivo.map((d) => d.nome.length))
+
 const leiaMe = [
   `${cabecalho.nome} — ${cabecalho.cargo.pt}`,
   cabecalho.linhas.map((l) => l.pt).join(' '),
@@ -242,9 +264,7 @@ const leiaMe = [
   contacto.linkedin ? `LinkedIn: ${contacto.linkedin}` : null,
   '',
   'Conteúdo deste arquivo:',
-  '  Fabio-Salgado-CV-PT.pdf  o documento completo, em português',
-  '  Fabio-Salgado-CV-EN.pdf  the same document, in English',
-  '  resume.json              o mesmo conteúdo em formato JSON Resume',
+  ...noArquivo.map((d) => `  ${d.nome.padEnd(coluna)}  ${GLOSA[d.id]}`),
   '',
   // O áudio fica de fora, e o arquivo tem de o dizer: um zip que promete
   // «tudo» e cala 100 MB de leituras é um zip que mente por omissão.
@@ -264,9 +284,7 @@ const leiaMe = [
 
 const entradas = [
   { origem: null, conteudo: leiaMe, nome: 'LEIA-ME.txt' },
-  { origem: pub + 'docs/Fabio-Salgado-CV-PT.pdf', nome: 'Fabio-Salgado-CV-PT.pdf' },
-  { origem: pub + 'docs/Fabio-Salgado-CV-EN.pdf', nome: 'Fabio-Salgado-CV-EN.pdf' },
-  { origem: pub + 'resume.json', nome: 'resume.json' },
+  ...noArquivo.map((d) => ({ origem: pub + d.caminho, nome: d.nome })),
 ]
 
 const data = dataFixa()
