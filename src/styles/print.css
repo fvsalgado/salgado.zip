@@ -117,19 +117,27 @@
      apresentação sessenta pixels para o primeiro projeto subir ao pé da folha
      1, e para as capas se partirem ao meio, com metade órfã no cimo da 4.
 
-     A quebra estava na secção da voz e passou para as capas, quando os
-     registos entraram. Medido, e não suposto: com a voz a abrir folha, a
-     folha 4 tinha de levar a prosa, quatro registos, quatro capas, os
-     mandatos, os certificados, os idiomas e o colofão — e a folga que lá
-     havia era de menos de vinte pixels. Aliviar as margens, encolher as
-     imagens para 16mm, pôr as capturas a duas por linha: nada disso chegou,
-     porque o que não cabia era a fila inteira, não a altura dela.
+     Ficou UMA quebra forçada, e não três. As outras duas foram tentativas
+     de arrumar à força o que a aritmética já arrumava sozinha, e cada uma
+     delas partia a voz em dois pedaços em folhas diferentes.
 
-     Assim, a voz volta a fluir a seguir às capturas e são as capas que abrem
-     folha. O documento fecha em quatro com [1, 0, 10, 4] imagens por folha:
-     o retrato; os projetos em texto; as seis capturas com os quatro registos
-     da voz; e as quatro capas. As capas continuam no fim da secção, que era o
-     pedido, e continuam a abrir folha, que é o que impede que se partam.
+     A conta, medida e não suposta, com a caixa de texto a 998px:
+
+       cabeça 359 + tarja 78 + percurso 463 = 934  → folha 1, 64px de folga
+       projetos                              = 998  → folha 2, uma folha exata
+       capturas 347 + voz 464                = 811  → folha 3, 187px de folga
+       mandatos 202 + resto                  ≈ 570  → folha 4
+
+     Ou seja: os mandatos não cabem na folha 3 por 15px, e por isso a voz fica
+     lá inteira — prosa, os quatro registos e as quatro capas — sem que nada
+     a force. [1, 0, 14, 0] imagens por folha: o retrato; os projetos em
+     texto; tudo o que é imagem na terceira; e a cauda em texto na quarta.
+
+     O `break-inside: avoid` na voz não muda a paginação de hoje: está lá para
+     o dia em que os projetos crescerem uma linha. A secção tem 464px e cabe
+     em qualquer folha, portanto ou fica onde está ou muda de folha inteira —
+     o que nunca mais acontece é o que aconteceu antes, com as capas
+     separadas da frase que nomeia os autores.
 
      O `margin-top: 0` não aparece em medição de fluxo contínuo, só no PDF: o
      Chromium honra a margem de topo de quem abre a folha que a quebra criou,
@@ -138,6 +146,7 @@
      ordem no ficheiro. */
   [data-seccao='projetos'] { break-before: page; }
   [data-seccao='projetos'] h2 { margin-top: 0; }
+  [data-seccao='voz'] { break-inside: avoid; }
 
   .dossie h3 { font-size: 11pt; }
   .entrada + .entrada { margin-top: 4mm; }
@@ -162,7 +171,7 @@
      livro que se conhece, não para se ler a capa. A legenda é que carrega a
      informação, e traz o autor para ninguém confundir quem escreveu com quem
      leu. Quatro numa linha atravessam a caixa de texto com folga. */
-  .capas { break-before: page; gap: 5mm; margin-top: 0; }
+  .capas { gap: 5mm; margin-top: 2.5mm; }
   .capa-doc { width: 30mm; }
   .capa-doc img { height: 24mm; }
   .capa-doc figcaption { font-size: 7.6pt; margin-top: 1.2mm; line-height: 1.25; }
