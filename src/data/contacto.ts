@@ -15,6 +15,8 @@ export const contacto = parse(Contacto, {
     fr: 'né à Nazaré',
     es: 'natural de Nazaré',
   },
+
+  nascimento: '1986',
   regiao: 'Lisboa e Torres Novas',
   /**
    * Os três lugares, por ordem biográfica: onde nasci, e os dois onde vivo.

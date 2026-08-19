@@ -7,10 +7,10 @@ interface Props { idioma: Idioma }
 const { idioma } = Astro.props
 
 const ROTULOS: Record<Idioma, { atualizado: string; semRastreio: string }> = {
-  pt: { atualizado: 'atualizado', semRastreio: 'sem cookies, sem rastreio' },
-  en: { atualizado: 'updated', semRastreio: 'no cookies, no tracking' },
-  fr: { atualizado: 'mis à jour', semRastreio: 'sans cookies, sans traçage' },
-  es: { atualizado: 'actualizado', semRastreio: 'sin cookies, sin rastreo' },
+  pt: { atualizado: 'atualizado', semRastreio: 'sem cookies, sem publicidade' },
+  en: { atualizado: 'updated', semRastreio: 'no cookies, no advertising' },
+  fr: { atualizado: 'mis à jour', semRastreio: 'sans cookies, sans publicité' },
+  es: { atualizado: 'actualizado', semRastreio: 'sin cookies, sin publicidad' },
 }
 const rot = ROTULOS[idioma]
 
@@ -48,7 +48,9 @@ const cvs = [
       </>
     ))}
     <span aria-hidden="true"> · </span>
-    {rot.semRastreio}
+    {/* A frase passou a ser uma ligação: dizer «sem cookies» e não dar o
+        caminho para quem quer confirmar é pedir confiança em vez de a merecer. */}
+    <a href="#privacidade">{rot.semRastreio}</a>
   </span>
   {contacto.lugares.length > 0 && (
     <span class="rodape__lugares">{coordenadas(contacto.lugares)}</span>

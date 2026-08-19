@@ -4,6 +4,7 @@ import '../styles/print.css'
 import { cabecalho, contacto, projetos, leituras, posicoes, datas, medidasVoz, RUBRICA, CANONICO, IDIOMAS, LINGUAS, PADRAO } from '../data'
 import type { Idioma } from '../data'
 import { t, duracaoISO } from '../data/formato'
+import { codigoDoSite } from '../data/textos.ts'
 import dimensoes from '../generated/og.json' with { type: 'json' }
 
 interface Props {
@@ -40,13 +41,25 @@ const SALTAR: Record<Idioma, string> = {
 }
 
 /** Perfis e sítios noutros domínios. O próprio não entra: já é o `url`. */
+/**
+ * `sameAs` é «estes URL são a mesma entidade que eu», e não «isto é meu».
+ *
+ * Até aqui levava os endereços dos projetos, que são obras e não perfis — e
+ * já estão no grafo como `CreativeWork` com `creator` a apontar aqui. Dizer a
+ * um motor de busca que sou o fado.today não me identifica: dilui-me. Ficam os
+ * dois perfis que são mesmo eu, e o do GitHub sai do endereço do repositório
+ * para não haver duas cadeias a dizer o mesmo.
+ */
 const sameAs = [
   ...(contacto.linkedin ? [contacto.linkedin] : []),
-  ...projetos.map((p) => p.url).filter((u): u is string => u !== null && u !== CANONICO),
+  codigoDoSite.replace(/\/[^/]+$/, ''),
 ]
 
 /** O cargo atual é o da posição sem fim: derivado, não escrito. */
 const atual = posicoes.find((p) => p.periodo.fim === null)
+
+/** A Vercel serve o script; fora dela o caminho não existe. */
+const analytics = Boolean(process.env.VERCEL)
 
 const PESSOA = `${CANONICO}/#pessoa`
 const SITE = `${CANONICO}/#site`
@@ -69,9 +82,31 @@ const jsonLd = {
       url: CANONICO,
       image: `${CANONICO}/fabio-salgado.jpg`,
       address: { '@type': 'PostalAddress', addressRegion: contacto.regiao, addressCountry: 'PT' },
+      // Há vários Fábio Salgado indexados. Um ano de nascimento com um lugar ao
+      // lado é o que diz a um motor de busca qual deles é este. O lugar sai do
+      // primeiro dos `lugares`, que estão por ordem biográfica — não é escrito
+      // uma segunda vez só para caber aqui.
+      birthDate: contacto.nascimento,
+      ...(contacto.lugares[0]
+        ? {
+            birthPlace: {
+              '@type': 'Place',
+              name: contacto.lugares[0].nome,
+              address: { '@type': 'PostalAddress', addressLocality: contacto.lugares[0].nome, addressCountry: 'PT' },
+            },
+          }
+        : {}),
       knowsLanguage: contacto.idiomas.map((i) => ({ '@type': 'Language', name: t(i.lingua, idioma) })),
       hasOccupation: { '@type': 'Occupation', name: t(cabecalho.cargo, idioma) },
-      ...(atual ? { worksFor: { '@type': 'Organization', name: atual.organizacao } } : {}),
+      ...(atual
+        ? {
+            worksFor: {
+              '@type': 'Organization',
+              name: atual.organizacao,
+              ...(atual.organizacaoUrl ? { url: atual.organizacaoUrl } : {}),
+            },
+          }
+        : {}),
       ...(contacto.email ? { email: `mailto:${contacto.email}` } : {}),
       ...(sameAs.length ? { sameAs } : {}),
     },
@@ -139,6 +174,9 @@ const jsonLd = {
     <title>{titulo}</title>
     <meta name="description" content={descricao} />
     <meta name="author" content={cabecalho.nome} />
+    <!-- Sem isto, a Google mostra as capturas dos projetos como miniatura em vez
+         de imagem grande, nos resultados e no Discover. -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href={canonical} />
     {robots && <meta name="robots" content={robots} />}
     {
@@ -172,7 +210,13 @@ const jsonLd = {
     }
     <meta name="twitter:card" content="summary_large_image" />
 
+    <!-- O SVG é a fonte e é o que os browsers modernos escolhem: inverte-se
+         sozinho no tema escuro. Os dois de baixo existem para quem não o lê —
+         o .ico para agregadores e leitores antigos, o de 180px para quem
+         guarda o site no ecrã inicial. Todos saem do mesmo desenho. -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="alternate" type="application/json" href="/resume.json" title="JSON Resume" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
@@ -192,6 +236,24 @@ const jsonLd = {
     />
 
     <script is:inline src="/tema.js"></script>
+    {
+      /**
+       * Medição de visitas. Só sai no build da Vercel, e é de propósito: fora
+       * de lá o caminho não existe, e a verificação 2 — todas as ligações
+       * internas devolvem 200 — falharia num ficheiro que o preview local não
+       * tem para servir.
+       *
+       * O script e o ponto de recolha vivem no próprio domínio, o que é a razão
+       * de ser este e não outro: a CSP continua `script-src 'self'`, e a
+       * verificação 8 continua a ver zero pedidos a terceiros porque não há
+       * nenhum. Sem cookies, sem localStorage: a visita é identificada por um
+       * resumo do pedido, descartado ao fim de 24 horas.
+       *
+       * São 2 495 bytes que o orçamento de 10 kB não conta, porque não passam
+       * pelo dist/. Ficam escritos aqui para não serem um custo escondido.
+       */
+      analytics && <script is:inline defer src="/_vercel/insights/script.js" />
+    }
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   </head>
   <body class={classe}>

@@ -11,6 +11,8 @@ dist/
 # src/generated/tamanhos.json, que esse sim é commitado.
 public/salgado.zip
 public/resume.json
+public/llms.txt
+public/.well-known/
 .verify/
 public/qr.svg
 

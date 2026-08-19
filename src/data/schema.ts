@@ -107,6 +107,13 @@ export const Posicao = z.object({
   id: Slug,
   cargo: Lang,
   organizacao: z.string().min(1),
+  /**
+   * O sítio da organização. Não aparece na página: serve o `worksFor` do
+   * JSON-LD, que sem endereço não consegue ligar-me a uma empresa que o motor
+   * de busca já conhece — e é essa ligação que faz de uma pessoa sem página na
+   * Wikipédia uma entidade reconhecível.
+   */
+  organizacaoUrl: HttpsUrl.nullable().default(null),
   periodo: Periodo,
   /** Duas a quatro linhas: o que fizeste e com que resultado. */
   linhas: z.array(Lang).min(1).max(4),
@@ -160,6 +167,17 @@ export const Contacto = z.object({
   concelho: Lang,
   /** De onde se é. Não é a mesma pergunta. */
   naturalidade: Lang,
+  /**
+   * O ano de nascimento. É o único número da casa que o build não consegue
+   * derivar de nada — não há ficheiro nem commit de onde o tirar —, e por isso
+   * vive aqui, escrito uma vez, e não repetido em cada sítio onde aparece.
+   *
+   * Serve duas coisas: a linha de totais, e o `birthDate` do JSON-LD. A
+   * segunda é a que interessa mais do que parece — há vários Fábio Salgado na
+   * web, e uma data de nascimento com um lugar ao lado é o que diz a um motor
+   * de busca qual deles é este.
+   */
+  nascimento: z.string().regex(/^\d{4}$/, 'usa YYYY'),
   /** A linha que abre o nó de contacto. É o convite, sem o dizer. */
   nota: Lang,
   /**

@@ -2,6 +2,7 @@
 import Node from './Node.astro'
 import { projetos, leituras, posicoes, mandatos, formacao, contacto, ficheiros, medidasVoz, RUBRICA, CANONICO } from '../data'
 import { colofaoSite, codigoDoSite, licenca, notaCertificados } from '../data/textos.ts'
+import { privacidade, notaPrivacidade } from '../data/privacidade.ts'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado, duracao, duracaoLonga, dataCurta } from '../data/formato'
 
@@ -25,14 +26,16 @@ interface Rotulos {
   mandatos: string
   formacao: string
   contacto: string
+  privacidade: string
   ficheiros: string
   colofao: string
   entradas: (n: number) => string
   /** Os totais da linha de cima. */
   contaProjetos: string
+  contaLeituras: string
   contaCargos: string
   contaMandatos: string
-  maisAntigo: (ano: number) => string
+  nascido: (ano: string) => string
   abrirTudo: string
   fecharTudo: string
   /** Os campos de um nó aberto. */
@@ -65,10 +68,10 @@ interface Rotulos {
 const ROTULOS: Record<Idioma, Rotulos> = {
   pt: {
     projetos: 'projetos/', voz: 'voz/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/',
-    contacto: 'contacto/', ficheiros: 'ficheiros/', colofao: 'colofão/',
+    contacto: 'contacto/', privacidade: 'privacidade/', ficheiros: 'ficheiros/', colofao: 'colofão/',
     entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
-    contaProjetos: 'projetos', contaCargos: 'cargos', contaMandatos: 'mandatos',
-    maisAntigo: (ano) => `o mais antigo é de ${ano}`,
+    contaProjetos: 'projetos', contaLeituras: 'leituras', contaCargos: 'cargos', contaMandatos: 'mandatos',
+    nascido: (ano) => `nascido em ${ano}`,
     abrirTudo: 'abrir tudo', fecharTudo: 'fechar tudo',
     papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
     privado: 'privado, atrás de autenticação', codigo: 'código', licenca: 'licença',
@@ -82,10 +85,10 @@ const ROTULOS: Record<Idioma, Rotulos> = {
   },
   en: {
     projetos: 'projects/', voz: 'voice/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/',
-    contacto: 'contact/', ficheiros: 'files/', colofao: 'colophon/',
+    contacto: 'contact/', privacidade: 'privacy/', ficheiros: 'files/', colofao: 'colophon/',
     entradas: (n) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
-    contaProjetos: 'projects', contaCargos: 'positions', contaMandatos: 'mandates',
-    maisAntigo: (ano) => `oldest from ${ano}`,
+    contaProjetos: 'projects', contaLeituras: 'readings', contaCargos: 'positions', contaMandatos: 'mandates',
+    nascido: (ano) => `born ${ano}`,
     abrirTudo: 'expand all', fecharTudo: 'collapse all',
     papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
     privado: 'private, behind authentication', codigo: 'source', licenca: 'licence',
@@ -99,10 +102,10 @@ const ROTULOS: Record<Idioma, Rotulos> = {
   },
   fr: {
     projetos: 'projets/', voz: 'voix/', percurso: 'parcours/', mandatos: 'mandats/', formacao: 'certificats/',
-    contacto: 'contact/', ficheiros: 'fichiers/', colofao: 'colophon/',
+    contacto: 'contact/', privacidade: 'confidentialite/', ficheiros: 'fichiers/', colofao: 'colophon/',
     entradas: (n) => `${n} ${n === 1 ? 'entrée' : 'entrées'}`,
-    contaProjetos: 'projets', contaCargos: 'postes', contaMandatos: 'mandats',
-    maisAntigo: (ano) => `le plus ancien date de ${ano}`,
+    contaProjetos: 'projets', contaLeituras: 'lectures', contaCargos: 'postes', contaMandatos: 'mandats',
+    nascido: (ano) => `né en ${ano}`,
     abrirTudo: 'tout ouvrir', fecharTudo: 'tout fermer',
     papel: 'rôle', periodo: 'période', stack: 'stack', endereco: 'adresse', acesso: 'accès',
     privado: 'privé, derrière une authentification', codigo: 'code', licenca: 'licence',
@@ -116,10 +119,10 @@ const ROTULOS: Record<Idioma, Rotulos> = {
   },
   es: {
     projetos: 'proyectos/', voz: 'voz/', percurso: 'trayectoria/', mandatos: 'mandatos/', formacao: 'certificados/',
-    contacto: 'contacto/', ficheiros: 'archivos/', colofao: 'colofón/',
+    contacto: 'contacto/', privacidade: 'privacidad/', ficheiros: 'archivos/', colofao: 'colofón/',
     entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
-    contaProjetos: 'proyectos', contaCargos: 'cargos', contaMandatos: 'mandatos',
-    maisAntigo: (ano) => `el más antiguo es de ${ano}`,
+    contaProjetos: 'proyectos', contaLeituras: 'lecturas', contaCargos: 'cargos', contaMandatos: 'mandatos',
+    nascido: (ano) => `nacido en ${ano}`,
     abrirTudo: 'abrir todo', fecharTudo: 'cerrar todo',
     papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'dirección', acesso: 'acceso',
     privado: 'privado, tras autenticación', codigo: 'código', licenca: 'licencia',
@@ -134,18 +137,16 @@ const ROTULOS: Record<Idioma, Rotulos> = {
 }
 const rot = ROTULOS[idioma]
 
-const anoInicio = Math.min(
-  ...[...posicoes, ...mandatos, ...projetos.filter((p) => p.periodo)].map((x) =>
-    parseInt((x.periodo as { inicio: string }).inicio.slice(0, 4), 10)
-  )
-)
 const totais = [
   `${projetos.length} ${rot.contaProjetos}`,
+  `${leituras.length} ${rot.contaLeituras}`,
   `${posicoes.length} ${rot.contaCargos}`,
   `${mandatos.length} ${rot.contaMandatos}`,
-  // «desde 2007» a seguir a três contagens lê-se como data de nascimento. O que
-  // 2007 é: a entrada mais antiga da lista.
-  rot.maisAntigo(anoInicio),
+  // A entrada mais antiga da lista era de 2007, e «desde 2007» a seguir a três
+  // contagens lia-se como data de nascimento — que é precisamente o que agora
+  // está lá, e por ser mesmo isso: 1986, o único número desta página que o
+  // build não consegue derivar de nada. Vive em `contacto.nascimento`.
+  rot.nascido(contacto.nascimento),
 ]
 
 /**
@@ -214,17 +215,21 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               ) : (
                 <span class="linha__desc">{t(p.linha, idioma)}</span>
               )}
-              {((p.url !== null && p.url !== CANONICO) || p.codigo !== null) && (
-                <span class="linha__ligacoes">
-                  {p.url !== null && p.url !== CANONICO && (
-                    <a href={p.url} rel="noopener">{rot.visitar} ↗</a>
-                  )}
-                  {p.codigo !== null && (
-                    <a href={p.codigo} rel="noopener">{rot.codigoAberto} ↗</a>
-                  )}
-                </span>
-              )}
             </Fragment>
+            {/* As ligações viviam dentro do `<summary>`, que já é um controlo:
+                dois controlos aninhados são um `nested-interactive` do axe, e um
+                leitor de ecrã absorve-os no nome do resumo em vez de os expor.
+                Aqui dentro são links normais, e com área de toque a sério. */}
+            {((p.url !== null && p.url !== CANONICO) || p.codigo !== null) && (
+              <p class="linha__ligacoes">
+                {p.url !== null && p.url !== CANONICO && (
+                  <a href={p.url} rel="noopener">{rot.visitar} ↗</a>
+                )}
+                {p.codigo !== null && (
+                  <a href={p.codigo} rel="noopener">{rot.codigoAberto} ↗</a>
+                )}
+              </p>
+            )}
             <div class="no__texto">
               {p.shot !== null && <p>{t(p.linha, idioma)}</p>}
               {p.detalhe.map((d) => <p>{t(d, idioma)}</p>)}
@@ -454,6 +459,21 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
           </dd>
         </>
       )}
+    </dl>
+  </Node>
+
+  {/* A seguir ao contacto de propósito: o campo «responsável» remete para o
+      endereço que está no nó de cima, e um leitor que salte para aqui a partir
+      do rodapé encontra os dois juntos. */}
+  <Node id="privacidade" nivel={2} nome={rot.privacidade}>
+    <p class="no__texto no__texto--nota">{t(notaPrivacidade, idioma)}</p>
+    <dl class="no__campos">
+      {privacidade.map((c) => (
+        <>
+          <dt>{t(c.rotulo, idioma)}</dt>
+          <dd>{t(c.texto, idioma)}</dd>
+        </>
+      ))}
     </dl>
   </Node>
 
