@@ -429,6 +429,13 @@ function imagensPorPagina(buf) {
   const conta = (buf, re) => (buf.toString('latin1').match(re) ?? []).length
   const esperadas = projetos.filter((x) => x.shot !== null).length
   const capas = leituras.filter((l) => l.capa !== null).length
+  /* O dossiê leva uma imagem por vídeo (o fotograma) e a PRIMEIRA imagem de
+     cada leitura em palco que tenha alguma. A regra vive no Dossier.astro; a
+     conta tem de a repetir, senão a verificação passa a medir o que houver em
+     vez do que devia haver. */
+  const registos = leituras.filter(
+    (l) => l.formato === 'video' || (l.formato === 'presencial' && l.imagens.length > 0)
+  ).length
   const FOLHAS = 4
   for (const nome of ['Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf']) {
     const caminho = pub + 'docs/' + nome
@@ -449,36 +456,36 @@ function imagensPorPagina(buf) {
     if (paginas > FOLHAS) {
       problemas.push(`${nome} tem ${paginas} páginas; o limite são ${FOLHAS}`)
     }
-    /* Onde é que cada imagem caiu. As quebras forçadas do print.css fazem os
-       projetos e a voz abrirem folha, e é isso que cumpre três dos pedidos:
-       o percurso com a apresentação, os projetos em duas folhas com as imagens,
-       e as capas no fim da voz. Sem esta conta, a paginação voltava a depender
-       do comprimento de um parágrafo e ninguém dava por isso — foi exatamente o
-       que aconteceu quando a apresentação encolheu sessenta pixels.
+    /* Onde é que cada imagem caiu. Duas quebras forçadas no print.css seguram
+       a paginação: os projetos abrem folha, e as capas abrem a última. Sem esta
+       conta, a paginação voltava a depender do comprimento de um parágrafo e
+       ninguém dava por isso — foi exatamente o que aconteceu quando a
+       apresentação encolheu sessenta pixels.
 
        Conta-se por página, sem descodificar nada: segue-se o /Resources de cada
        /Type /Page e contam-se os /XObject que são /Subtype /Image. O retrato
-       está na primeira; as capturas na penúltima, no fim dos projetos; as capas
-       na última, no fim da voz. O QR é vetorial e não entra. */
+       está na primeira; a penúltima leva as capturas dos projetos e os registos
+       da voz; a última leva as capas. O QR é vetorial e não entra. */
     const porPagina = imagensPorPagina(buf)
+    const penultima = esperadas + registos
     if (porPagina === null) {
       problemas.push(`${nome}: não consegui ler a árvore de páginas para contar as imagens`)
     } else if (porPagina.length === FOLHAS) {
       if (porPagina[0] < 1) problemas.push(`${nome}: a primeira folha não leva o retrato`)
-      if (porPagina[FOLHAS - 2] < esperadas) {
-        problemas.push(`${nome}: as ${esperadas} capturas deviam fechar os projetos na folha ${FOLHAS - 1}; encontrei ${porPagina[FOLHAS - 2]}`)
+      if (porPagina[FOLHAS - 2] < penultima) {
+        problemas.push(`${nome}: as ${esperadas} capturas e os ${registos} registos da voz deviam ficar juntos na folha ${FOLHAS - 1}; encontrei ${porPagina[FOLHAS - 2]} imagens`)
       }
       if (porPagina[FOLHAS - 1] < capas) {
         problemas.push(`${nome}: as ${capas} capas deviam fechar a voz na última folha; encontrei ${porPagina[FOLHAS - 1]}`)
       }
     }
-    // Retrato, QR, uma captura por projeto que a tenha e as capas dos livros.
-    // O Chromium pode codificar uma imagem como par imagem+máscara, por isso a
-    // conta é um mínimo, não uma igualdade.
+    // Retrato, QR, uma captura por projeto que a tenha, os registos da voz e as
+    // capas dos livros. O Chromium pode codificar uma imagem como par
+    // imagem+máscara, por isso a conta é um mínimo, não uma igualdade.
     const imagens = conta(buf, /\/Subtype\s*\/Image/g)
-    if (imagens < esperadas + capas + 1) {
+    if (imagens < esperadas + capas + registos + 1) {
       problemas.push(
-        `${nome} devia levar o retrato, as ${esperadas} capturas e as ${capas} capas; tem ${imagens} imagens`
+        `${nome} devia levar o retrato, as ${esperadas} capturas, os ${registos} registos da voz e as ${capas} capas; tem ${imagens} imagens`
       )
     }
   }
