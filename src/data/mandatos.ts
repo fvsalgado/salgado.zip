@@ -36,14 +36,26 @@ export const mandatos = parse(Mandato.array(), [
     },
     organizacao: 'Assembleia Municipal da Nazaré',
     periodo: { inicio: '2007-10', fim: '2015-09' },
+    // As idades são derivadas do ano de nascimento, confirmado pelo Fábio; a
+    // data completa fica de fora, que é dado de identidade e não de percurso.
+    //
+    // Dizia «Eleito aos 21 anos, para dois mandatos consecutivos», e errava nas
+    // duas metades. Não houve eleição aos 21: houve candidatura aos 19 e posse
+    // por substituição aos 21. E não foram dois mandatos: foi o resto de um,
+    // um inteiro, e um terceiro deixado a meio. O período — 2007-10 a 2015-09 —
+    // sempre esteve certo; era a frase por baixo que o contava mal.
     linhas: [
-      // A idade é derivada do ano de nascimento, confirmado pelo Fábio; a data
-      // completa fica de fora, que é dado de identidade e não de percurso.
       {
-        pt: 'Eleito aos 21 anos, para dois mandatos consecutivos.',
-        en: 'Elected at 21, for two consecutive terms.',
-        fr: 'Élu à 21 ans, pour deux mandats consécutifs.',
-        es: 'Elegido a los 21 años, para dos mandatos consecutivos.',
+        pt: 'Número dois da lista e mandatário da candidatura, aos 19 anos.',
+        en: 'Number two on the list and election agent for the candidacy, at 19.',
+        fr: 'Numéro deux de la liste et mandataire de la candidature, à 19 ans.',
+        es: 'Número dos de la lista y mandatario de la candidatura, a los 19 años.',
+      },
+      {
+        pt: 'Entrei por substituição em 2007, aos 21. Fiz depois um mandato completo, e um terceiro que interrompi a meio.',
+        en: 'I took office by substitution in 2007, at 21. I then served one full term, and a third that I cut short halfway.',
+        fr: 'Je suis entré par substitution en 2007, à 21 ans. J’ai ensuite fait un mandat complet, et un troisième que j’ai interrompu à mi-parcours.',
+        es: 'Entré por sustitución en 2007, a los 21. Hice después un mandato completo, y un tercero que interrumpí a mitad.',
       },
     ],
   },
