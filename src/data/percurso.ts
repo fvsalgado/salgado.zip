@@ -26,6 +26,7 @@ export const posicoes = parse(Posicao.array(), [
     },
     organizacao: 'ATREVIA',
     organizacaoUrl: 'https://www.atrevia.com',
+    logo: 'atrevia.webp',
     periodo: { inicio: '2022-06', fim: null },
     linhas: [
       // O gesto próprio primeiro. «Regulação e relação institucional para
@@ -61,6 +62,7 @@ export const posicoes = parse(Posicao.array(), [
     },
     organizacao: 'Câmara Municipal de Lisboa',
     organizacaoUrl: 'https://www.lisboa.pt',
+    logo: 'cml.webp',
     periodo: { inicio: '2018-03', fim: '2022-04' },
     linhas: [
       {
