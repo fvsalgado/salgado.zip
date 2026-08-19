@@ -15,15 +15,29 @@ import { Lang, parse } from './schema.ts'
  * rodapé no mesmo commit em que a medição entrou, porque deixou de ser verdade
  * — e um sítio que se apresenta como auditável não pode ter no rodapé uma
  * afirmação que o próprio código desmente.
+ *
+ * Os textos encolheram a 19/08/2026 sem perder um único dever do artigo 13.º:
+ * os seis campos são os seis que a lei obriga a dizer, e o que saiu foi a
+ * repetição — «é o que existe em qualquer sítio da internet» a explicar o que
+ * já se percebia, «e não sobrevive de um dia para o outro» a dizer segunda vez
+ * o que «24 horas» diz.
+ *
+ * O sétimo campo não é do RGPD: é a ACESSIBILIDADE, e está aqui porque é a
+ * mesma promessa noutra matéria — o que o sítio faz a quem o lê, dito de
+ * maneira a poder ser conferido. Cada afirmação dele tem um sítio no código
+ * onde se confirma: o atalho e o foco no base.css, o contraste na verificação
+ * 5, o funcionamento sem JavaScript na 4, a paragem das animações na consulta
+ * a `prefers-reduced-motion`. O que não se pode provar — uma auditoria formal
+ * — diz-se que não existe, em vez de se ficar calado sobre isso.
  */
 
 const Campo = z.object({ rotulo: Lang, texto: Lang })
 
 export const notaPrivacidade = parse(Lang, {
-  pt: 'Sem cookies, sem publicidade, sem perfis e sem partilha com terceiros para publicidade. O que se segue é o que existe mesmo.',
-  en: 'No cookies, no advertising, no profiles, and nothing shared with third parties for advertising. What follows is what actually exists.',
-  fr: 'Sans cookies, sans publicité, sans profilage et sans partage à des fins publicitaires. Ce qui suit est ce qui existe réellement.',
-  es: 'Sin cookies, sin publicidad, sin perfiles y sin compartir con terceros con fines publicitarios. Lo que sigue es lo que existe de verdad.',
+  pt: 'Sem cookies, sem publicidade e sem perfis. O que se segue é o que existe mesmo.',
+  en: 'No cookies, no advertising, no profiles. What follows is what actually exists.',
+  fr: 'Sans cookies, sans publicité, sans profilage. Ce qui suit est ce qui existe réellement.',
+  es: 'Sin cookies, sin publicidad, sin perfiles. Lo que sigue es lo que existe de verdad.',
 }, 'privacidade.nota')
 
 export const privacidade = parse(Campo.array().min(1), [
@@ -39,46 +53,60 @@ export const privacidade = parse(Campo.array().min(1), [
   {
     rotulo: { pt: 'que dados', en: 'what data', fr: 'quelles données', es: 'qué datos' },
     texto: {
-      pt: 'Registos do servidor, que incluem o endereço IP, o agente do navegador e a hora — é o que existe em qualquer sítio da internet. Uma medição de visitas sem cookies, que guarda a página, o referenciador, o país, o sistema e o tipo de aparelho, e identifica a visita por um resumo criptográfico do pedido. E o que escreveres, se me escreveres.',
-      en: 'Server logs, which include the IP address, the browser agent and the time — what exists on any site on the internet. A cookieless measurement of visits, keeping the page, the referrer, the country, the system and the device type, identifying a visit by a cryptographic digest of the request. And whatever you write, if you write to me.',
-      fr: 'Les journaux du serveur, qui contiennent l’adresse IP, l’agent du navigateur et l’heure — ce qui existe sur n’importe quel site. Une mesure de fréquentation sans cookies, qui garde la page, le référent, le pays, le système et le type d’appareil, et identifie la visite par une empreinte de la requête. Et ce que vous m’écrivez, le cas échéant.',
-      es: 'Registros del servidor, que incluyen la dirección IP, el agente del navegador y la hora — lo que existe en cualquier sitio de internet. Una medición de visitas sin cookies, que guarda la página, el referente, el país, el sistema y el tipo de aparato, e identifica la visita por un resumen criptográfico de la petición. Y lo que escribas, si me escribes.',
+      pt: 'Registos do servidor: endereço IP, navegador e hora. Uma medição de visitas sem cookies: página, referenciador, país, sistema e tipo de aparelho, com a visita identificada por um resumo criptográfico do pedido. E o que me escreveres.',
+      en: 'Server logs: IP address, browser and time. A cookieless measurement of visits: page, referrer, country, system and device type, with the visit identified by a cryptographic digest of the request. And whatever you write to me.',
+      fr: 'Les journaux du serveur : adresse IP, navigateur et heure. Une mesure de fréquentation sans cookies : page, référent, pays, système et type d’appareil, la visite étant identifiée par une empreinte de la requête. Et ce que vous m’écrivez.',
+      es: 'Registros del servidor: dirección IP, navegador y hora. Una medición de visitas sin cookies: página, referente, país, sistema y tipo de aparato, con la visita identificada por un resumen criptográfico de la petición. Y lo que me escribas.',
     },
   },
   {
     rotulo: { pt: 'para quê', en: 'what for', fr: 'pourquoi', es: 'para qué' },
     texto: {
-      pt: 'Servir a página, mantê-la de pé, e saber quantas pessoas a leem. Nada disto alimenta publicidade, perfis ou decisões automatizadas sobre ninguém.',
-      en: 'To serve the page, keep it up, and know how many people read it. None of it feeds advertising, profiles or automated decisions about anyone.',
-      fr: 'Servir la page, la maintenir en ligne, et savoir combien de personnes la lisent. Rien de tout cela n’alimente la publicité, le profilage ou des décisions automatisées.',
-      es: 'Servir la página, mantenerla en pie, y saber cuántas personas la leen. Nada de esto alimenta publicidad, perfiles ni decisiones automatizadas sobre nadie.',
+      pt: 'Servir a página, mantê-la de pé e saber quantas pessoas a leem. Nada disto alimenta publicidade, perfis ou decisões automatizadas.',
+      en: 'To serve the page, keep it up and know how many people read it. None of it feeds advertising, profiles or automated decisions.',
+      fr: 'Servir la page, la maintenir en ligne et savoir combien de personnes la lisent. Rien de cela n’alimente la publicité, le profilage ou des décisions automatisées.',
+      es: 'Servir la página, mantenerla en pie y saber cuántas personas la leen. Nada de esto alimenta publicidad, perfiles ni decisiones automatizadas.',
     },
   },
   {
     rotulo: { pt: 'quanto tempo', en: 'how long', fr: 'combien de temps', es: 'cuánto tiempo' },
     texto: {
-      pt: 'A identificação de uma visita é descartada ao fim de 24 horas e não sobrevive de um dia para o outro. Os registos do servidor seguem a retenção de quem aloja. O que me escreveres fica enquanto a conversa fizer sentido.',
-      en: 'A visit’s identifier is discarded after 24 hours and does not survive from one day to the next. Server logs follow the host’s retention. Whatever you write to me stays for as long as the conversation makes sense.',
-      fr: 'L’identifiant d’une visite est supprimé au bout de 24 heures et ne survit pas d’un jour à l’autre. Les journaux suivent la rétention de l’hébergeur. Ce que vous m’écrivez reste tant que la conversation a du sens.',
-      es: 'La identificación de una visita se descarta a las 24 horas y no sobrevive de un día para otro. Los registros del servidor siguen la retención de quien aloja. Lo que me escribas queda mientras la conversación tenga sentido.',
+      pt: 'A identificação de uma visita dura 24 horas. Os registos do servidor seguem a retenção de quem aloja. O que me escreveres fica enquanto a conversa fizer sentido.',
+      en: 'A visit’s identifier lasts 24 hours. Server logs follow the host’s retention. Whatever you write to me stays as long as the conversation makes sense.',
+      fr: 'L’identifiant d’une visite dure 24 heures. Les journaux suivent la rétention de l’hébergeur. Ce que vous m’écrivez reste tant que la conversation a du sens.',
+      es: 'La identificación de una visita dura 24 horas. Los registros del servidor siguen la retención de quien aloja. Lo que me escribas queda mientras la conversación tenga sentido.',
     },
   },
   {
     rotulo: { pt: 'quem mais lhes toca', en: 'who else handles it', fr: 'qui d’autre y touche', es: 'quién más los toca' },
     texto: {
-      pt: 'A Vercel, que aloja o site e faz a medição, na qualidade de subcontratante. Mais ninguém: a página não faz um único pedido a terceiros, e a verificação 8 do repositório falha se algum dia fizer.',
-      en: 'Vercel, which hosts the site and does the measurement, as a processor. Nobody else: the page makes not a single third-party request, and check 8 in the repository fails if it ever does.',
-      fr: 'Vercel, qui héberge le site et effectue la mesure, en tant que sous-traitant. Personne d’autre : la page ne fait aucune requête à des tiers, et la vérification 8 du dépôt échoue si cela arrive.',
-      es: 'Vercel, que aloja el sitio y hace la medición, como subencargado. Nadie más: la página no hace ni una sola petición a terceros, y la verificación 8 del repositorio falla si algún día la hiciera.',
+      pt: 'A Vercel, que aloja e mede, como subcontratante. Mais ninguém: a página não faz um único pedido a terceiros, e a verificação 8 falha se algum dia fizer.',
+      en: 'Vercel, which hosts and measures, as a processor. Nobody else: the page makes not a single third-party request, and check 8 fails if it ever does.',
+      fr: 'Vercel, qui héberge et mesure, en tant que sous-traitant. Personne d’autre : la page ne fait aucune requête à des tiers, et la vérification 8 échoue si cela arrive.',
+      es: 'Vercel, que aloja y mide, como subencargado. Nadie más: la página no hace ni una sola petición a terceros, y la verificación 8 falla si algún día la hiciera.',
     },
   },
   {
     rotulo: { pt: 'os teus direitos', en: 'your rights', fr: 'vos droits', es: 'tus derechos' },
     texto: {
-      pt: 'Acesso, retificação, apagamento, limitação, oposição e portabilidade. Escreve para o endereço acima. Se achares que não resolvi, podes reclamar à CNPD.',
-      en: 'Access, rectification, erasure, restriction, objection and portability. Write to the address above. If you think I did not resolve it, you may complain to the Portuguese data protection authority (CNPD).',
-      fr: 'Accès, rectification, effacement, limitation, opposition et portabilité. Écrivez à l’adresse ci-dessus. Si vous estimez que je n’ai pas résolu la question, vous pouvez saisir la CNPD.',
-      es: 'Acceso, rectificación, supresión, limitación, oposición y portabilidad. Escribe a la dirección de arriba. Si crees que no lo resolví, puedes reclamar ante la CNPD.',
+      pt: 'Acesso, retificação, apagamento, limitação, oposição e portabilidade: escreve para o endereço acima. Se não resolver, podes reclamar à CNPD.',
+      en: 'Access, rectification, erasure, restriction, objection and portability: write to the address above. If I do not resolve it, you may complain to the Portuguese data protection authority (CNPD).',
+      fr: 'Accès, rectification, effacement, limitation, opposition et portabilité : écrivez à l’adresse ci-dessus. Si je ne règle pas la question, vous pouvez saisir la CNPD.',
+      es: 'Acceso, rectificación, supresión, limitación, oposición y portabilidad: escribe a la dirección de arriba. Si no lo resuelvo, puedes reclamar ante la CNPD.',
+    },
+  },
+  {
+    rotulo: {
+      pt: 'acessibilidade',
+      en: 'accessibility',
+      fr: 'accessibilité',
+      es: 'accesibilidad',
+    },
+    texto: {
+      pt: 'Funciona sem JavaScript, tem atalho para o conteúdo e o foco do teclado é sempre visível. O contraste é medido nos dois temas contra a norma AA, e as animações param quando o sistema o pede. Auditoria formal não há: se encontrares uma barreira, escreve-me e corrijo-a.',
+      en: 'It works without JavaScript, has a skip-to-content link, and the keyboard focus is always visible. Contrast is measured against AA in both themes, and animation stops when the system asks for it. There is no formal audit: if you hit a barrier, write to me and I will fix it.',
+      fr: 'Il fonctionne sans JavaScript, propose un lien d’évitement vers le contenu et le focus clavier reste toujours visible. Le contraste est mesuré face à la norme AA dans les deux thèmes, et les animations s’arrêtent si le système le demande. Il n’y a pas d’audit formel : si vous rencontrez un obstacle, écrivez-moi et je le corrige.',
+      es: 'Funciona sin JavaScript, tiene enlace para saltar al contenido y el foco del teclado siempre se ve. El contraste se mide contra la norma AA en los dos temas, y las animaciones paran cuando el sistema lo pide. Auditoría formal no hay: si encuentras una barrera, escríbeme y la corrijo.',
     },
   },
 ], 'privacidade')

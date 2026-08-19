@@ -10,6 +10,11 @@
  * a linha com a nota de privacidade, e o que se quer levar de um sítio destes
  * não pode ir a meio de uma frase sobre cookies.
  *
+ * A linha das promessas diz três: o que não se faz a quem lê (sem cookies, sem
+ * publicidade), o que se faz por quem lê (acessibilidade) e o que se dá a quem
+ * quiser (código aberto, licença). As duas primeiras levam ao mesmo nó, que é
+ * onde as duas estão escritas por extenso e onde se pode conferi-las.
+ *
  * A hora de atualização saiu. Dizia a data do último commit de conteúdo, que é
  * informação sobre o repositório e não sobre quem lê — e o `lastmod` do
  * sitemap continua a dá-la a quem a usa mesmo, que são os motores de busca.
@@ -29,11 +34,14 @@ import { codigoDoSite, perfilGithub, licenca } from '../data/textos.ts'
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
 
-const ROTULOS: Record<Idioma, { sem: string; aberto: string; licenca: string }> = {
-  pt: { sem: 'sem cookies, sem publicidade', aberto: 'código aberto', licenca: 'licença' },
-  en: { sem: 'no cookies, no advertising', aberto: 'open source', licenca: 'licence' },
-  fr: { sem: 'sans cookies, sans publicité', aberto: 'code ouvert', licenca: 'licence' },
-  es: { sem: 'sin cookies, sin publicidad', aberto: 'código abierto', licenca: 'licencia' },
+const ROTULOS: Record<
+  Idioma,
+  { sem: string; acesso: string; aberto: string; licenca: string }
+> = {
+  pt: { sem: 'sem cookies, sem publicidade', acesso: 'acessibilidade', aberto: 'código aberto', licenca: 'licença' },
+  en: { sem: 'no cookies, no advertising', acesso: 'accessibility', aberto: 'open source', licenca: 'licence' },
+  fr: { sem: 'sans cookies, sans publicité', acesso: 'accessibilité', aberto: 'code ouvert', licenca: 'licence' },
+  es: { sem: 'sin cookies, sin publicidad', acesso: 'accesibilidad', aberto: 'código abierto', licenca: 'licencia' },
 }
 const rot = ROTULOS[idioma]
 
@@ -101,6 +109,14 @@ const contactos = [
 
   <p class="rodape__nota">
     <a href="#privacidade">{rot.sem}</a>
+    <span aria-hidden="true"> · </span>
+    {/* Aponta ao mesmo nó que a ligação anterior, e é de propósito: a
+        acessibilidade é o último campo lá dentro. Uma âncora ao próprio campo
+        obrigaria o navegador a abrir um <details> fechado para chegar ao
+        <dt>, coisa que os motores mais antigos não fazem sem JavaScript — e
+        aqui nada depende de JavaScript. Duas etiquetas, duas promessas, o
+        mesmo destino. */}
+    <a href="#privacidade">{rot.acesso}</a>
     <span aria-hidden="true"> · </span>
     <a href={codigoDoSite} rel="noopener">{rot.aberto}</a>
     <span aria-hidden="true"> · </span>
