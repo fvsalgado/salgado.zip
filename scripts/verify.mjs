@@ -388,6 +388,41 @@ function html(rota) {
   decide('hreflang simétrico com x-default', problemas, `${IDIOMAS.length} línguas`)
 }
 
+/**
+ * Quantas imagens cada página do PDF declara nos seus recursos.
+ *
+ * Não descodifica nada e não pretende ser um leitor de PDF: encontra os objetos
+ * indiretos, apanha os que são `/Type /Page`, segue-lhes o `/Resources` e conta
+ * os `/XObject` cujo objeto apontado é `/Subtype /Image`. Chega para saber em
+ * que folha caiu o quê, que é a única pergunta que aqui se faz.
+ *
+ * Devolve `null` se não conseguir ler a estrutura, para a verificação poder
+ * dizer que não sabe em vez de dizer que está tudo bem.
+ */
+function imagensPorPagina(buf) {
+  const bruto = buf.toString('latin1')
+  const objs = new Map()
+  for (const m of bruto.matchAll(/(\d+)\s+\d+\s+obj\b([\s\S]*?)\bendobj/g)) {
+    objs.set(Number(m[1]), m[2])
+  }
+  if (objs.size === 0) return null
+  const paginas = []
+  for (const [num, corpo] of objs) {
+    if (/\/Type\s*\/Page[^s]/.test(corpo)) paginas.push([num, corpo])
+  }
+  if (paginas.length === 0) return null
+  return paginas.map(([, corpo]) => {
+    const mr = /\/Resources\s*(\d+)\s+\d+\s+R/.exec(corpo)
+    const rec = mr ? (objs.get(Number(mr[1])) ?? '') : corpo
+    let n = 0
+    for (const x of rec.matchAll(/\/\w+\s+(\d+)\s+\d+\s+R/g)) {
+      const alvo = objs.get(Number(x[1])) ?? ''
+      if (alvo.includes('/Subtype') && alvo.includes('/Image')) n += 1
+    }
+    return n
+  })
+}
+
 /* ══ 11. PDFs ═══════════════════════════════════════════════════════════ */
 {
   const problemas = []
@@ -413,6 +448,29 @@ function html(rota) {
        Quem quiser passar daqui muda este número de propósito, não por descuido. */
     if (paginas > FOLHAS) {
       problemas.push(`${nome} tem ${paginas} páginas; o limite são ${FOLHAS}`)
+    }
+    /* Onde é que cada imagem caiu. As quebras forçadas do print.css fazem os
+       projetos e a voz abrirem folha, e é isso que cumpre três dos pedidos:
+       o percurso com a apresentação, os projetos em duas folhas com as imagens,
+       e as capas no fim da voz. Sem esta conta, a paginação voltava a depender
+       do comprimento de um parágrafo e ninguém dava por isso — foi exatamente o
+       que aconteceu quando a apresentação encolheu sessenta pixels.
+
+       Conta-se por página, sem descodificar nada: segue-se o /Resources de cada
+       /Type /Page e contam-se os /XObject que são /Subtype /Image. O retrato
+       está na primeira; as capturas na penúltima, no fim dos projetos; as capas
+       na última, no fim da voz. O QR é vetorial e não entra. */
+    const porPagina = imagensPorPagina(buf)
+    if (porPagina === null) {
+      problemas.push(`${nome}: não consegui ler a árvore de páginas para contar as imagens`)
+    } else if (porPagina.length === FOLHAS) {
+      if (porPagina[0] < 1) problemas.push(`${nome}: a primeira folha não leva o retrato`)
+      if (porPagina[FOLHAS - 2] < esperadas) {
+        problemas.push(`${nome}: as ${esperadas} capturas deviam fechar os projetos na folha ${FOLHAS - 1}; encontrei ${porPagina[FOLHAS - 2]}`)
+      }
+      if (porPagina[FOLHAS - 1] < capas) {
+        problemas.push(`${nome}: as ${capas} capas deviam fechar a voz na última folha; encontrei ${porPagina[FOLHAS - 1]}`)
+      }
     }
     // Retrato, QR, uma captura por projeto que a tenha e as capas dos livros.
     // O Chromium pode codificar uma imagem como par imagem+máscara, por isso a
