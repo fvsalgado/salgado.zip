@@ -110,6 +110,17 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
   line-height: 1.02;
   letter-spacing: -0.025em;
 }
+/* O cargo atual: a primeira coisa que se lê a seguir ao nome. Mono como o
+   resto dos metadados, mas em tinta cheia — é informação, não legenda. */
+.cabecalho__cargo {
+  font-family: var(--mono);
+  font-size: var(--t-base);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-top: 0.7rem;
+}
+.cabecalho__cargo + .cabecalho__areas { margin-top: 0.25rem; }
+
 .cabecalho__areas {
   font-family: var(--mono);
   font-size: var(--t-meta);
@@ -117,7 +128,8 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
   letter-spacing: 0.02em;
   margin-top: 0.55rem;
 }
-.cabecalho__texto p:not(.cabecalho__areas), .cabecalho--dossie p {
+.cabecalho__texto p:not(.cabecalho__areas):not(.cabecalho__cargo),
+.cabecalho--dossie p:not(.cabecalho__cargo) {
   font-size: clamp(1.02rem, 0.95rem + 0.45vw, 1.2rem);
   line-height: 1.5;
   text-wrap: pretty;
@@ -267,6 +279,9 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
 
 /* ── Capturas: cinzento em repouso, cor no hover e no foco ───────────────── */
 .shot { margin-top: 0.85rem; padding-left: 0.35rem; }
+/* A captura dentro do `<summary>`: conteúdo de frase, e não um `<figure>`, que
+   ali seria HTML inválido. O recuo é o mesmo da descrição que substituiu. */
+.shot--resumo { display: block; padding: 0.3rem 0.4rem 0.15rem 1.1rem; margin-top: 0; }
 .shot a { display: inline-block; text-decoration: none; line-height: 0; }
 .shot img {
   width: 100%;
@@ -423,6 +438,18 @@ h2.linha, h3.linha { font: inherit; }
 .linha__ligacoes a { color: var(--ink-soft); }
 .linha__ligacoes a:hover { color: var(--accent); }
 summary { padding-bottom: 0.35rem; }
+
+/* ── Leitor de áudio ──────────────────────────────────────────────────────
+   Controlo nativo do browser: é o único leitor que funciona com o JavaScript
+   desligado e dentro de uma CSP sem 'unsafe-inline'. Não se lhe estiliza o
+   interior — dá-se-lhe a largura da coluna e o ar à volta, e o `color-scheme`
+   dos tokens trata de o pôr claro ou escuro com o resto da página. */
+.leitor {
+  display: block;
+  width: 100%;
+  max-width: 30rem;
+  margin: 0.35rem 0 0.9rem;
+}
 
 /* ── Utilitários de espaçamento (sem style= inline: a CSP é `style-src 'self'`,
    sem 'unsafe-inline' e sem hashes a manter à mão) ───────────────────────── */

@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/pack.mjs",
+    "prebuild": "node scripts/voz.mjs && node scripts/pack.mjs",
     "build": "astro build",
     "preview": "astro preview --port 4321",
     "check": "astro check",
     "artifacts": "node scripts/artifacts.mjs",
     "pack": "node scripts/pack.mjs",
+    "voz": "node scripts/voz.mjs",
     "verify": "node scripts/verify.mjs",
     "mosaico": "node scripts/mosaico.mjs"
   },

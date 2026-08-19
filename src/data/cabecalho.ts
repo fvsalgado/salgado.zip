@@ -3,7 +3,7 @@ import { Cabecalho, parse } from './schema.ts'
 export const cabecalho = parse(Cabecalho, {
   nome: 'Fábio Salgado',
   cargo: {
-    pt: 'Consultor de assuntos públicos',
+    pt: 'Consultor de Public Affairs',
     en: 'Public affairs consultant',
     fr: 'Consultant en affaires publiques',
     es: 'Consultor de asuntos públicos',
