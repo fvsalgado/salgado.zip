@@ -461,27 +461,33 @@ function imagensPorPagina(buf) {
     if (paginas > FOLHAS) {
       problemas.push(`${nome} tem ${paginas} páginas; o limite são ${FOLHAS}`)
     }
-    /* Onde é que cada imagem caiu. Duas quebras forçadas no print.css seguram
-       a paginação: os projetos abrem folha, e as capas abrem a última. Sem esta
-       conta, a paginação voltava a depender do comprimento de um parágrafo e
-       ninguém dava por isso — foi exatamente o que aconteceu quando a
-       apresentação encolheu sessenta pixels.
+    /* Onde é que cada imagem caiu. Uma quebra forçada e uma proibição de corte
+       seguram a paginação: os projetos abrem folha, e a secção da voz não se
+       parte. Sem esta conta, a paginação voltava a depender do comprimento de
+       um parágrafo e ninguém dava por isso — foi exatamente o que aconteceu
+       quando a apresentação encolheu sessenta pixels.
+
+       O que se exige é que TUDO o que é imagem caiba na penúltima folha: as
+       capturas que fecham os projetos, e logo a seguir a voz inteira, com os
+       registos e as capas. É a maneira de verificar, contando, aquilo que a
+       vista vê — uma folha com as imagens todas e a última só com texto. Se
+       um dia a voz se partir em duas folhas, as capas caem para a última e
+       esta conta acusa, que é exatamente o caso que se quer impedir.
 
        Conta-se por página, sem descodificar nada: segue-se o /Resources de cada
-       /Type /Page e contam-se os /XObject que são /Subtype /Image. O retrato
-       está na primeira; a penúltima leva as capturas dos projetos e os registos
-       da voz; a última leva as capas. O QR é vetorial e não entra. */
+       /Type /Page e contam-se os /XObject que são /Subtype /Image. O QR é
+       vetorial e não entra. */
     const porPagina = imagensPorPagina(buf)
-    const penultima = esperadas + registos
+    const penultima = esperadas + registos + capas
     if (porPagina === null) {
       problemas.push(`${nome}: não consegui ler a árvore de páginas para contar as imagens`)
     } else if (porPagina.length === FOLHAS) {
       if (porPagina[0] < 1) problemas.push(`${nome}: a primeira folha não leva o retrato`)
       if (porPagina[FOLHAS - 2] < penultima) {
-        problemas.push(`${nome}: as ${esperadas} capturas e os ${registos} registos da voz deviam ficar juntos na folha ${FOLHAS - 1}; encontrei ${porPagina[FOLHAS - 2]} imagens`)
+        problemas.push(`${nome}: as ${esperadas} capturas, os ${registos} registos e as ${capas} capas deviam ficar todos na folha ${FOLHAS - 1}; encontrei ${porPagina[FOLHAS - 2]} imagens`)
       }
-      if (porPagina[FOLHAS - 1] < capas) {
-        problemas.push(`${nome}: as ${capas} capas deviam fechar a voz na última folha; encontrei ${porPagina[FOLHAS - 1]}`)
+      if (porPagina[FOLHAS - 1] > 0) {
+        problemas.push(`${nome}: a última folha é a da cauda em texto e apareceram-lhe ${porPagina[FOLHAS - 1]} imagens — a voz partiu-se`)
       }
     }
     // Retrato, QR, uma captura por projeto que a tenha, os registos da voz e as
