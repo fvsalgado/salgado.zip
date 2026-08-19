@@ -4,7 +4,7 @@ import '../styles/print.css'
 import { cabecalho, contacto, projetos, leituras, posicoes, datas, medidasVoz, RUBRICA, CANONICO, IDIOMAS, LINGUAS, PADRAO } from '../data'
 import type { Idioma } from '../data'
 import { t, duracaoISO } from '../data/formato'
-import { codigoDoSite } from '../data/textos.ts'
+import { perfilGithub } from '../data/textos.ts'
 import dimensoes from '../generated/og.json' with { type: 'json' }
 
 interface Props {
@@ -52,7 +52,7 @@ const SALTAR: Record<Idioma, string> = {
  */
 const sameAs = [
   ...(contacto.linkedin ? [contacto.linkedin] : []),
-  codigoDoSite.replace(/\/[^/]+$/, ''),
+  perfilGithub,
 ]
 
 /** O cargo atual é o da posição sem fim: derivado, não escrito. */
