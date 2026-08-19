@@ -393,6 +393,8 @@ function html(rota) {
   const problemas = []
   const conta = (buf, re) => (buf.toString('latin1').match(re) ?? []).length
   const esperadas = projetos.filter((x) => x.shot !== null).length
+  const capas = leituras.filter((l) => l.capa !== null).length
+  const FOLHAS = 4
   for (const nome of ['Fabio-Salgado-CV-PT.pdf', 'Fabio-Salgado-CV-EN.pdf']) {
     const caminho = pub + 'docs/' + nome
     if (!existsSync(caminho)) {
@@ -403,18 +405,29 @@ function html(rota) {
     if (buf.subarray(0, 5).toString() !== '%PDF-') problemas.push(`${nome} não é um PDF`)
     const paginas = conta(buf, /\/Type\s*\/Page[^s]/g)
     if (paginas < 2) problemas.push(`${nome} tem ${paginas} página(s) — o documento completo tem mais`)
-    // Retrato, QR e uma captura por projeto que a tenha. O Chromium pode
-    // codificar uma imagem como par imagem+máscara, por isso a conta é um
-    // mínimo, não uma igualdade.
+    /* Quatro folhas, e é um teto. Não é gosto: é a diferença entre um documento
+       que se imprime numa folha A4 frente e verso duas vezes e um que obriga a
+       uma terceira quase vazia. O limite paga-se em desenho e ganha-se em
+       leitura, e sem uma verificação a defendê-lo o primeiro parágrafo que
+       alguém acrescentar empurra-o para cinco sem ninguém dar por isso.
+       Quem quiser passar daqui muda este número de propósito, não por descuido. */
+    if (paginas > FOLHAS) {
+      problemas.push(`${nome} tem ${paginas} páginas; o limite são ${FOLHAS}`)
+    }
+    // Retrato, QR, uma captura por projeto que a tenha e as capas dos livros.
+    // O Chromium pode codificar uma imagem como par imagem+máscara, por isso a
+    // conta é um mínimo, não uma igualdade.
     const imagens = conta(buf, /\/Subtype\s*\/Image/g)
-    if (imagens < esperadas + 1) {
-      problemas.push(`${nome} devia levar o retrato e as ${esperadas} capturas; tem ${imagens} imagens`)
+    if (imagens < esperadas + capas + 1) {
+      problemas.push(
+        `${nome} devia levar o retrato, as ${esperadas} capturas e as ${capas} capas; tem ${imagens} imagens`
+      )
     }
   }
   if (existsSync(pub + 'docs/Fabio-Salgado-Projetos-PT.pdf')) {
     problemas.push('Fabio-Salgado-Projetos-PT.pdf ainda existe — foi fundido nos dois documentos')
   }
-  decide('os dois documentos abrem, com retrato e capturas', problemas)
+  decide('os dois documentos abrem, com retrato e capturas, em 4 folhas', problemas)
 }
 
 /* ══ 12. O .zip e os tamanhos publicados ════════════════════════════════ */

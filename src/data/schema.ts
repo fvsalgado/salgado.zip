@@ -155,8 +155,10 @@ export const Leitura = z.object({
    * o mesmo título. Onde não houver a edição certa fica `null`: uma capa errada
    * é uma citação errada, e vale menos do que capa nenhuma.
    *
-   * Aparece na listagem e na página. Não entra nos CV: um currículo com capas
-   * de livros de outros lê-se como se os livros fossem meus.
+   * Aparece na listagem, na página, e no fim da secção da voz nos dois CV.
+   * Esteve fora dos CV com o argumento de que um currículo com capas de livros
+   * de outros se lê como se os livros fossem meus — e o argumento resolve-se na
+   * legenda, que traz o autor colado ao título, e não a esconder a imagem.
    *
    * Ficheiro e obra andam juntos num objeto porque um sem o outro não serve:
    * sem o nome da obra, o texto alternativo teria de usar o `titulo` da

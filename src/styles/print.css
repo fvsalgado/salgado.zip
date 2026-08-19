@@ -54,15 +54,25 @@
   a { color: inherit; text-decoration: none; }
 
   /* ── Cabeça do documento ───────────────────────────────────────────────── */
-  .dossie__cabeca { gap: 10mm; align-items: flex-start; }
+  /* A apresentação corre à volta do retrato em vez de ficar ao lado dele.
+     Em caixa flex, a prosa estava presa a 128mm de largura ao longo dos seus
+     90mm de altura, e o retrato só ocupa 26mm — sobrava uma coluna vazia de um
+     terço de página por baixo dele, que era a coisa mais feia do documento.
+     Com o retrato em `float`, a prosa aperta-se nas primeiras linhas e abre
+     para os 178mm da caixa de texto a partir daí: menos três a quatro linhas,
+     que é o que a primeira página precisava para receber o percurso. */
+  .dossie__cabeca { display: block; }
+  .retrato--dossie { float: right; margin: 0 0 3mm 7mm; }
   .dossie h1 { font-size: 26pt; letter-spacing: -0.02em; }
   .dossie .cabecalho__areas { font-size: 8pt; margin-top: 2mm; }
-  .dossie .cabecalho--dossie { margin-top: 4mm; max-width: 128mm; }
+  .dossie .cabecalho--dossie { margin-top: 4mm; max-width: none; }
   .cabecalho--dossie p { font-size: 10.4pt; line-height: 1.45; }
   .cabecalho--dossie p + p { margin-top: 1.6mm; }
   .retrato--dossie { width: 26mm; height: 26mm; border-radius: 2px; }
 
-  .tarja { margin-top: 6mm; padding: 2.6mm 0; font-size: 8.2pt; }
+  /* Apertada em relação ao ecrã: são vinte pixels, e são exatamente os que
+     faltavam para o último cargo do percurso não cair para a folha seguinte. */
+  .tarja { margin-top: 4.5mm; padding: 2mm 0; font-size: 8.2pt; }
   .tarja__campos p { gap: 1mm 7mm; }
   .tarja__qr { width: 16mm; height: 16mm; }
 
@@ -76,7 +86,10 @@
     font-size: 7.6pt;
     letter-spacing: 0.14em;
     color: #101010;
-    margin: 6.5mm 0 3mm;
+    /* 5,5mm e não 6,5: com oito secções, cada milímetro aqui vale oito no
+       documento, e foi o que faltou para o português fechar em quatro folhas.
+       Abaixo de 5mm o rótulo começa a colar-se ao parágrafo anterior. */
+    margin: 5.5mm 0 2.6mm;
     padding: 0;
     border: 0;
   }
@@ -85,7 +98,7 @@
     flex: 1;
     border-top: 1px solid var(--rule);
   }
-  section:first-of-type h2 { margin-top: 6mm; }
+  section:first-of-type h2 { margin-top: 4.5mm; }
 
   .dossie h3 { font-size: 11pt; }
   .entrada + .entrada { margin-top: 4mm; }
@@ -104,6 +117,16 @@
   .capturas { grid-template-columns: repeat(3, 1fr); gap: 5mm; }
   .captura img { border-color: var(--rule); }
   .captura figcaption { font-size: 8pt; margin-top: 1.2mm; }
+
+  /* ── As capas dos livros ───────────────────────────────────────────────
+     Pequenas de propósito: no papel servem para se reconhecer a lombada de um
+     livro que se conhece, não para se ler a capa. A legenda é que carrega a
+     informação, e traz o autor para ninguém confundir quem escreveu com quem
+     leu. Quatro numa linha atravessam a caixa de texto com folga. */
+  .capas { gap: 5mm; margin-top: 2.5mm; }
+  .capa-doc { width: 30mm; }
+  .capa-doc img { height: 24mm; }
+  .capa-doc figcaption { font-size: 7.6pt; margin-top: 1.2mm; line-height: 1.25; }
 
   /* O colofão fecha o documento: é o mesmo texto, um corpo abaixo. */
   [data-seccao='colofao'] p { font-size: 9.2pt; color: var(--ink-soft); }

@@ -83,11 +83,32 @@ const linhaFicheiros = en
 const atualDossie = posicoes.find((p) => p.periodo.fim === null)
 
 const comCaptura = projetos.filter((p) => p.shot !== null)
+/**
+ * As capas entram no documento, no fim da secção da voz.
+ *
+ * Estiveram de fora por uma razão que continua boa: um currículo com capas de
+ * livros de outros lê-se como se os livros fossem do candidato. O que resolve
+ * isso não é escondê-las — é a legenda, que traz o autor colado ao título. Com
+ * «Torto Arado · Itamar Vieira Junior» por baixo da imagem, ninguém confunde
+ * quem escreveu com quem leu.
+ *
+ * No fim da secção e não junto de cada frase: a prosa da voz é um bloco só, e
+ * intercalar imagens partia-a em cinco pedaços numa página que já é apertada.
+ */
+const comCapa = leituras.filter((l) => l.capa !== null)
 const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
 ---
 
 <article class="dossie__doc">
   <header class="dossie__cabeca">
+    <img
+      class="retrato retrato--dossie"
+      src="/fabio-salgado.jpg"
+      alt={en ? `Portrait of ${cabecalho.nome}` : `Retrato de ${cabecalho.nome}`}
+      width="200"
+      height="200"
+      decoding="async"
+    />
     <div class="dossie__intro">
       <h1>{cabecalho.nome}</h1>
       {atualDossie && (
@@ -100,14 +121,6 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
         {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
       </div>
     </div>
-    <img
-      class="retrato retrato--dossie"
-      src="/fabio-salgado.jpg"
-      alt={en ? `Portrait of ${cabecalho.nome}` : `Retrato de ${cabecalho.nome}`}
-      width="200"
-      height="200"
-      decoding="async"
-    />
   </header>
 
   <!-- Quem recruta procura o contacto na primeira página, não na última. -->
@@ -122,6 +135,26 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
     </div>
     <img class="tarja__qr" src="/qr.svg" alt={en ? 'QR code for salgado.zip' : 'Código QR para salgado.zip'} width="120" height="120" />
   </div>
+
+  {
+    posicoes.length > 0 && (
+      <section data-seccao="percurso">
+        <h2>{rot.percurso}</h2>
+        {posicoes.map((p) => (
+          <div class="entrada" id={`d-${p.id}`}>
+            <div class="entrada__cabeca">
+              <h3>{t(p.cargo, idioma)}</h3>
+              <span class="entrada__quando">{periodoLongo(p.periodo, idioma)}</span>
+            </div>
+            <p class="entrada__onde">{p.organizacao}</p>
+            <div class="entrada__corpo">
+              {p.linhas.map((l) => <p>{t(l, idioma)}</p>)}
+            </div>
+          </div>
+        ))}
+      </section>
+    )
+  }
 
   <section data-seccao="projetos">
     <h2>{rot.projetos}</h2>
@@ -171,29 +204,30 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
         {linhaPalco && <p>{linhaPalco}</p>}
         {linhaAutor && <p>{linhaAutor}</p>}
         <p>{linhaFicheiros}</p>
+        {comCapa.length > 0 && (
+          <div class="capas">
+            {comCapa.map((l) => (
+              <figure class="capa-doc">
+                <img
+                  src={`/capas/${l.capa!.ficheiro}`}
+                  alt={`${en ? 'Cover of' : 'Capa de'} ${l.capa!.obra}, ${en ? 'by' : 'de'} ${l.autoria}`}
+                  decoding="async"
+                />
+                {/* Obra e autor em linhas próprias: numa coluna de 30mm, «Torto
+                    Arado · Itamar Vieira Junior» numa linha só partia-se em
+                    quatro, e a legenda ficava mais alta do que a capa. */}
+                <figcaption>
+                  <span class="capa-doc__obra">{l.capa!.obra}</span>
+                  <span class="capa-doc__autor">{l.autoria}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
       </section>
     )
   }
 
-  {
-    posicoes.length > 0 && (
-      <section data-seccao="percurso">
-        <h2>{rot.percurso}</h2>
-        {posicoes.map((p) => (
-          <div class="entrada" id={`d-${p.id}`}>
-            <div class="entrada__cabeca">
-              <h3>{t(p.cargo, idioma)}</h3>
-              <span class="entrada__quando">{periodoLongo(p.periodo, idioma)}</span>
-            </div>
-            <p class="entrada__onde">{p.organizacao}</p>
-            <div class="entrada__corpo">
-              {p.linhas.map((l) => <p>{t(l, idioma)}</p>)}
-            </div>
-          </div>
-        ))}
-      </section>
-    )
-  }
 
   {
     mandatos.length > 0 && (
