@@ -1,9 +1,9 @@
 ---
 import '../styles/base.css'
 import '../styles/print.css'
-import { cabecalho, contacto, projetos, posicoes, datas, CANONICO, IDIOMAS, LINGUAS, PADRAO } from '../data'
+import { cabecalho, contacto, projetos, leituras, posicoes, datas, medidasVoz, RUBRICA, CANONICO, IDIOMAS, LINGUAS, PADRAO } from '../data'
 import type { Idioma } from '../data'
-import { t } from '../data/formato'
+import { t, duracaoISO } from '../data/formato'
 import dimensoes from '../generated/og.json' with { type: 'json' }
 
 interface Props {
@@ -83,6 +83,29 @@ const jsonLd = {
       inLanguage: 'pt-PT',
       ...(p.url ? { url: p.url } : {}),
       ...(p.codigo ? { codeRepository: p.codigo } : {}),
+    })),
+    /**
+     * As leituras, e não como obra minha.
+     *
+     * Os projetos acima saem com `creator: PESSOA`, que é o que são. Estas não:
+     * o `author` é de quem escreveu o texto e eu entro como `contributor`, que
+     * é o que a voz é. Um `AudioObject` com o meu nome no `author` dizia a uma
+     * máquina que o «Torto Arado» é meu.
+     */
+    ...leituras.map((l) => ({
+      '@type': 'AudioObject',
+      name: l.titulo,
+      description: t(l.fonte, idioma),
+      author: { '@type': 'Person', name: l.autoria },
+      contributor: { '@id': PESSOA },
+      publisher: { '@type': 'Organization', name: RUBRICA.editor },
+      isPartOf: { '@type': 'PodcastSeries', name: RUBRICA.nome },
+      datePublished: l.data,
+      inLanguage: 'pt-PT',
+      contentUrl: `${CANONICO}/voz/${l.id}.mp3`,
+      encodingFormat: 'audio/mpeg',
+      ...(medidasVoz[l.id] ? { duration: duracaoISO(medidasVoz[l.id].segundos) } : {}),
+      isBasedOn: l.origem,
     })),
     {
       '@type': 'WebSite',

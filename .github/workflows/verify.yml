@@ -42,7 +42,7 @@ jobs:
         run: npm run verify
 
       # As oito capturas ficam disponíveis no separador de artefactos da
-      # execução: a verificação 13 é a única que precisa de olho humano.
+      # execução: a verificação 15 é a única que precisa de olho humano.
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -32,6 +32,39 @@ export function tamanho(bytes: number | null): string {
   return `${(bytes / 1e6).toFixed(1)} MB`
 }
 
+/**
+ * Duração de uma leitura, para a coluna da listagem: `mm:ss`, ou `h:mm:ss`
+ * quando passa da hora. É a notação de qualquer leitor de áudio, e lê-se igual
+ * nas quatro línguas — um «17 min 52 s» traduzido quatro vezes era trabalho a
+ * mais para dizer o mesmo.
+ */
+export function duracao(segundos: number): string {
+  const h = Math.floor(segundos / 3600)
+  const m = Math.floor((segundos % 3600) / 60)
+  const s = segundos % 60
+  const dois = (n: number) => String(n).padStart(2, '0')
+  return h > 0 ? `${h}:${dois(m)}:${dois(s)}` : `${m}:${dois(s)}`
+}
+
+/** O total do nó: horas e minutos, que é a grandeza em que se pensa 1h53. */
+export function duracaoLonga(segundos: number): string {
+  const h = Math.floor(segundos / 3600)
+  const m = Math.round((segundos % 3600) / 60)
+  return h > 0 ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`
+}
+
+/**
+ * A mesma duração em ISO 8601, para o JSON-LD. O schema.org quer `PT17M52S`,
+ * e não `17:52` — são o mesmo número em duas notações, e nenhuma das duas é
+ * escrita à mão.
+ */
+export function duracaoISO(segundos: number): string {
+  const h = Math.floor(segundos / 3600)
+  const m = Math.floor((segundos % 3600) / 60)
+  const s = segundos % 60
+  return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${s || (!h && !m) ? `${s}S` : ''}`
+}
+
 export function dataCurta(iso: string | undefined, idioma: Idioma): string | null {
   if (!iso) return null
   const d = new Date(iso)

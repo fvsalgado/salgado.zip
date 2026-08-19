@@ -424,6 +424,18 @@ h2.linha, h3.linha { font: inherit; }
 .linha__ligacoes a:hover { color: var(--accent); }
 summary { padding-bottom: 0.35rem; }
 
+/* ── Leitor de áudio ──────────────────────────────────────────────────────
+   Controlo nativo do browser: é o único leitor que funciona com o JavaScript
+   desligado e dentro de uma CSP sem 'unsafe-inline'. Não se lhe estiliza o
+   interior — dá-se-lhe a largura da coluna e o ar à volta, e o `color-scheme`
+   dos tokens trata de o pôr claro ou escuro com o resto da página. */
+.leitor {
+  display: block;
+  width: 100%;
+  max-width: 30rem;
+  margin: 0.35rem 0 0.9rem;
+}
+
 /* ── Utilitários de espaçamento (sem style= inline: a CSP é `style-src 'self'`,
    sem 'unsafe-inline' e sem hashes a manter à mão) ───────────────────────── */
 .cabecalho + .arvore { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }

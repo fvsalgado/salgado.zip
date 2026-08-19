@@ -20,6 +20,7 @@ import { posicoes, formacao } from '../src/data/percurso.ts'
 import { mandatos } from '../src/data/mandatos.ts'
 import { contacto } from '../src/data/contacto.ts'
 import { definicoes } from '../src/data/ficheiros.ts'
+import { leituras, RUBRICA } from '../src/data/voz.ts'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
 const pub = raiz + 'public/'
@@ -85,6 +86,22 @@ const resume = {
     // Projetos privados entram sem `url`. A entrada é legítima; o endereço não sai.
     ...(p.url ? { url: p.url } : {}),
   })),
+  /**
+   * As leituras entram em `publications`, que é o campo do JSON Resume mais
+   * próximo do que elas são. O `summary` diz o papel primeiro e de propósito:
+   * uma entrada com o título do livro e o meu nome por cima, sem mais nada,
+   * lê-se como se eu o tivesse escrito.
+   */
+  publications: leituras.map((l) => {
+    const papel = l.papel.en ?? l.papel.pt
+    return {
+      name: l.titulo,
+      publisher: `${RUBRICA.nome}, ${RUBRICA.editor}`,
+      releaseDate: l.data,
+      url: l.origem,
+      summary: `${papel[0].toUpperCase()}${papel.slice(1)} for ${RUBRICA.nome} (${RUBRICA.editor}). ${l.fonte.en ?? l.fonte.pt}`,
+    }
+  }),
   meta: {
     canonical: `${CANONICO}/resume.json`,
     version: '1.0.0',
@@ -109,6 +126,16 @@ writeFileSync(
   })
 )
 
+/* ── O que fica de fora do .zip ───────────────────────────────────────────
+   O áudio não entra no arquivo, e por isso o arquivo tem de dizer onde está e
+   quanto pesa. Os dois números saem do voz.json, medido em disco pelo
+   scripts/voz.mjs — nem o tamanho nem a duração são escritos à mão. */
+const medidasVoz = JSON.parse(readFileSync(raiz + 'src/generated/voz.json', 'utf8'))
+const vozBytes = Object.values(medidasVoz).reduce((s, m) => s + m.bytes, 0)
+const vozSegundos = Object.values(medidasVoz).reduce((s, m) => s + m.segundos, 0)
+const vozMB = (vozBytes / 1e6).toFixed(0)
+const vozHoras = `${Math.floor(vozSegundos / 3600)}h${String(Math.round((vozSegundos % 3600) / 60)).padStart(2, '0')}`
+
 /* ── salgado.zip ──────────────────────────────────────────────────────────
    Lista explícita de ficheiros. Nunca empacotar public/ inteiro: o próprio
    .zip vive lá dentro. */
@@ -124,6 +151,12 @@ const leiaMe = [
   '  Fabio-Salgado-CV-PT.pdf  o documento completo, em português',
   '  Fabio-Salgado-CV-EN.pdf  the same document, in English',
   '  resume.json              o mesmo conteúdo em formato JSON Resume',
+  '',
+  // O áudio fica de fora, e o arquivo tem de o dizer: um zip que promete
+  // «tudo» e cala 100 MB de leituras é um zip que mente por omissão.
+  `As ${leituras.length} leituras do ${RUBRICA.nome} não vêm aqui dentro: são ${vozHoras} de áudio,`,
+  `${vozMB} MB, e quem quer o CV não quer o arquivo sonoro com ele.`,
+  `Estão em ${CANONICO}/, no nó voz/, uma a uma e com o tamanho à vista.`,
   '',
   'Gerado a partir da mesma fonte que o site. Nenhum número foi escrito à mão.',
   '',

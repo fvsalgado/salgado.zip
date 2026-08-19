@@ -16,6 +16,7 @@ const alvos = [
   'src/data/cabecalho.ts',
   'src/data/projetos.ts',
   'src/data/percurso.ts',
+  'src/data/voz.ts',
   'src/data/contacto.ts',
 ]
 

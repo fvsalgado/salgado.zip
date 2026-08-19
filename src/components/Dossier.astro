@@ -12,7 +12,7 @@
  * criar a próxima rota. Um PDF em francês passa a existir no dia em que
  * alguém o peça, e nesse dia é este tipo que se alarga.
  */
-import { cabecalho, projetos, posicoes, mandatos, formacao, contacto } from '../data'
+import { cabecalho, projetos, leituras, posicoes, mandatos, formacao, contacto, medidasVoz, RUBRICA, CANONICO } from '../data'
 import { colofaoDocumento, notaCertificados } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodoLongo, estado } from '../data/formato'
@@ -23,9 +23,25 @@ const en = idioma === 'en'
 
 const rot = en
   ? { percurso: 'Career', projetos: 'Projects', mandatos: 'Institutional mandates',
-      formacao: 'Certificates', idiomas: 'Languages', colofao: 'Colophon', capturas: 'The projects, at a glance' }
+      formacao: 'Certificates', idiomas: 'Languages', colofao: 'Colophon', capturas: 'The projects, at a glance',
+      voz: 'Voice' }
   : { percurso: 'Percurso', projetos: 'Projetos', mandatos: 'Mandatos institucionais',
-      formacao: 'Certificados', idiomas: 'Idiomas', colofao: 'Colofão', capturas: 'Os projetos, à vista' }
+      formacao: 'Certificados', idiomas: 'Idiomas', colofao: 'Colofão', capturas: 'Os projetos, à vista',
+      voz: 'Voz' }
+
+/**
+ * As leituras, no papel, são um parágrafo e não nove entradas. No ecrã a
+ * árvore aguenta uma lista; num CV de duas páginas, nove linhas de uma rubrica
+ * de podcast desequilibravam o percurso. O que o parágrafo diz — quantas,
+ * quando, quanto tempo, de quem são os textos — sai todo dos dados.
+ */
+const anosVoz = leituras.map((l) => Number(l.data.slice(0, 4)))
+const segundosVoz = leituras.reduce((s, l) => s + (medidasVoz[l.id]?.segundos ?? 0), 0)
+const horasVoz = `${Math.floor(segundosVoz / 3600)}h${String(Math.round((segundosVoz % 3600) / 60)).padStart(2, '0')}`
+const autoresVoz = [...new Set(leituras.map((l) => l.autoria))].join(', ')
+const linhaVoz = en
+  ? `${leituras.length} readings for ${RUBRICA.nome}, the ${RUBRICA.editor} podcast, between ${Math.min(...anosVoz)} and ${Math.max(...anosVoz)} — ${horasVoz} of audio. Texts by ${autoresVoz}. The files are at ${CANONICO.replace('https://', '')}, under voz/.`
+  : `${leituras.length} leituras para o ${RUBRICA.nome}, o podcast do ${RUBRICA.editor}, entre ${Math.min(...anosVoz)} e ${Math.max(...anosVoz)} — ${horasVoz} de áudio. Textos de ${autoresVoz}. Os ficheiros estão em ${CANONICO.replace('https://', '')}, no nó voz/.`
 
 const comCaptura = projetos.filter((p) => p.shot !== null)
 const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
@@ -98,6 +114,15 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
             </figure>
           ))}
         </div>
+      </section>
+    )
+  }
+
+  {
+    leituras.length > 0 && (
+      <section data-seccao="voz">
+        <h2>{rot.voz}</h2>
+        <p>{linhaVoz}</p>
       </section>
     )
   }

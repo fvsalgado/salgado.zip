@@ -67,6 +67,42 @@ export const Projeto = z.object({
 })
 export type Projeto = z.infer<typeof Projeto>
 
+/**
+ * Uma leitura em voz alta, publicada por outrem.
+ *
+ * O `titulo` fica fora do `Lang` de propósito: é o nome de uma peça publicada
+ * com aquele nome, e traduzi-lo nas quatro páginas inventava obras que não
+ * existem. O que se traduz é o que diz de onde saiu o texto, e o que foi meu.
+ *
+ * A `origem` continua a apontar à página do editor mesmo com o áudio alojado
+ * aqui. O ficheiro nesta casa é uma cópia de arquivo, e uma cópia que esconde
+ * de onde veio é uma cópia a fazer-se passar por original.
+ *
+ * Não há campo para o nome do ficheiro: é `${id}.mp3`, em public/voz/. Duas
+ * chaves para a mesma coisa é uma a divergir da outra mais cedo ou mais tarde.
+ */
+export const Leitura = z.object({
+  id: Slug,
+  /** O título como foi publicado. Não traduz. */
+  titulo: z.string().min(1),
+  /** De quem é o texto. Nunca é de quem o lê — é esse o ponto deste campo. */
+  autoria: z.string().min(1),
+  /** A obra, o artigo ou a tradução de onde saiu. */
+  fonte: Lang,
+  /** O que foi meu nesta peça, e só isso. */
+  papel: Lang,
+  /** Data de publicação no editor, não do ficheiro: os mp3 foram todos
+   *  remexidos numa migração de servidor em 2024 e trazem essa data. */
+  data: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'usa YYYY-MM-DD'),
+  /** A página do editor: é a fonte, e é para onde vai quem quer o contexto. */
+  origem: HttpsUrl,
+  /** De onde a cópia veio, para se poder confrontar com o original. */
+  origemAudio: HttpsUrl,
+  /** Do ficheiro guardado. É o que prova que a cópia é a cópia. */
+  sha256: z.string().regex(/^[0-9a-f]{64}$/, 'sha256 em minúsculas, 64 hex'),
+})
+export type Leitura = z.infer<typeof Leitura>
+
 export const Posicao = z.object({
   id: Slug,
   cargo: Lang,

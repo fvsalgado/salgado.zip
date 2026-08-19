@@ -1,25 +1,28 @@
 #!/usr/bin/env node
 /**
- * Um comando, catorze verificações, código de saída não-zero em qualquer falha.
+ * Um comando, dezasseis verificações, código de saída não-zero em qualquer falha.
  *
  * A v2 deste plano tinha uma lista de onze pontos para lembrar à mão antes de
- * cada publicação. O que não é executável não se cumpre. Treze destas são
- * binárias; só a última — a revisão à vista das oito capturas — precisa de
- * olho humano.
+ * cada publicação. O que não é executável não se cumpre. Quinze destas são
+ * binárias; só uma — a revisão à vista das oito capturas — precisa de olho
+ * humano.
  *
  *   npm run verify
  */
 import { execFileSync, spawn } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 import { abrirBrowser, BASE } from './browser.mjs'
 import { lerZip } from './zip-ler.mjs'
+import { lerMp3 } from './mp3-ler.mjs'
 import { definicoes } from '../src/data/ficheiros.ts'
 import { IDIOMAS, LINGUAS } from '../src/data/idiomas.ts'
 import { posicoes } from '../src/data/percurso.ts'
 import { contacto } from '../src/data/contacto.ts'
 import { projetos } from '../src/data/projetos.ts'
+import { leituras } from '../src/data/voz.ts'
 
 const CANONICO = 'https://salgado.zip'
 
@@ -471,6 +474,72 @@ function html(rota) {
     }
   }
   decide('o .zip abre e os tamanhos publicados batem certo com o disco', problemas)
+}
+
+/* ══ 16. As leituras batem certo com os mp3 em disco ════════════════════
+   O nó `voz/` publica três coisas que ninguém escreveu à mão — o tamanho, a
+   duração e o sha256 — e uma quarta que ninguém deve poder desfazer sem dar
+   por isso: o áudio não pré-carrega. */
+{
+  const problemas = []
+  const dirVoz = pub + 'voz/'
+  const medidas = JSON.parse(readFileSync(raiz + 'src/generated/voz.json', 'utf8'))
+
+  for (const l of leituras) {
+    const caminho = dirVoz + `${l.id}.mp3`
+    if (!existsSync(caminho)) {
+      problemas.push(`${l.id}: public/voz/${l.id}.mp3 não existe`)
+      continue
+    }
+    const b = readFileSync(caminho)
+    if (createHash('sha256').update(b).digest('hex') !== l.sha256) {
+      problemas.push(`${l.id}: o sha256 do ficheiro não é o declarado em src/data/voz.ts`)
+    }
+    const m = medidas[l.id]
+    if (!m) {
+      problemas.push(`${l.id}: sem medida em voz.json — corre \`npm run voz\``)
+      continue
+    }
+    if (m.bytes !== b.length) problemas.push(`${l.id}: voz.json diz ${m.bytes} B, o disco diz ${b.length} B`)
+    const segundos = lerMp3(b).segundos
+    if (m.segundos !== segundos) problemas.push(`${l.id}: voz.json diz ${m.segundos} s, o ficheiro diz ${segundos} s`)
+  }
+
+  // Um mp3 sem entrada é áudio publicado que não diz de quem é o texto.
+  const declarados = new Set(leituras.map((l) => `${l.id}.mp3`))
+  if (existsSync(dirVoz)) {
+    for (const f of readdirSync(dirVoz)) {
+      if (!declarados.has(f)) problemas.push(`public/voz/${f}: ficheiro sem entrada em src/data/voz.ts`)
+    }
+  }
+
+  // O áudio fica fora do .zip por decisão tomada, e não por esquecimento. Se um
+  // dia entrar, que entre porque alguém o quis.
+  if (existsSync(pub + 'salgado.zip')) {
+    const z = lerZip(readFileSync(pub + 'salgado.zip'))
+    const dentro = z.entradas.filter((e) => e.nome.endsWith('.mp3')).map((e) => e.nome)
+    if (dentro.length) problemas.push(`o .zip traz áudio: ${dentro.join(', ')}`)
+  }
+
+  // Sem `preload="none"` a página abria mais de cem megabytes de pedidos a quem
+  // só passou por lá — e a verificação 8 não o apanha, porque o áudio é nosso.
+  for (const rota of paginas) {
+    const h = html(rota)
+    for (const l of leituras) {
+      const achado = new RegExp(`<audio[^>]*src="/voz/${l.id}\\.mp3"[^>]*>`).exec(h)
+      if (!achado) problemas.push(`${rota}: sem leitor para ${l.id}`)
+      else if (!/preload="none"/.test(achado[0])) {
+        problemas.push(`${rota}: o leitor de ${l.id} não tem preload="none"`)
+      }
+    }
+  }
+
+  const totalSegundos = Object.values(medidas).reduce((s, m) => s + m.segundos, 0)
+  decide(
+    'as leituras batem certo com os mp3 em disco, e o áudio não pré-carrega',
+    problemas,
+    `${leituras.length} leituras · ${Math.floor(totalSegundos / 3600)}h${String(Math.round((totalSegundos % 3600) / 60)).padStart(2, '0')}`
+  )
 }
 
 /* ══ 15. A página 404 é nossa ═══════════════════════════════════════════
