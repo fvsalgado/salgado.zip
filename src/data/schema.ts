@@ -128,6 +128,31 @@ export const Leitura = z.object({
   origemAudio: HttpsUrl.nullable().default(null),
   /** Do ficheiro guardado. É o que prova que a cópia é a cópia. */
   sha256: z.string().regex(/^[0-9a-f]{64}$/, 'sha256 em minúsculas, 64 hex'),
+  /**
+   * A capa da edição de onde saiu o texto, ou `null`.
+   *
+   * Só existe onde a edição é a que está creditada em `fonte` — a do Galeano é
+   * a da tradução de Nepomuceno e Brito, e não uma capa espanhola qualquer com
+   * o mesmo título. Onde não houver a edição certa fica `null`: uma capa errada
+   * é uma citação errada, e vale menos do que capa nenhuma.
+   *
+   * Aparece na listagem e na página. Não entra nos CV: um currículo com capas
+   * de livros de outros lê-se como se os livros fossem meus.
+   *
+   * Ficheiro e obra andam juntos num objeto porque um sem o outro não serve:
+   * sem o nome da obra, o texto alternativo teria de usar o `titulo` da
+   * entrada — e «Futebol: As origens» é o capítulo, não o livro que está na
+   * imagem. Quem não vê a capa merece saber de que livro ela é.
+   */
+  capa: z
+    .object({
+      /** Em public/capas/. */
+      ficheiro: z.string().regex(/^[a-z0-9-]+\.webp$/),
+      /** O título da obra que a imagem mostra, como está na capa. */
+      obra: z.string().min(1),
+    })
+    .nullable()
+    .default(null),
 })
 export type Leitura = z.infer<typeof Leitura>
 
@@ -145,13 +170,23 @@ export const Posicao = z.object({
   /**
    * Marca da organização em public/logos/, ou `null`. Só existe onde houve um
    * ficheiro de proveniência limpa: o da Câmara é domínio público e vem da
-   * página de identidade gráfica do próprio município; o da ATREVIA é o
-   * logótipo da empresa, usado aqui para a identificar como empregador.
+   * página de identidade gráfica do próprio município; o da ATREVIA e o do
+   * Bartô são os logótipos das casas, usados aqui para as identificar como
+   * empregadores.
    *
-   * Os dois são monocromáticos com transparência, e é isso que lhes permite
-   * inverter no tema escuro sem um segundo ficheiro.
+   * Os dois primeiros são monocromáticos com transparência, e é isso que lhes
+   * permite inverter no tema escuro sem um segundo ficheiro. O do Bartô tem
+   * cor — ver `logoCor`.
    */
   logo: z.string().regex(/^[a-z0-9-]+\.webp$/).nullable().default(null),
+  /**
+   * A marca tem cor própria e não pode ser invertida no tema escuro.
+   *
+   * O `invert(1)` que serve as marcas monocromáticas roda a matiz: no Bartô o
+   * chapéu vermelho saía ciano. Quem tem cor não inverte — assenta numa placa
+   * de papel, que é o que qualquer manual de marca manda fazer.
+   */
+  logoCor: z.boolean().default(false),
   periodo: Periodo,
   /** Duas a quatro linhas: o que fizeste e com que resultado. */
   linhas: z.array(Lang).min(1).max(4),

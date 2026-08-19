@@ -53,6 +53,8 @@ interface Rotulos {
   visitar: string
   codigoAberto: string
   captura: string
+  capaDe: (obra: string, autoria: string) => string
+  fotograma: string
   notaFicheiros: string
   /** Os campos de uma leitura. */
   autor: string
@@ -79,6 +81,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     privado: 'privado, atrás de autenticação', codigo: 'código', licenca: 'licença',
     onde: 'onde', deOnde: 'de onde', idiomas: 'idiomas',
     visitar: 'visitar', codigoAberto: 'código aberto', captura: 'Captura de ecrã de',
+    capaDe: (obra, autoria) => `Capa de «${obra}», de ${autoria}`, fotograma: 'Imagem de',
     notaFicheiros: 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.',
     autor: 'autoria', rubricaLbl: 'rubrica', publicado: 'publicado', duracaoLbl: 'duração',
     ficheiroLbl: 'ficheiro', original: 'no editor', ouvir: 'Ouvir', ver: 'Ver', dimensoes: 'imagem',
@@ -96,6 +99,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     privado: 'private, behind authentication', codigo: 'source', licenca: 'licence',
     onde: 'where', deOnde: 'from', idiomas: 'languages',
     visitar: 'visit', codigoAberto: 'open source', captura: 'Screenshot of',
+    capaDe: (obra, autoria) => `Cover of “${obra}”, by ${autoria}`, fotograma: 'Still from',
     notaFicheiros: 'Every size above is read from the real file at build time. Nothing here is typed by hand.',
     autor: 'author', rubricaLbl: 'series', publicado: 'published', duracaoLbl: 'length',
     ficheiroLbl: 'file', original: 'at the publisher', ouvir: 'Listen to', ver: 'Watch', dimensoes: 'picture',
@@ -113,6 +117,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     privado: 'privé, derrière une authentification', codigo: 'code', licenca: 'licence',
     onde: 'où', deOnde: 'd’où', idiomas: 'langues',
     visitar: 'visiter', codigoAberto: 'code ouvert', captura: 'Capture d’écran de',
+    capaDe: (obra, autoria) => `Couverture de « ${obra} », de ${autoria}`, fotograma: 'Image de',
     notaFicheiros: 'Toutes les tailles ci-dessus sont lues sur le fichier réel au build. Rien ici n’est saisi à la main.',
     autor: 'auteur', rubricaLbl: 'rubrique', publicado: 'publié', duracaoLbl: 'durée',
     ficheiroLbl: 'fichier', original: 'chez l’éditeur', ouvir: 'Écouter', ver: 'Regarder', dimensoes: 'image',
@@ -130,6 +135,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     privado: 'privado, tras autenticación', codigo: 'código', licenca: 'licencia',
     onde: 'dónde', deOnde: 'de dónde', idiomas: 'idiomas',
     visitar: 'visitar', codigoAberto: 'código abierto', captura: 'Captura de pantalla de',
+    capaDe: (obra, autoria) => `Portada de «${obra}», de ${autoria}`, fotograma: 'Imagen de',
     notaFicheiros: 'Todos los tamaños de arriba se leen del fichero real en el build. Nada aquí se escribe a mano.',
     autor: 'autoría', rubricaLbl: 'sección', publicado: 'publicado', duracaoLbl: 'duración',
     ficheiroLbl: 'fichero', original: 'en el editor', ouvir: 'Escuchar', ver: 'Ver', dimensoes: 'imagen',
@@ -304,7 +310,43 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               ]}
             >
               <Fragment slot="resumo">
-                <span class="linha__desc">{t(l.fonte, idioma)}</span>
+                {/* A imagem, e não a fonte — a mesma troca que se fez em
+                    projetos/. Onze linhas com um parágrafo por baixo eram uma
+                    parede de texto onde não se via o que ali estava.
+
+                    A capa da edição onde há uma, o fotograma onde é vídeo, e
+                    nada onde não há imagem nenhuma: a linha já traz autoria,
+                    ano e duração, e uma frase repetida ali só a estica.
+
+                    Um `<audio controls>` aqui dentro seria o que parecia
+                    óbvio, e não pode ser: dentro de um `<summary>` é um
+                    controlo dentro de um controlo — o `nested-interactive` do
+                    axe — e um leitor de ecrã engole-o no nome do resumo. O
+                    leitor fica no corpo, a um clique de distância. */}
+                {l.capa !== null ? (
+                  <span class="capa capa--resumo">
+                    <img
+                      src={`/capas/${l.capa.ficheiro}`}
+                      alt={rot.capaDe(l.capa.obra, l.autoria)}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                ) : l.formato === 'video' ? (
+                  <span class="capa capa--resumo">
+                    {/* Sem `width`/`height`: os únicos números à mão seriam os
+                        do vídeo, e a capa não tem as dimensões do vídeo — é
+                        exportada a 960×540 venha ele de onde vier. Como o CSS
+                        fixa a altura, o que falta declarar é a largura, e essa
+                        não desloca nada por baixo. */}
+                    <img
+                      src={`/voz/${l.id}.webp`}
+                      alt={`${rot.fotograma} ${l.titulo}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                ) : null}
               </Fragment>
               {/* Leitor nativo, áudio ou vídeo: sem uma linha de JavaScript, e
                   com preload="none" não faz pedido nenhum enquanto ninguém
@@ -331,6 +373,9 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                   aria-label={`${rot.ouvir} ${l.titulo} — ${l.autoria}`}
                 />
               )}
+              <div class="no__texto">
+                <p>{t(l.fonte, idioma)}</p>
+              </div>
               <dl class="no__campos">
                 <dt>{rot.autor}</dt>
                 <dd>{l.autoria}</dd>
@@ -384,15 +429,25 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               nome={`${t(p.cargo, idioma)} · ${p.organizacao}`}
               colunas={[{ classe: 'periodo', valor: periodo(p.periodo) }]}
             >
-              {p.logo && (
-                <img
-                  class="marca-org"
-                  src={`/logos/${p.logo}`}
-                  alt={p.organizacao}
-                  loading="lazy"
-                  decoding="async"
-                />
-              )}
+              <Fragment slot="resumo">
+                {/* A marca sobe para o resumo pela mesma razão que a captura
+                    dos projetos: quem passa os olhos pela listagem reconhece um
+                    logótipo antes de ler um cargo. O que fica atrás do clique é
+                    o texto, que é o que ninguém lê de passagem.
+
+                    Um `<img>` é conteúdo de frase, portanto vive dentro do
+                    `<summary>` sem o invalidar — ao contrário de um `<figure>`,
+                    que foi o que obrigou a envolver a captura num `<span>`. */}
+                {p.logo && (
+                  <img
+                    class:list={['marca-org', 'marca-org--resumo', p.logoCor && 'marca-org--cor']}
+                    src={`/logos/${p.logo}`}
+                    alt={p.organizacao}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+              </Fragment>
               <div class="no__texto">
                 {p.linhas.map((l) => <p>{t(l, idioma)}</p>)}
               </div>

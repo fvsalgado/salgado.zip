@@ -491,9 +491,42 @@ summary { padding-bottom: 0.35rem; }
   height: 2.6rem;
   margin: 0.15rem 0 0.85rem;
 }
-:root[data-theme='dark'] .marca-org { filter: invert(1); }
+/* A marca dentro do `<summary>`: o mesmo recuo da captura dos projetos, para
+   assentar debaixo do nome da linha e não debaixo da guia da árvore. */
+.marca-org--resumo { margin: 0.3rem 0 0.2rem 1.1rem; }
+:root[data-theme='dark'] .marca-org:not(.marca-org--cor) { filter: invert(1); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .marca-org { filter: invert(1); }
+  :root:not([data-theme='light']) .marca-org:not(.marca-org--cor) { filter: invert(1); }
+}
+/* Marca com cor própria não se inverte: o `invert(1)` roda a matiz, e o chapéu
+   vermelho do Bartô saía ciano. No tema escuro assenta numa placa de papel —
+   que é o que o manual de qualquer marca a cores manda fazer sobre fundo
+   escuro. A placa não acompanha o tema: se acompanhasse, voltava ao problema. */
+:root[data-theme='dark'] .marca-org--cor {
+  background: var(--placa-marca);
+  padding: 0.25rem 0.45rem;
+  border-radius: 3px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .marca-org--cor {
+    background: var(--placa-marca);
+    padding: 0.25rem 0.45rem;
+    border-radius: 3px;
+  }
+}
+
+/* ── Capas e fotogramas do nó voz/ ────────────────────────────────────────
+   O que a listagem mostra de véspera em cada gravação. A altura é a mesma para
+   capa e para fotograma — uma é retrato e o outro é 16:9, e sem altura comum as
+   linhas ficavam com alturas diferentes conforme o formato do ficheiro. */
+.capa--resumo { display: block; padding: 0.35rem 0.4rem 0.2rem 1.1rem; }
+.capa img {
+  display: block;
+  height: 5.5rem;
+  width: auto;
+  max-width: 100%;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
 }
 
 /* ── Leitor de áudio ──────────────────────────────────────────────────────

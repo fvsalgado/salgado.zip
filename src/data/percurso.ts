@@ -89,6 +89,10 @@ export const posicoes = parse(Posicao.array(), [
     id: 'chapito',
     cargo: { pt: 'Barman', en: 'Barman', fr: 'Barman', es: 'Barman' },
     organizacao: 'Bartô',
+    logo: 'barto.webp',
+    // A única marca do percurso com cor: o chapéu do «o» é vermelho e o
+    // `invert(1)` do tema escuro punha-o ciano. Ver `logoCor` no schema.
+    logoCor: true,
     periodo: { inicio: '2015-01', fim: '2017-12' },
     linhas: [
       {
