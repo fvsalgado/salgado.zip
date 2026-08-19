@@ -485,34 +485,29 @@ summary { padding-bottom: 0.35rem; }
    escuro sem um segundo ficheiro. A altura é fixa e a largura acompanha: a da
    Câmara é vertical e a da ATREVIA é horizontal, e uma largura fixa esmagava
    uma das duas. */
+/* A marca é sempre uma caixa com uma ou duas camadas dentro: o traço, que
+   inverte com o tema, e — onde a marca tem cor — a cor por cima, que não
+   inverte. As duas imagens saem do mesmo original com a mesma caixa, logo
+   assentam uma na outra sem acerto nenhum à mão. */
 .marca-org {
+  position: relative;
   display: block;
-  width: auto;
+  width: max-content;
   height: 2.6rem;
   margin: 0.15rem 0 0.85rem;
 }
-/* A marca dentro do `<summary>`: o mesmo recuo da captura dos projetos, para
-   assentar debaixo do nome da linha e não debaixo da guia da árvore. */
+/* Dentro do `<summary>`: o mesmo recuo da captura dos projetos, para assentar
+   debaixo do nome da linha e não debaixo da guia da árvore. */
 .marca-org--resumo { margin: 0.3rem 0 0.2rem 1.1rem; }
-:root[data-theme='dark'] .marca-org:not(.marca-org--cor) { filter: invert(1); }
+.marca-org img { display: block; height: 100%; width: auto; }
+.marca-org__cor { position: absolute; inset: 0; }
+
+/* Só o traço inverte. O `invert(1)` roda a matiz — no chapéu do Bartô dava
+   ciano — e os filtros do CSS não a devolvem: o `hue-rotate(180deg)` a seguir
+   é uma aproximação linear e sai um rosa lavado. Daí a segunda camada. */
+:root[data-theme='dark'] .marca-org__base { filter: invert(1); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .marca-org:not(.marca-org--cor) { filter: invert(1); }
-}
-/* Marca com cor própria não se inverte: o `invert(1)` roda a matiz, e o chapéu
-   vermelho do Bartô saía ciano. No tema escuro assenta numa placa de papel —
-   que é o que o manual de qualquer marca a cores manda fazer sobre fundo
-   escuro. A placa não acompanha o tema: se acompanhasse, voltava ao problema. */
-:root[data-theme='dark'] .marca-org--cor {
-  background: var(--placa-marca);
-  padding: 0.25rem 0.45rem;
-  border-radius: 3px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .marca-org--cor {
-    background: var(--placa-marca);
-    padding: 0.25rem 0.45rem;
-    border-radius: 3px;
-  }
+  :root:not([data-theme='light']) .marca-org__base { filter: invert(1); }
 }
 
 /* ── Capas e fotogramas do nó voz/ ────────────────────────────────────────

@@ -439,13 +439,29 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                     `<summary>` sem o invalidar — ao contrário de um `<figure>`,
                     que foi o que obrigou a envolver a captura num `<span>`. */}
                 {p.logo && (
-                  <img
-                    class:list={['marca-org', 'marca-org--resumo', p.logoCor && 'marca-org--cor']}
-                    src={`/logos/${p.logo}`}
-                    alt={p.organizacao}
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <span class="marca-org marca-org--resumo">
+                    <img
+                      class="marca-org__base"
+                      src={`/logos/${p.logo}`}
+                      alt={p.organizacao}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    {/* A camada a cores por cima, onde existe. Sai do mesmo
+                        original e com a mesma caixa, portanto assenta ao pixel;
+                        e como não leva o `invert`, mantém a cor nos dois temas.
+                        Sem `alt`, porque quem nomeia a casa é a camada de baixo
+                        e repetir o nome dava-o duas vezes a um leitor de ecrã. */}
+                    {p.logoCor && (
+                      <img
+                        class="marca-org__cor"
+                        src={`/logos/${p.logoCor}`}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )}
+                  </span>
                 )}
               </Fragment>
               <div class="no__texto">

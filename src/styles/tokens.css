@@ -24,11 +24,6 @@
   --accent: #2b3a4a;
   --accent-fundo: #e8ecf1;
 
-  /* Placa para marcas a cores. Não é redefinida no tema escuro de
-     propósito: uma marca que não pode ser invertida precisa de fundo
-     claro nos dois temas. */
-  --placa-marca: #fbfaf7;
-
   --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --serif: 'IBM Plex Serif', Iowan Old Style, Palatino, Georgia, serif;
 
