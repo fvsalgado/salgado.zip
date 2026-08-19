@@ -89,6 +89,16 @@ export const posicoes = parse(Posicao.array(), [
     id: 'chapito',
     cargo: { pt: 'Barman', en: 'Barman', fr: 'Barman', es: 'Barman' },
     organizacao: 'Bartô',
+    // A página oficial da casa é no Facebook e não num domínio próprio. Fica
+    // registada, mas hoje não vai a lado nenhum: o `organizacaoUrl` só é lido
+    // para o cargo atual, que é o do `worksFor`. E ainda que fosse lido, valia
+    // menos do que os outros dois — quem não tem sessão iniciada é mandado para
+    // um ecrã de login, e um motor de busca não passa daí.
+    organizacaoUrl: 'https://www.facebook.com/obarbarto/',
+    // A única marca do percurso com cor: o chapéu do «o» é vermelho, e vem em
+    // ficheiro à parte para não ser invertido com o resto. Ver `logoCor`.
+    logo: 'barto.webp',
+    logoCor: 'barto-chapeu.webp',
     periodo: { inicio: '2015-01', fim: '2017-12' },
     linhas: [
       {

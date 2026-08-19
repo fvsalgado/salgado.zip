@@ -117,6 +117,7 @@ export const leituras = parse(Leitura.array(), [
     origem: 'https://www.esquerda.net/audio/alucinar-o-estrume-julio-henriques',
     origemAudio: 'https://www.esquerda.net/sites/default/files/alucinar_o_estrume_julio_henriques_conto.mp3',
     sha256: '8005eda6700f5c19e0c07017692c933c60a9643be371603a178d68b68ec21486',
+    capa: { ficheiro: 'alucinar-o-estrume.webp', obra: 'Alucinar o Estrume' },
   },
   {
     id: 'vazio-estrategico',
@@ -153,6 +154,7 @@ export const leituras = parse(Leitura.array(), [
     origem: 'https://www.esquerda.net/audio/podcast-torto-arado',
     origemAudio: 'https://www.esquerda.net/sites/default/files/torto_arado.mp3',
     sha256: 'a3d638e467dc2c25404c1abaeba86e8d20ee761471567dfb125466175a8b130b',
+    capa: { ficheiro: 'torto-arado.webp', obra: 'Torto Arado' },
   },
   {
     id: 'revolucao-esquecida',
@@ -225,6 +227,7 @@ export const leituras = parse(Leitura.array(), [
     origem: 'https://www.esquerda.net/audio/uma-grande-familia-trecho-de-os-donos-de-portugal',
     origemAudio: 'https://www.esquerda.net/sites/default/files/uma_grande_familia.mp3',
     sha256: '643164d10c92145ceffe164f8d638da54b9a6461893d62164a31f0fdcad835cd',
+    capa: { ficheiro: 'uma-grande-familia.webp', obra: 'Os Donos de Portugal' },
   },
   {
     id: 'documentos-do-pentagono',
@@ -261,5 +264,6 @@ export const leituras = parse(Leitura.array(), [
     origem: 'https://www.esquerda.net/audio/futebol-origens',
     origemAudio: 'https://www.esquerda.net/sites/default/files/eduardo_galeano.mp3',
     sha256: '2d0d77c9fbb33d3a4ed548c91cf2cb4ebb0f020166de7a8d8e1f71c396c08370',
+    capa: { ficheiro: 'futebol-origens.webp', obra: 'Futebol ao Sol e à Sombra' },
   },
 ], 'voz.leituras')
