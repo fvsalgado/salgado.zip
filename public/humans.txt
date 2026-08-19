@@ -4,7 +4,8 @@ Alfama, Lisboa · Ribeira Branca, Torres Novas · natural da Nazaré
 https://salgado.zip
 
 /* SITE */
-Astro estático, sem CMS, sem analytics, sem cookies.
+Astro estático, sem CMS, sem cookies, sem publicidade.
+Medição de visitas anónima e sem cookies, servida do próprio domínio; ver /#privacidade.
 Tipografia: IBM Plex Mono e IBM Plex Serif, auto-alojadas (OFL).
 Fonte única em src/data, várias saídas: a página, os PDF, o resume.json e o salgado.zip.
 Nenhum número desta página é escrito à mão.

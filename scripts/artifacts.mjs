@@ -9,7 +9,7 @@
  *   npm run artifacts -- --sem-shots   salta as capturas dos sites externos
  */
 import { spawn } from 'node:child_process'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import QRCode from 'qrcode'
 
@@ -260,6 +260,64 @@ async function pdf(nome, rota, idioma) {
   })
   await ctx.close()
   console.log(`· ${nome}`)
+}
+
+/* ── 4. Favicons de mapa de bits ──────────────────────────────────────────
+   O favicon.svg é a fonte e continua a ser o que os browsers modernos usam —
+   inclusive a inverter-se sozinho no tema escuro. Mas o /favicon.ico devolvia
+   404, e quem guarda o site no ecrã inicial de um iPhone ficava com uma
+   miniatura da página em vez de uma marca.
+
+   Rasteriza-se com o próprio Chromium, em esquema claro, que é a versão que
+   um ícone estático deve ter: fundo escuro, marca clara. Sem dependência
+   nativa e sem um segundo desenho a manter — se o SVG mudar, estes mudam. */
+{
+  const svg = readFileSync(pub + 'favicon.svg', 'utf8')
+  const ctx = await browser.newContext({ colorScheme: 'light' })
+  const p = await ctx.newPage()
+  const png = async (lado) => {
+    const dataUrl = await p.evaluate(
+      async ([svg, n]) => {
+        const img = new Image()
+        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
+        await img.decode()
+        const c = document.createElement('canvas')
+        c.width = n
+        c.height = n
+        const g = c.getContext('2d')
+        g.drawImage(img, 0, 0, n, n)
+        return c.toDataURL('image/png')
+      },
+      [svg, lado]
+    )
+    return Buffer.from(dataUrl.split(',')[1], 'base64')
+  }
+
+  const png180 = await png(180)
+  writeFileSync(pub + 'apple-touch-icon.png', png180)
+
+  /**
+   * Um .ico com um só PNG lá dentro. O formato aceita PNG desde o Vista e o
+   * contentor são 22 bytes de cabeçalho — escrevê-los à mão é mais honesto do
+   * que juntar um codificador de ícones às dependências por causa disto.
+   */
+  const png48 = await png(48)
+  const cabeca = Buffer.alloc(22)
+  cabeca.writeUInt16LE(0, 0) // reservado
+  cabeca.writeUInt16LE(1, 2) // 1 = ícone
+  cabeca.writeUInt16LE(1, 4) // uma imagem
+  cabeca.writeUInt8(48, 6) // largura
+  cabeca.writeUInt8(48, 7) // altura
+  cabeca.writeUInt8(0, 8) // cores da paleta: nenhuma
+  cabeca.writeUInt8(0, 9) // reservado
+  cabeca.writeUInt16LE(1, 10) // planos
+  cabeca.writeUInt16LE(32, 12) // bits por pixel
+  cabeca.writeUInt32LE(png48.length, 14)
+  cabeca.writeUInt32LE(22, 18) // onde começa a imagem
+  writeFileSync(pub + 'favicon.ico', Buffer.concat([cabeca, png48]))
+
+  await ctx.close()
+  console.log(`· favicon.ico (48px, ${png48.length} B) e apple-touch-icon.png (180px, ${png180.length} B)`)
 }
 
 await pdf('Fabio-Salgado-CV-PT.pdf', '/cv/', 'pt')

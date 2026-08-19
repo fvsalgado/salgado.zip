@@ -21,6 +21,7 @@ import { mandatos } from '../src/data/mandatos.ts'
 import { contacto } from '../src/data/contacto.ts'
 import { definicoes } from '../src/data/ficheiros.ts'
 import { leituras, RUBRICA } from '../src/data/voz.ts'
+import { colofaoSite, codigoDoSite, licenca } from '../src/data/textos.ts'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
 const pub = raiz + 'public/'
@@ -124,6 +125,82 @@ writeFileSync(
     errorCorrectionLevel: 'M',
     color: { dark: '#14130f', light: '#00000000' },
   })
+)
+
+/* ── llms.txt ─────────────────────────────────────────────────────────────
+   Um resumo do arquivo em texto, para quem chega por um modelo de linguagem
+   em vez de por um browser.
+
+   Sem ilusões sobre o que isto vale hoje: nenhum grande fornecedor documentou
+   que consome llms.txt em produção, e a Google disse que a Pesquisa não o usa.
+   A Perplexity diz que sim, e quem colar o domínio num assistente recebe isto
+   em vez de HTML mastigado. É barato porque sai da mesma fonte que tudo o
+   resto — o dia em que um projeto entrar em src/data, entra aqui sozinho. */
+const llms = [
+  `# ${cabecalho.nome}`,
+  '',
+  `> ${cabecalho.cargo.pt} na ${posicoes[0].organizacao}. ${cabecalho.areas.pt[0].toUpperCase()}${cabecalho.areas.pt.slice(1)}. Arquivo pessoal de projetos, percurso e leituras, em ${CANONICO}.`,
+  '',
+  ...cabecalho.linhas.map((l) => l.pt),
+  '',
+  '## Projetos',
+  '',
+  ...projetos.map((p) =>
+    p.url && p.url !== CANONICO
+      ? `- [${p.dominio}](${p.url}): ${p.papel.pt} — ${p.linha.pt}`
+      : p.url === CANONICO
+        ? `- [${p.dominio}](${CANONICO}): ${p.papel.pt} — ${p.linha.pt}`
+        : `- ${p.dominio} (privado, sem endereço público): ${p.papel.pt} — ${p.linha.pt}`
+  ),
+  '',
+  '## Percurso',
+  '',
+  ...posicoes.map(
+    (p) => `- ${p.cargo.pt}, ${p.organizacao} (${p.periodo.inicio}–${p.periodo.fim ?? 'presente'}): ${p.linhas[0].pt}`
+  ),
+  '',
+  '## Mandatos',
+  '',
+  ...mandatos.map((m) => `- ${m.cargo.pt}, ${m.organizacao} (${m.periodo.inicio}–${m.periodo.fim ?? 'presente'})`),
+  '',
+  `## Voz — ${RUBRICA.nome}, ${RUBRICA.editor}`,
+  '',
+  ...leituras.map((l) => `- [${l.titulo}](${CANONICO}/voz/${l.id}.mp3) (${l.data}): ${l.papel.pt} de um texto de ${l.autoria}. ${l.fonte.pt} Original: ${l.origem}`),
+  '',
+  '## Ficheiros',
+  '',
+  `- [resume.json](${CANONICO}/resume.json): o mesmo conteúdo em JSON Resume, legível por máquina.`,
+  `- [salgado.zip](${CANONICO}/salgado.zip): os dois CV em PDF e o resume.json, num arquivo.`,
+  `- [código](${codigoDoSite}): o código deste sítio, sob ${licenca.nome}.`,
+  '',
+  '## Notas',
+  '',
+  ...colofaoSite.map((l) => `- ${l.pt}`),
+  `- As leituras do ${RUBRICA.nome} são de textos de terceiros; a voz é de ${cabecalho.nome} e cada entrada credita quem escreveu.`,
+  '',
+]
+writeFileSync(pub + 'llms.txt', llms.join('\n'))
+
+/* ── .well-known/security.txt ─────────────────────────────────────────────
+   RFC 9116: para onde escrever a quem encontrar um problema. Num sítio que
+   publica o próprio código e se apresenta como auditável, a ausência nota-se.
+
+   O `Expires` sai da data fixa dos stamps mais um ano, e não da data de hoje:
+   um campo que muda a cada build punha ruído em todos os commits. */
+const expira = new Date(dataFixa())
+expira.setUTCFullYear(expira.getUTCFullYear() + 1)
+mkdirSync(pub + '.well-known', { recursive: true })
+writeFileSync(
+  pub + '.well-known/security.txt',
+  [
+    contacto.email ? `Contact: mailto:${contacto.email}` : null,
+    `Expires: ${expira.toISOString().replace(/\.\d{3}Z$/, 'Z')}`,
+    'Preferred-Languages: pt, en',
+    `Canonical: ${CANONICO}/.well-known/security.txt`,
+    '',
+  ]
+    .filter((l) => l !== null)
+    .join('\n')
 )
 
 /* ── O que fica de fora do .zip ───────────────────────────────────────────
@@ -262,7 +339,7 @@ try {
 }
 writeFileSync(raiz + 'src/generated/og.json', JSON.stringify(og, null, 2) + '\n')
 
-console.log(`pack: resume.json + salgado.zip (${entradas.length - emFalta.length}/${entradas.length} entradas) · ${linhas} linhas em ${contaveis.length} ficheiros`)
+console.log(`pack: resume.json + salgado.zip + llms.txt + security.txt (${entradas.length - emFalta.length}/${entradas.length} entradas) · ${linhas} linhas em ${contaveis.length} ficheiros`)
 if (emFalta.length) {
   console.log(`      em falta, corre \`npm run artifacts\`: ${emFalta.join(', ')}`)
 }

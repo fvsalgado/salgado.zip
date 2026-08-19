@@ -429,12 +429,17 @@ h2.linha, h3.linha { font: inherit; }
   padding: 0.05rem 0.4rem 0 1.1rem;
   text-wrap: pretty;
 }
+/* Já não vive no `<summary>`: é a primeira linha do corpo do nó aberto.
+   O `padding-block` dos links é o que lhes dá os 24 px de altura que o
+   critério 2.5.8 do WCAG 2.2 pede — a letra não muda, muda a área. */
 .linha__ligacoes {
   display: flex;
-  gap: 1.1rem;
-  padding: 0.25rem 0.4rem 0.15rem 1.1rem;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.1rem;
+  padding: 0.1rem 0.4rem 0.35rem 0;
   font-size: var(--t-meta);
 }
+.linha__ligacoes a { padding-block: 0.28rem; display: inline-block; }
 .linha__ligacoes a { color: var(--ink-soft); }
 .linha__ligacoes a:hover { color: var(--accent); }
 summary { padding-bottom: 0.35rem; }
@@ -465,3 +470,15 @@ summary { padding-bottom: 0.35rem; }
 
 .marca a { color: var(--ink-soft); text-decoration-color: var(--rule-forte); }
 .marca a:hover { color: var(--accent); }
+
+/* ── Menos movimento, para quem o pediu ao sistema ───────────────────────────
+   A seta do nó tem uma transição, e o sistema operativo tem uma preferência.
+   Quem a liga não a liga para este site em particular. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

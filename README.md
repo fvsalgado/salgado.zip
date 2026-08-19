@@ -1,6 +1,6 @@
 # salgado.zip
 
-Site pessoal de Fábio Salgado. Astro estático, sem CMS, sem analytics, sem cookies.
+Site pessoal de Fábio Salgado. Astro estático, sem CMS, sem cookies, sem publicidade.
 
 ## A ideia
 
@@ -50,12 +50,21 @@ build não consegue derivar não entra.
 
 ## Porque é que alguns ficheiros não estão no repositório
 
-`public/resume.json` e `public/salgado.zip` são gerados pelo `prebuild` a partir
-do que está commitado, e ficam em `.gitignore`: assim o Astro consegue ler-lhes
-o tamanho com `fs` no build e não há binários a inchar o histórico.
+`public/resume.json`, `public/salgado.zip`, `public/llms.txt` e
+`public/.well-known/security.txt` são gerados pelo `prebuild` a partir do que
+está commitado, e ficam em `.gitignore`: assim o Astro consegue ler-lhes o
+tamanho com `fs` no build e não há binários a inchar o histórico.
 
-As capturas, os PDFs e o `og.png` **são** commitados, porque a Vercel não abre
-browsers no build.
+O `llms.txt` sai da mesma fonte que a página — acrescentar um projeto em
+`src/data` acrescenta-o lá sozinho. Sem ilusões quanto ao que vale hoje:
+nenhum grande fornecedor documentou que o consome, e a Google disse que a
+Pesquisa não o usa. Custa um bloco no `pack.mjs` e a Perplexity lê-o.
+
+As capturas, os PDFs, o `og.png`, o `favicon.ico` e o `apple-touch-icon.png`
+**são** commitados, porque a Vercel não abre browsers no build. Os dois ícones
+de mapa de bits saem do `favicon.svg` rasterizado pelo próprio Chromium — o SVG
+continua a ser a fonte e o que os browsers modernos usam; os outros existem
+para quem não o lê.
 
 ## As leituras, e a exceção que abrem
 
@@ -101,6 +110,28 @@ publicados na listagem batem certo com os ficheiros em disco.
 
 A verificação 16 falha enquanto houver conteúdo por confirmar — é o que impede
 o PR de sair de rascunho, em vez de um marcador `[POR PREENCHER]` no código.
+
+## Medição, e o que ela custou dizer
+
+O site mede visitas com o Web Analytics da Vercel, e a escolha foi feita por
+números: o script do PostHog são 82 kB comprimidos — cinquenta e duas vezes
+todo o JavaScript deste site e oito vezes o orçamento — enquanto este são
+2 495 bytes servidos **do próprio domínio**, script e ponto de recolha. Por
+isso a CSP continua `script-src 'self'`, e a verificação 8 continua a ver zero
+pedidos a terceiros: não há nenhum. Sem cookies, sem `localStorage`; a visita é
+identificada por um resumo do pedido, descartado ao fim de 24 horas.
+
+O `<script>` só sai no build da Vercel. Fora de lá o caminho não existe, e a
+verificação 2 falharia num ficheiro que o preview local não tem para servir —
+o que significa que estes 2 495 bytes não passam pelo `dist/` e não entram no
+orçamento de 10 kB. Ficam contados aqui para não serem um custo escondido.
+
+O que isto custou foi uma frase. O rodapé dizia «sem cookies, sem rastreio» e o
+`humans.txt` dizia «sem analytics»: as duas saíram no mesmo commit em que a
+medição entrou, porque deixaram de ser verdade. Um sítio que se apresenta como
+auditável não pode ter no rodapé uma afirmação que o próprio código desmente.
+No lugar delas ficou uma ligação ao nó `privacidade/`, que diz por extenso que
+dados existem, para quê, quanto tempo e quem lhes toca.
 
 ## Segurança e privacidade
 

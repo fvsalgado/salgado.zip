@@ -16,9 +16,14 @@ interface Props { idioma: Idioma }
 const { idioma } = Astro.props
 
 const outras = IDIOMAS.filter((i) => i !== idioma)
+
+/** O alternador é navegação, e quem salta por landmarks tem de o encontrar. */
+const ROTULO: Record<Idioma, string> = {
+  pt: 'línguas', en: 'languages', fr: 'langues', es: 'idiomas',
+}
 ---
 
-<span class="marca">
+<nav class="marca" aria-label={ROTULO[idioma]}>
   salgado.zip
   {
     outras.map((i) => (
@@ -30,4 +35,4 @@ const outras = IDIOMAS.filter((i) => i !== idioma)
       </>
     ))
   }
-</span>
+</nav>

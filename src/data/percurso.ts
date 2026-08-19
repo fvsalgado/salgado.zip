@@ -25,6 +25,7 @@ export const posicoes = parse(Posicao.array(), [
       es: 'Consultor de Asuntos Públicos',
     },
     organizacao: 'ATREVIA',
+    organizacaoUrl: 'https://www.atrevia.com',
     periodo: { inicio: '2022-06', fim: null },
     linhas: [
       // O gesto próprio primeiro. «Regulação e relação institucional para
@@ -59,6 +60,7 @@ export const posicoes = parse(Posicao.array(), [
       es: 'Asesor Político',
     },
     organizacao: 'Câmara Municipal de Lisboa',
+    organizacaoUrl: 'https://www.lisboa.pt',
     periodo: { inicio: '2018-03', fim: '2022-04' },
     linhas: [
       {
