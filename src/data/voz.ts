@@ -159,12 +159,12 @@ export const leituras = parse(Leitura.array(), [
   {
     id: 'documentos-do-pentagono',
     titulo: '«Documentos do Pentágono» influenciaram desfecho no Vietname',
-    autoria: 'Luís Leira',
+    autoria: 'Luís Leiria',
     fonte: {
-      pt: 'Artigo de Luís Leira, publicado no esquerda.net em 2010.',
-      en: 'An article by Luís Leira, first published on esquerda.net in 2010.',
-      fr: 'Article de Luís Leira, publié sur esquerda.net en 2010.',
-      es: 'Artículo de Luís Leira, publicado en esquerda.net en 2010.',
+      pt: 'Artigo de Luís Leiria, publicado no esquerda.net em 2010.',
+      en: 'An article by Luís Leiria, first published on esquerda.net in 2010.',
+      fr: 'Article de Luís Leiria, publié sur esquerda.net en 2010.',
+      es: 'Artículo de Luís Leiria, publicado en esquerda.net en 2010.',
     },
     papel: LEITURA,
     data: '2018-07-31',

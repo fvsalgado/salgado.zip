@@ -1,10 +1,23 @@
 ---
-import { cabecalho } from '../data'
+import { cabecalho, posicoes } from '../data'
 import type { Idioma } from '../data'
 import { t } from '../data/formato'
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
+
+/**
+ * O que ele faz agora, e onde, logo por baixo do nome.
+ *
+ * Sai da posição sem fim em `percurso/` — derivado, não escrito: no dia em que
+ * ele mudar de casa, muda a entrada do percurso e esta linha muda com ela. A
+ * versão anterior deixava o cargo só no JSON-LD, e quem abria a página tinha de
+ * expandir `percurso/` para saber o que ele faz hoje.
+ */
+const atual = posicoes.find((p) => p.periodo.fim === null)
+
+/** «na», «at», «chez», «en»: a preposição não é a mesma nas quatro línguas. */
+const EM: Record<Idioma, string> = { pt: 'na', en: 'at', fr: 'chez', es: 'en' }
 
 /** O texto alternativo do retrato: a única frase deste componente. */
 const RETRATO: Record<Idioma, string> = {
@@ -26,6 +39,11 @@ const RETRATO: Record<Idioma, string> = {
   />
   <div class="cabecalho__texto">
     <h1>{cabecalho.nome}</h1>
+    {atual && (
+      <p class="cabecalho__cargo">
+        {`${t(atual.cargo, idioma)} ${EM[idioma]} ${atual.organizacao}`}
+      </p>
+    )}
     <p class="cabecalho__areas">{t(cabecalho.areas, idioma)}</p>
     {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}
   </div>

@@ -43,6 +43,10 @@ const linhaVoz = en
   ? `${leituras.length} readings for ${RUBRICA.nome}, the ${RUBRICA.editor} podcast, between ${Math.min(...anosVoz)} and ${Math.max(...anosVoz)} — ${horasVoz} of audio. Texts by ${autoresVoz}. The files are at ${CANONICO.replace('https://', '')}, under voz/.`
   : `${leituras.length} leituras para o ${RUBRICA.nome}, o podcast do ${RUBRICA.editor}, entre ${Math.min(...anosVoz)} e ${Math.max(...anosVoz)} — ${horasVoz} de áudio. Textos de ${autoresVoz}. Os ficheiros estão em ${CANONICO.replace('https://', '')}, no nó voz/.`
 
+/** O mesmo cargo derivado que a página mostra: quem tem o papel na mão também
+ *  tem de saber o que ele faz hoje sem ir procurar à secção do percurso. */
+const atualDossie = posicoes.find((p) => p.periodo.fim === null)
+
 const comCaptura = projetos.filter((p) => p.shot !== null)
 const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
 ---
@@ -51,6 +55,11 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
   <header class="dossie__cabeca">
     <div class="dossie__intro">
       <h1>{cabecalho.nome}</h1>
+      {atualDossie && (
+        <p class="cabecalho__cargo">
+          {`${t(atualDossie.cargo, idioma)} ${en ? 'at' : 'na'} ${atualDossie.organizacao}`}
+        </p>
+      )}
       <p class="cabecalho__areas">{t(cabecalho.areas, idioma)}</p>
       <div class="cabecalho cabecalho--dossie">
         {cabecalho.linhas.map((l) => <p>{t(l, idioma)}</p>)}

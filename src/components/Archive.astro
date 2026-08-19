@@ -195,7 +195,25 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
             ]}
           >
             <Fragment slot="resumo">
-              <span class="linha__desc">{t(p.linha, idioma)}</span>
+              {/* A captura fechada, e não a descrição.
+                  O que se via sem clicar era uma linha de texto, e a imagem
+                  ficava atrás de um clique que a maior parte de quem passa não
+                  dá. Trocou-se: a captura é o que a listagem mostra de véspera,
+                  e a descrição passa a viver dentro do nó aberto, com o resto.
+                  Quem não tem captura — os dois de baixo — continua a mostrar a
+                  descrição, que é melhor do que uma linha vazia. */}
+              {p.shot !== null ? (
+                <span class="shot shot--resumo">
+                  <img
+                    src={`/shots/${p.shot}`}
+                    alt={`${rot.captura} ${p.dominio}: ${t(p.linha, idioma)}`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              ) : (
+                <span class="linha__desc">{t(p.linha, idioma)}</span>
+              )}
               {((p.url !== null && p.url !== CANONICO) || p.codigo !== null) && (
                 <span class="linha__ligacoes">
                   {p.url !== null && p.url !== CANONICO && (
@@ -208,6 +226,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               )}
             </Fragment>
             <div class="no__texto">
+              {p.shot !== null && <p>{t(p.linha, idioma)}</p>}
               {p.detalhe.map((d) => <p>{t(d, idioma)}</p>)}
             </div>
             <dl class="no__campos">
@@ -248,16 +267,6 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                 </>
               )}
             </dl>
-            {p.shot !== null && (
-              <figure class="shot">
-                <img
-                  src={`/shots/${p.shot}`}
-                  alt={`${rot.captura} ${p.dominio}: ${t(p.linha, idioma)}`}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </figure>
-            )}
           </Node>
         ))
       }

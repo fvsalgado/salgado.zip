@@ -17,7 +17,14 @@ export type Idioma = (typeof IDIOMAS)[number]
 export const PADRAO: Idioma = 'pt'
 
 export interface Lingua {
-  /** O nome da língua na própria língua. Ninguém procura «Portuguese» num menu. */
+  /**
+   * O nome da língua na própria língua. Ninguém procura «Portuguese» num menu.
+   *
+   * Tudo em minúsculas, incluindo o inglês. A ortografia inglesa pedia
+   * «English» com maiúscula, mas o alternador é uma linha de mono ao lado da
+   * marca — e uma palavra em maiúscula no meio de três em minúscula lê-se como
+   * destaque de uma língua sobre as outras, que é exatamente o que não é.
+   */
   etiqueta: string
   /** O atributo `lang` do documento e o `hreflang` das alternativas. */
   html: string
@@ -30,7 +37,7 @@ export interface Lingua {
 
 export const LINGUAS: Record<Idioma, Lingua> = {
   pt: { etiqueta: 'português', html: 'pt-PT', bcp47: 'pt-PT', og: 'pt_PT', raiz: '/' },
-  en: { etiqueta: 'English', html: 'en', bcp47: 'en-GB', og: 'en_GB', raiz: '/en/' },
+  en: { etiqueta: 'english', html: 'en', bcp47: 'en-GB', og: 'en_GB', raiz: '/en/' },
   fr: { etiqueta: 'français', html: 'fr', bcp47: 'fr-FR', og: 'fr_FR', raiz: '/fr/' },
   es: { etiqueta: 'español', html: 'es', bcp47: 'es-ES', og: 'es_ES', raiz: '/es/' },
 }

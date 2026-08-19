@@ -17,7 +17,9 @@ export const posicoes = parse(Posicao.array(), [
   {
     id: 'atrevia',
     cargo: {
-      pt: 'Consultor de Assuntos Públicos',
+      // «Public Affairs» e não «Assuntos Públicos» em português: é o nome por
+      // que o ofício é conhecido cá, e é assim que ele se apresenta.
+      pt: 'Consultor de Public Affairs',
       en: 'Public Affairs Consultant',
       fr: 'Consultant en affaires publiques',
       es: 'Consultor de Asuntos Públicos',
