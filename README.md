@@ -17,8 +17,9 @@ O áudio do nó `voz/` corre no sentido contrário — não sai dos dados, é me
 por eles:
 
 ```
-public/voz/*.mp3  ──►  src/generated/voz.json  ──►  duração e tamanho na página
- nove originais         statSync + cabeçalho          e no LEIA-ME do .zip
+public/voz/*.mp3  ──┬─►  src/generated/voz.json  ──►  duração, tamanho e
+public/voz/*.mp4  ──┘     statSync + mp3-ler +           dimensões na página
+ onze gravações            mp4-ler                       e no LEIA-ME do .zip
 ```
 
 A página existe em quatro línguas — português, inglês, francês e espanhol —, e
@@ -66,7 +67,7 @@ de mapa de bits saem do `favicon.svg` rasterizado pelo próprio Chromium — o S
 continua a ser a fonte e o que os browsers modernos usam; os outros existem
 para quem não o lê.
 
-## As leituras, e a exceção que abrem
+## O nó voz/, e a exceção que abre
 
 O nó `voz/` traz nove leituras em voz alta para o **Alta Voz**, o podcast do
 esquerda.net, entre 2018 e 2019. Os mp3 estão neste repositório — 107 MB de
@@ -87,12 +88,27 @@ A voz é do Fábio. **Os textos não**: são de quem os escreveu e de quem os
 traduziu — Galeano, Dostoiévski, Bensaïd, Itamar Vieira Junior, entre outros —,
 e por isso cada entrada abre com a autoria, e não com o título.
 
+Ao lado das nove leituras estão **dois vídeos** de promoção do Transborda, a
+mostra de artes performativas de Almada, de 2023 e 2025. Vieram da página do
+festival em **VP9 dentro de um MP4** — a combinação que o Facebook serve e que
+o Safari não reproduz, o que deixaria todos os iPhones com um vídeo partido.
+Foram recodificados uma vez para H.264 com áudio AAC, a 24 de CRF, e ficaram no
+mesmo tamanho do original. Aqui o `sha256` é o do ficheiro publicado e não o do
+original: o que se guarda é uma cópia que funciona, e não uma cópia exata de um
+ficheiro que meio mundo não abria. A recodificação foi feita uma vez, à mão; o
+repositório não ganhou um codificador de vídeo por causa de dois ficheiros.
+
+Cada vídeo leva uma capa em `.webp`, tirada do cartão final. Sem ela, um
+`<video preload="none">` é um retângulo preto na listagem — e a listagem é onde
+ele é visto.
+
 Duas decisões que se leem no código e vale a pena dizer por extenso:
 
-- O leitor é o `<audio controls>` nativo, com `preload="none"`. É o único que
-  funciona com o JavaScript desligado e dentro de uma CSP sem `'unsafe-inline'`,
-  e sem o `preload` a página abria 107 MB de pedidos a quem só passou por lá. A
-  verificação 13 falha se algum leitor perder o atributo.
+- O leitor é o `<audio controls>` ou o `<video controls>` nativo, com
+  `preload="none"`. São os únicos que funcionam com o JavaScript desligado e
+  dentro de uma CSP sem `'unsafe-inline'`, e sem o `preload` a página abria mais
+  de cem megabytes de pedidos a quem só passou por lá. A verificação 13 falha se
+  algum leitor perder o atributo ou se um vídeo perder a capa.
 - O áudio **não entra no `salgado.zip`**. Quem quer o CV não quer 1h53 de
   leituras com ele; o `LEIA-ME.txt` do arquivo diz onde estão e quanto pesam, e
   a verificação 13 falha se um mp3 aparecer lá dentro.

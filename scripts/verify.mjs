@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url'
 import { abrirBrowser, BASE } from './browser.mjs'
 import { lerZip } from './zip-ler.mjs'
 import { lerMp3 } from './mp3-ler.mjs'
+import { lerMp4 } from './mp4-ler.mjs'
 import { definicoes } from '../src/data/ficheiros.ts'
 import { IDIOMAS, LINGUAS } from '../src/data/idiomas.ts'
 import { posicoes } from '../src/data/percurso.ts'
@@ -476,19 +477,20 @@ function html(rota) {
   decide('o .zip abre e os tamanhos publicados batem certo com o disco', problemas)
 }
 
-/* ══ 16. As leituras batem certo com os mp3 em disco ════════════════════
-   O nó `voz/` publica três coisas que ninguém escreveu à mão — o tamanho, a
-   duração e o sha256 — e uma quarta que ninguém deve poder desfazer sem dar
-   por isso: o áudio não pré-carrega. */
+/* ══ 16. As gravações batem certo com os ficheiros em disco ═════════════
+   O nó `voz/` publica quatro coisas que ninguém escreveu à mão — o tamanho, a
+   duração, as dimensões da imagem e o sha256 — e duas que ninguém deve poder
+   desfazer sem dar por isso: nada pré-carrega, e todo o vídeo leva capa. */
 {
   const problemas = []
   const dirVoz = pub + 'voz/'
   const medidas = JSON.parse(readFileSync(raiz + 'src/generated/voz.json', 'utf8'))
 
   for (const l of leituras) {
-    const caminho = dirVoz + `${l.id}.mp3`
+    const video = l.formato === 'video'
+    const caminho = dirVoz + `${l.id}.${video ? 'mp4' : 'mp3'}`
     if (!existsSync(caminho)) {
-      problemas.push(`${l.id}: public/voz/${l.id}.mp3 não existe`)
+      problemas.push(`${l.id}: ${caminho.replace(raiz, '')} não existe`)
       continue
     }
     const b = readFileSync(caminho)
@@ -501,12 +503,23 @@ function html(rota) {
       continue
     }
     if (m.bytes !== b.length) problemas.push(`${l.id}: voz.json diz ${m.bytes} B, o disco diz ${b.length} B`)
-    const segundos = lerMp3(b).segundos
-    if (m.segundos !== segundos) problemas.push(`${l.id}: voz.json diz ${m.segundos} s, o ficheiro diz ${segundos} s`)
+    const lido = video ? lerMp4(b) : lerMp3(b)
+    if (m.segundos !== lido.segundos) {
+      problemas.push(`${l.id}: voz.json diz ${m.segundos} s, o ficheiro diz ${lido.segundos} s`)
+    }
+    if (video) {
+      // Sem capa, um vídeo que não pré-carrega é um retângulo preto na listagem.
+      if (!existsSync(dirVoz + `${l.id}.webp`)) problemas.push(`${l.id}: falta a capa ${l.id}.webp`)
+      if (m.largura !== lido.largura || m.altura !== lido.altura) {
+        problemas.push(`${l.id}: voz.json diz ${m.largura}×${m.altura}, o ficheiro diz ${lido.largura}×${lido.altura}`)
+      }
+    }
   }
 
-  // Um mp3 sem entrada é áudio publicado que não diz de quem é o texto.
-  const declarados = new Set(leituras.map((l) => `${l.id}.mp3`))
+  // Um ficheiro sem entrada é som ou imagem publicados que não dizem de quem são.
+  const declarados = new Set(
+    leituras.flatMap((l) => (l.formato === 'video' ? [`${l.id}.mp4`, `${l.id}.webp`] : [`${l.id}.mp3`]))
+  )
   if (existsSync(dirVoz)) {
     for (const f of readdirSync(dirVoz)) {
       if (!declarados.has(f)) problemas.push(`public/voz/${f}: ficheiro sem entrada em src/data/voz.ts`)
@@ -517,8 +530,8 @@ function html(rota) {
   // dia entrar, que entre porque alguém o quis.
   if (existsSync(pub + 'salgado.zip')) {
     const z = lerZip(readFileSync(pub + 'salgado.zip'))
-    const dentro = z.entradas.filter((e) => e.nome.endsWith('.mp3')).map((e) => e.nome)
-    if (dentro.length) problemas.push(`o .zip traz áudio: ${dentro.join(', ')}`)
+    const dentro = z.entradas.filter((e) => /\.(mp3|mp4)$/.test(e.nome)).map((e) => e.nome)
+    if (dentro.length) problemas.push(`o .zip traz som ou imagem: ${dentro.join(', ')}`)
   }
 
   // Sem `preload="none"` a página abria mais de cem megabytes de pedidos a quem
@@ -526,19 +539,24 @@ function html(rota) {
   for (const rota of paginas) {
     const h = html(rota)
     for (const l of leituras) {
-      const achado = new RegExp(`<audio[^>]*src="/voz/${l.id}\\.mp3"[^>]*>`).exec(h)
+      const video = l.formato === 'video'
+      const tag = video ? 'video' : 'audio'
+      const ext = video ? 'mp4' : 'mp3'
+      const achado = new RegExp(`<${tag}[^>]*src="/voz/${l.id}\\.${ext}"[^>]*>`).exec(h)
       if (!achado) problemas.push(`${rota}: sem leitor para ${l.id}`)
       else if (!/preload="none"/.test(achado[0])) {
         problemas.push(`${rota}: o leitor de ${l.id} não tem preload="none"`)
+      } else if (video && !/poster="/.test(achado[0])) {
+        problemas.push(`${rota}: o vídeo ${l.id} não tem capa`)
       }
     }
   }
 
   const totalSegundos = Object.values(medidas).reduce((s, m) => s + m.segundos, 0)
   decide(
-    'as leituras batem certo com os mp3 em disco, e o áudio não pré-carrega',
+    'as gravações batem certo com os ficheiros em disco, e nada pré-carrega',
     problemas,
-    `${leituras.length} leituras · ${Math.floor(totalSegundos / 3600)}h${String(Math.round((totalSegundos % 3600) / 60)).padStart(2, '0')}`
+    `${leituras.length} gravações · ${Math.floor(totalSegundos / 3600)}h${String(Math.round((totalSegundos % 3600) / 60)).padStart(2, '0')}`
   )
 }
 

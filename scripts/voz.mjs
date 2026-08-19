@@ -18,6 +18,7 @@ import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'no
 import { fileURLToPath } from 'node:url'
 
 import { lerMp3 } from './mp3-ler.mjs'
+import { lerMp4 } from './mp4-ler.mjs'
 import { leituras } from '../src/data/voz.ts'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
@@ -32,9 +33,10 @@ const medidas = {}
 const problemas = []
 
 for (const l of leituras) {
-  const caminho = pub + `voz/${l.id}.mp3`
+  const ext = l.formato === 'video' ? 'mp4' : 'mp3'
+  const caminho = pub + `voz/${l.id}.${ext}`
   if (!existsSync(caminho)) {
-    problemas.push(`${l.id}: public/voz/${l.id}.mp3 não existe`)
+    problemas.push(`${l.id}: public/voz/${l.id}.${ext} não existe`)
     continue
   }
   const bytes = statSync(caminho).size
@@ -43,8 +45,17 @@ for (const l of leituras) {
   if (sha !== l.sha256) {
     problemas.push(`${l.id}: o sha256 do ficheiro não é o declarado em src/data/voz.ts`)
   }
-  const d = lerMp3(b)
-  medidas[l.id] = { bytes, segundos: d.segundos }
+  if (l.formato === 'video') {
+    // A capa é obrigatória: com `preload="none"` um vídeo sem `poster` é um
+    // retângulo preto na listagem, e a listagem é onde ele é visto.
+    if (!existsSync(pub + `voz/${l.id}.webp`)) {
+      problemas.push(`${l.id}: falta a capa public/voz/${l.id}.webp`)
+    }
+    const d = lerMp4(b)
+    medidas[l.id] = { bytes, segundos: d.segundos, largura: d.largura, altura: d.altura }
+  } else {
+    medidas[l.id] = { bytes, segundos: lerMp3(b).segundos }
+  }
 }
 
 if (problemas.length) {
@@ -57,6 +68,7 @@ writeFileSync(raiz + 'src/generated/voz.json', JSON.stringify(medidas, null, 2) 
 
 const total = Object.values(medidas).reduce((s, m) => s + m.segundos, 0)
 const bytes = Object.values(medidas).reduce((s, m) => s + m.bytes, 0)
+const videos = leituras.filter((l) => l.formato === 'video').length
 console.log(
-  `voz: ${leituras.length} leituras · ${Math.floor(total / 3600)}h${String(Math.floor((total % 3600) / 60)).padStart(2, '0')} · ${(bytes / 1e6).toFixed(1)} MB`
+  `voz: ${leituras.length} peças (${leituras.length - videos} áudio, ${videos} vídeo) · ${Math.floor(total / 3600)}h${String(Math.floor((total % 3600) / 60)).padStart(2, '0')} · ${(bytes / 1e6).toFixed(1)} MB`
 )

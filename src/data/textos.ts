@@ -13,10 +13,10 @@ const m = (linhas as { ficheiros: number }).ficheiros
  */
 export const colofaoSite = parse(z.array(Lang).min(1), [
   {
-    pt: 'Astro estático, sem cookies e sem rastreio. Tipografia IBM Plex, auto-alojada.',
-    en: 'Static Astro, no cookies and no tracking. IBM Plex type, self-hosted.',
-    fr: 'Astro statique, sans cookies et sans traçage. Typographie IBM Plex, auto-hébergée.',
-    es: 'Astro estático, sin cookies y sin rastreo. Tipografía IBM Plex, autoalojada.',
+    pt: 'Astro estático, sem cookies e sem publicidade. A medição de visitas é anónima e sai do próprio domínio. Tipografia IBM Plex, auto-alojada.',
+    en: 'Static Astro, no cookies and no advertising. Visit measurement is anonymous and served from this domain. IBM Plex type, self-hosted.',
+    fr: 'Astro statique, sans cookies et sans publicité. La mesure de fréquentation est anonyme et servie depuis ce domaine. Typographie IBM Plex, auto-hébergée.',
+    es: 'Astro estático, sin cookies y sin publicidad. La medición de visitas es anónima y se sirve del propio dominio. Tipografía IBM Plex, autoalojada.',
   },
   {
     pt: `${num('pt')} linhas de código em ${m} ficheiros. Uma fonte de dados; a página, os PDF, o resume.json e o zip saem dela.`,

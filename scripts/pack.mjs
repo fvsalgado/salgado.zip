@@ -163,9 +163,14 @@ const llms = [
   '',
   ...mandatos.map((m) => `- ${m.cargo.pt}, ${m.organizacao} (${m.periodo.inicio}–${m.periodo.fim ?? 'presente'})`),
   '',
-  `## Voz — ${RUBRICA.nome}, ${RUBRICA.editor}`,
+  '## Voz',
   '',
-  ...leituras.map((l) => `- [${l.titulo}](${CANONICO}/voz/${l.id}.mp3) (${l.data}): ${l.papel.pt} de um texto de ${l.autoria}. ${l.fonte.pt} Original: ${l.origem}`),
+  `As leituras são da rubrica ${RUBRICA.nome}, do ${RUBRICA.editor}; os vídeos são de outra proveniência e estão identificados.`,
+  '',
+  ...leituras.map(
+    (l) =>
+      `- [${l.titulo}](${CANONICO}/voz/${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}) (${l.data}): ${l.papel.pt}, peça de ${l.autoria}. ${l.fonte.pt} Original: ${l.origem}`
+  ),
   '',
   '## Ficheiros',
   '',
@@ -231,7 +236,7 @@ const leiaMe = [
   '',
   // O áudio fica de fora, e o arquivo tem de o dizer: um zip que promete
   // «tudo» e cala 100 MB de leituras é um zip que mente por omissão.
-  `As ${leituras.length} leituras do ${RUBRICA.nome} não vêm aqui dentro: são ${vozHoras} de áudio,`,
+  `As ${leituras.length} gravações do nó voz/ não vêm aqui dentro: são ${vozHoras} de som e imagem,`,
   `${vozMB} MB, e quem quer o CV não quer o arquivo sonoro com ele.`,
   `Estão em ${CANONICO}/, no nó voz/, uma a uma e com o tamanho à vista.`,
   '',

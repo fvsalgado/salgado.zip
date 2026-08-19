@@ -23,12 +23,30 @@ import { Leitura, parse } from './schema.ts'
  * quem lê.
  */
 
+/**
+ * Os dois vídeos são de outra proveniência: promoções do Transborda, a mostra
+ * de artes performativas de Almada, publicadas na página do festival.
+ *
+ * Vieram em VP9 dentro de um MP4 — a combinação que o Facebook serve e que o
+ * Safari não reproduz, o que deixava todos os iPhones com um vídeo partido.
+ * Foram recodificados uma vez para H.264 com áudio AAC, a 24 de CRF, que toca
+ * em tudo e ficou no mesmo tamanho do original. O `sha256` de cada um é o do
+ * ficheiro publicado, não o do original: aqui o que se guarda é uma cópia que
+ * funciona, e não uma cópia exata de um ficheiro que meio mundo não abria.
+ */
+
 /** Quando as cópias foram tiradas do esquerda.net. */
 export const RECOLHA = '2026-08-19'
 
 /** A rubrica do editor. Não é um projeto meu, e o nó tem de o dizer. */
 export const RUBRICA = { nome: 'Alta Voz', editor: 'esquerda.net' }
 
+const VOZ = {
+  pt: 'voz',
+  en: 'voice',
+  fr: 'voix',
+  es: 'voz',
+}
 const LEITURA = {
   pt: 'leitura',
   en: 'reading',
@@ -45,6 +63,44 @@ const NARRACAO = {
 /** Ordem cronológica inversa, como em `percurso/` e `projetos/`. */
 export const leituras = parse(Leitura.array(), [
   {
+    id: 'transborda-2025',
+    titulo: 'Transborda 2025',
+    autoria: 'Casa da Dança, Almada',
+    fonte: {
+      pt: 'Vídeo de promoção da 5.ª Mostra Internacional de Artes Performativas de Almada, de 17 de abril a 11 de maio de 2025.',
+      en: 'Promotional film for the 5th International Performing Arts Festival of Almada, 17 April to 11 May 2025.',
+      fr: 'Vidéo de promotion de la 5ᵉ Mostra internationale des arts performatifs d’Almada, du 17 avril au 11 mai 2025.',
+      es: 'Vídeo de promoción de la 5.ª Muestra Internacional de Artes Performativas de Almada, del 17 de abril al 11 de mayo de 2025.',
+    },
+    papel: VOZ,
+    rubrica: null,
+    editor: 'Transborda, Almada',
+    formato: 'video',
+    data: '2025',
+    origem: 'https://www.facebook.com/reel/1567148937283493',
+    origemAudio: null,
+    sha256: 'c192d38bf2a429584d08b0828e8e36f7bfe45090408c70ab4ebe00ce0569c75d',
+  },
+  {
+    id: 'transborda-2023',
+    titulo: 'Transborda 2023',
+    autoria: 'Casa da Dança, Almada',
+    fonte: {
+      pt: 'Vídeo de promoção da 3.ª Mostra Internacional de Artes Performativas de Almada, de 29 de abril a 14 de maio de 2023.',
+      en: 'Promotional film for the 3rd International Performing Arts Festival of Almada, 29 April to 14 May 2023.',
+      fr: 'Vidéo de promotion de la 3ᵉ Mostra internationale des arts performatifs d’Almada, du 29 avril au 14 mai 2023.',
+      es: 'Vídeo de promoción de la 3.ª Muestra Internacional de Artes Performativas de Almada, del 29 de abril al 14 de mayo de 2023.',
+    },
+    papel: VOZ,
+    rubrica: null,
+    editor: 'Transborda, Almada',
+    formato: 'video',
+    data: '2023',
+    origem: 'https://www.facebook.com/reel/259311793127459',
+    origemAudio: null,
+    sha256: 'dcee08eb75e92e45fe91e485b46773b4f51375694bfb26ed2d2795dbeef3616f',
+  },
+  {
     id: 'alucinar-o-estrume',
     titulo: 'Alucinar o estrume',
     autoria: 'Júlio Henriques',
@@ -55,6 +111,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'Cuento de Júlio Henriques.',
     },
     papel: LEITURA,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2019-09-09',
     origem: 'https://www.esquerda.net/audio/alucinar-o-estrume-julio-henriques',
     origemAudio: 'https://www.esquerda.net/sites/default/files/alucinar_o_estrume_julio_henriques_conto.mp3',
@@ -71,6 +129,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'Artículo de Manolo Monereo, en la traducción portuguesa de Carlos Santos.',
     },
     papel: LEITURA,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2019-07-09',
     origem: 'https://www.esquerda.net/audio/vazio-estrategico-o-governo-como-objetivo',
     origemAudio: 'https://www.esquerda.net/sites/default/files/vazio_estrategico_monereo.mp3',
@@ -87,6 +147,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'Fragmento de la novela de Itamar Vieira Junior.',
     },
     papel: LEITURA,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2019-02-18',
     origem: 'https://www.esquerda.net/audio/podcast-torto-arado',
     origemAudio: 'https://www.esquerda.net/sites/default/files/torto_arado.mp3',
@@ -103,6 +165,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'Artículo de Carlos Carujo sobre Rosa Luxemburgo.',
     },
     papel: NARRACAO,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2019-01-22',
     origem: 'https://www.esquerda.net/audio/podcast-revolucao-esquecida',
     origemAudio: 'https://www.esquerda.net/sites/default/files/rosa.mp3',
@@ -119,6 +183,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'Cuento de Dostoievski, en la traducción portuguesa de Ruth Guimarães.',
     },
     papel: NARRACAO,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2018-12-17',
     origem: 'https://www.esquerda.net/audio/uma-arvore-de-natal-e-um-casamento-de-dostoievski',
     origemAudio: 'https://www.esquerda.net/sites/default/files/dostoievski.mp3',
@@ -135,6 +201,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'De «Marx, o Intempestivo», de Daniel Bensaïd.',
     },
     papel: LEITURA,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2018-12-03',
     origem: 'https://www.esquerda.net/audio/tres-criticas-de-marx',
     origemAudio: 'https://www.esquerda.net/sites/default/files/marx.mp3',
@@ -151,6 +219,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'Fragmento de «Os Donos de Portugal», de Jorge Costa, Luís Fazenda, Cecília Honório, Francisco Louçã y Fernando Rosas.',
     },
     papel: LEITURA,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2018-10-08',
     origem: 'https://www.esquerda.net/audio/uma-grande-familia-trecho-de-os-donos-de-portugal',
     origemAudio: 'https://www.esquerda.net/sites/default/files/uma_grande_familia.mp3',
@@ -167,6 +237,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'Artículo de Luís Leiria, publicado en esquerda.net en 2010.',
     },
     papel: LEITURA,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2018-07-31',
     origem: 'https://www.esquerda.net/audio/documentos-do-pentagono-influenciaram-desfecho-no-vietname',
     origemAudio: 'https://www.esquerda.net/sites/default/files/documentos_do_pentagono_influenciaram_desfecho_no_vietname.mp3',
@@ -183,6 +255,8 @@ export const leituras = parse(Leitura.array(), [
       es: 'De «Fútbol a sol y sombra», de Eduardo Galeano, en la traducción portuguesa de Eric Nepomuceno y Maria do Carmo Brito.',
     },
     papel: LEITURA,
+    rubrica: RUBRICA.nome,
+    editor: RUBRICA.editor,
     data: '2018-07-09',
     origem: 'https://www.esquerda.net/audio/futebol-origens',
     origemAudio: 'https://www.esquerda.net/sites/default/files/eduardo_galeano.mp3',

@@ -455,6 +455,18 @@ summary { padding-bottom: 0.35rem; }
   max-width: 30rem;
   margin: 0.35rem 0 0.9rem;
 }
+/* O vídeo é mais largo que a barra de um leitor de som, e tem imagem: leva a
+   mesma largura das capturas dos projetos e a mesma moldura, para a listagem
+   se ler como uma coisa só. O `height: auto` impede o salto de layout que as
+   dimensões declaradas no elemento existem para evitar. */
+.leitor--video {
+  max-width: 26rem;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: var(--paper-fundo, #000);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
 
 /* ── Utilitários de espaçamento (sem style= inline: a CSP é `style-src 'self'`,
    sem 'unsafe-inline' e sem hashes a manter à mão) ───────────────────────── */
