@@ -53,6 +53,17 @@ const LEITURA = {
   fr: 'lecture',
   es: 'lectura',
 }
+/**
+ * Nem tudo o que aqui está é leitura de texto alheio. A noite no Sagrada
+ * Família foi peça montada — alinhamento, formas e improviso —, e chamar-lhe
+ * leitura dizia menos do que aconteceu.
+ */
+const PERFORMANCE = {
+  pt: 'performance',
+  en: 'performance',
+  fr: 'performance',
+  es: 'performance',
+}
 const NARRACAO = {
   pt: 'narração',
   en: 'narration',
@@ -305,6 +316,33 @@ export const leituras = parse(Leitura.array(), [
         credito: 'Fotografia de Raul Pinto',
       },
     ],
+  },
+  {
+    id: 'quartas-da-palavra-2016',
+    titulo: 'Noite a solo',
+    // A única entrada do nó em que a peça é minha. O campo continua a dizer de
+    // quem é a peça e não de quem lhe põe a voz — e aqui a peça é o alinhamento.
+    autoria: 'Fábio Salgado',
+    fonte: {
+      pt: 'Noite a solo nas Quartas da Palavra, o serão semanal do Sagrada Família. Alinhamento próprio, entre livros em papel, telemóvel, vídeo, documentário e música cantada — de Carlos Paredes a Zeca Medeiros, Tom Zé, Beatriz Azevedo e Alberto Pimenta. Angela Correia escreveu sobre a noite na Bibliotrónica Portuguesa.',
+      en: 'A solo night at Quartas da Palavra, the weekly word evening at Sagrada Família. A programme of my own, between paper books, a phone, video, documentary and sung music — from Carlos Paredes to Zeca Medeiros, Tom Zé, Beatriz Azevedo and Alberto Pimenta. Angela Correia wrote about the night in Bibliotrónica Portuguesa.',
+      fr: 'Soirée en solo aux Quartas da Palavra, la veillée hebdomadaire du Sagrada Família. Un programme de mon cru, entre livres papier, téléphone, vidéo, documentaire et musique chantée — de Carlos Paredes à Zeca Medeiros, Tom Zé, Beatriz Azevedo et Alberto Pimenta. Angela Correia a écrit sur la soirée dans Bibliotrónica Portuguesa.',
+      es: 'Noche en solitario en las Quartas da Palavra, la velada semanal del Sagrada Família. Alineación propia, entre libros en papel, teléfono, vídeo, documental y música cantada — de Carlos Paredes a Zeca Medeiros, Tom Zé, Beatriz Azevedo y Alberto Pimenta. Angela Correia escribió sobre la noche en Bibliotrónica Portuguesa.',
+    },
+    papel: PERFORMANCE,
+    rubrica: null,
+    editor: 'Quartas da Palavra',
+    formato: 'presencial',
+    // A crítica saiu a 30/06/2016 às 17:40 e abre com «ontem»: 29 de junho,
+    // uma quarta-feira, que é o dia que dá nome ao ciclo.
+    data: '2016-06-29',
+    local: 'Sagrada Família, Rua dos Remédios, Alfama, Lisboa',
+    // O domínio antigo da revista — bibliotronicaportuguesa.pt — foi entretanto
+    // apanhado e redireciona para um site de apostas. Este é o que a própria
+    // página declara como canónico.
+    origem: 'https://bibliotronicapt.pt/ler-e-ouvir-ler-em-alfama/',
+    // Sem cartaz: não apareceu. O que prova a noite é a crítica, na `origem`.
+    imagens: [],
   },
   {
     id: 'poesia-clandestina',
