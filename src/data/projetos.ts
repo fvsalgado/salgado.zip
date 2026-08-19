@@ -49,10 +49,17 @@ const cobertura =
  * não pode trazer atrás de si o que a ficha protege: no Travertina diz-se
  * porque foi feito, nunca de quem é a casa.
  *
- * Cada entrada fecha com uma LINHA DE ASSINATURA: uma frase curta, na
- * primeira pessoa, que diz o papel real em verbos conjugados e sem um único
- * adjetivo. É o que separa uma ficha de produto de uma prova sobre a pessoa —
- * a listagem descreve o que o produto faz, e a última linha diz quem o fez.
+ * As LINHAS DE ASSINATURA — «desenhei-o e construí-o», «produzo-o», «fundámo-lo
+ * os dois» — saíram todas por decisão do Fábio a 19/08/2026. Diziam em prosa o
+ * que o campo `papel` já diz por cima de cada ficha, e diziam-no oito vezes
+ * seguidas: lidas em fila, a repetição roubava-lhes a força que tinham uma a
+ * uma. O papel continua a separar quem fundou de quem só construiu, que é a
+ * distinção que interessa a quem lê. O que também saiu com elas foram as
+ * relações pessoais — a companheira, a sobrinha permanece por ser o motivo da
+ * ficha —, e essas não voltam: não são prova de trabalho.
+ *
+ * Os MOTIVOS ficam, e são agora a única primeira pessoa da listagem: «fi-lo
+ * porque gosto de teatro», «fi-lo como resposta a um problema de autonomia».
  *
  * `periodo: null` significa ano por confirmar. Não se publica por adivinhação:
  * são datas do percurso de uma pessoa real, num site que vai para
@@ -112,7 +119,7 @@ export const projetos = parse(Projeto.array().min(1), [
       },
       {
         pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa. Renomeado e relançado em 2026, agora de âmbito nacional.',
-        en: 'Born in 2016 as EmCena.pt, a Lisbon theatre listing. Renamed and relaunched in 2026, now nationwide.',
+        en: 'Born in 2016 as EmCena.pt, a listings site for Lisbon theatre. Renamed and relaunched in 2026, now nationwide.',
         fr: 'Né en 2016 sous le nom d’EmCena.pt, agenda du théâtre de Lisbonne. Renommé et relancé en 2026, désormais à l’échelle nationale.',
         es: 'Nació en 2016 como EmCena.pt, agenda de teatro de Lisboa. Renombrado y relanzado en 2026, ahora de ámbito nacional.',
       },
@@ -165,16 +172,10 @@ export const projetos = parse(Projeto.array().min(1), [
         es: 'Representamos a los artistas y organizamos los conciertos. Edición discográfica, puntualmente.',
       },
       {
-        pt: 'A curadoria artística é da Marta Rosa, minha companheira. Fundámo-lo os dois.',
-        en: 'Artistic curation is by Marta Rosa, my partner. We founded it together.',
-        fr: 'La curation artistique est de Marta Rosa, ma compagne. Nous l’avons fondé à deux.',
-        es: 'La curaduría artística es de Marta Rosa, mi compañera. Lo fundamos los dos.',
-      },
-      {
-        pt: 'Produzo-o, e o site também é meu.',
-        en: 'I produce it, and the site is mine too.',
-        fr: 'Je le produis, et le site est de moi aussi.',
-        es: 'Lo produzco, y el sitio también es mío.',
+        pt: 'A curadoria artística é da Marta Rosa, minha companheira.',
+        en: 'Artistic curation is by Marta Rosa, my partner.',
+        fr: 'La curation artistique est de Marta Rosa, ma compagne.',
+        es: 'La curaduría artística es de Marta Rosa, mi compañera.',
       },
     ],
     stack: [],
@@ -200,18 +201,6 @@ export const projetos = parse(Projeto.array().min(1), [
         fr: 'Francisca est ma nièce.',
         es: 'Francisca es mi sobrina.',
       },
-      {
-        pt: 'Os rankings atualizam-se sozinhos: por API onde há API, por recolha da página onde não há.',
-        en: 'The rankings keep themselves up to date: by API where there is one, by scraping the page where there is not.',
-        fr: 'Les classements se mettent à jour tout seuls : par API là où il y en a une, par récupération de la page là où il n’y en a pas.',
-        es: 'Los rankings se actualizan solos: por API donde la hay, por recogida de la página donde no la hay.',
-      },
-      {
-        pt: 'Desenhei-o e construí-o.',
-        en: 'I designed it and built it.',
-        fr: 'Je l’ai dessiné et construit.',
-        es: 'Lo diseñé y lo construí.',
-      },
     ],
     stack: [],
     url: 'https://franciscasalgado.golf',
@@ -235,18 +224,6 @@ export const projetos = parse(Projeto.array().min(1), [
         en: 'Voice, fado viola, and her own lyrics.',
         fr: 'Voix, viola de fado et ses propres textes.',
         es: 'Voz, viola de fado y letras propias.',
-      },
-      {
-        pt: 'A Marta é a minha companheira, e é com ela que produzo fado.',
-        en: "Marta is my partner, and she's who I produce fado with.",
-        fr: 'Marta est ma compagne, et c’est avec elle que je produis du fado.',
-        es: 'Marta es mi compañera, y es con ella con quien produzco fado.',
-      },
-      {
-        pt: 'Desenhei-o e construí-o; as canções são dela.',
-        en: 'I designed it and built it; the songs are hers.',
-        fr: 'Je l’ai dessiné et construit ; les chansons sont d’elle.',
-        es: 'Lo diseñé y lo construí; las canciones son suyas.',
       },
     ],
     stack: [],
@@ -281,30 +258,6 @@ export const projetos = parse(Projeto.array().min(1), [
         fr: 'Module travaux : chapitres par phase, budget contre payé, journal des dépenses et fiches par pièce.',
         es: 'Módulo de obra: capítulos por fase, presupuesto frente a pagado, registro de gastos y fichas por estancia.',
       },
-      {
-        pt: 'CRM integrado para gerir uma microempresa, com gerador de propostas e orçamentos.',
-        en: 'Built-in CRM for running a micro-business, with a proposal and quote generator.',
-        fr: 'CRM intégré pour gérer une micro-entreprise, avec générateur de propositions et de devis.',
-        es: 'CRM integrado para gestionar una microempresa, con generador de propuestas y presupuestos.',
-      },
-      {
-        pt: 'Liga-se ao exterior por API: meteorologia, transportes, rádio, risco de incêndio, alertas de calor, automações e domótica.',
-        en: 'It reaches outside through APIs: weather, transport, radio, wildfire risk, heat alerts, automations and home control.',
-        fr: 'Il se relie à l’extérieur par API : météo, transports, radio, risque d’incendie, alertes de chaleur, automatisations et domotique.',
-        es: 'Se conecta al exterior por API: meteorología, transportes, radio, riesgo de incendio, alertas de calor, automatizaciones y domótica.',
-      },
-      {
-        pt: 'Aplicação privada, atrás de autenticação — sem ligação pública. As capturas mostram dados de demonstração.',
-        en: 'Private application, behind authentication — no public link. The screenshots show demo data.',
-        fr: 'Application privée, derrière une authentification — sans lien public. Les captures montrent des données de démonstration.',
-        es: 'Aplicación privada, tras autenticación — sin enlace público. Las capturas muestran datos de demostración.',
-      },
-      {
-        pt: 'Desenhei-o e construí-o, módulo a módulo.',
-        en: 'I designed it and built it, module by module.',
-        fr: 'Je l’ai dessiné et construit, module après module.',
-        es: 'Lo diseñé y lo construí, módulo a módulo.',
-      },
     ],
     stack: ['Vite', 'Supabase (RLS)', 'PWA offline-first'],
     url: null,
@@ -329,12 +282,6 @@ export const projetos = parse(Projeto.array().min(1), [
         en: 'Booking goes through the experience platforms that sell the city.',
         fr: 'La réservation passe par les plateformes d’expériences qui vendent la ville.',
         es: 'La reserva pasa por las plataformas de experiencias que venden la ciudad.',
-      },
-      {
-        pt: 'Escolhi as casas, desenhei o sítio e construí-o.',
-        en: 'I chose the houses, designed the site and built it.',
-        fr: 'J’ai choisi les maisons, dessiné le site et je l’ai construit.',
-        es: 'Elegí las casas, diseñé el sitio y lo construí.',
       },
     ],
     stack: [],
@@ -367,12 +314,6 @@ export const projetos = parse(Projeto.array().min(1), [
         fr: 'Application privée, derrière une authentification — sans lien public.',
         es: 'Aplicación privada, tras autenticación — sin enlace público.',
       },
-      {
-        pt: 'Desenhei-o e construí-o. Já estive do outro lado deste balcão.',
-        en: 'I designed it and built it. I have stood on the other side of this counter.',
-        fr: 'Je l’ai dessiné et construit. Je me suis déjà tenu de l’autre côté de ce comptoir.',
-        es: 'Lo diseñé y lo construí. Ya he estado del otro lado de esta barra.',
-      },
     ],
     stack: ['React', 'Vite'],
     url: null,
@@ -392,10 +333,10 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     detalhe: [
       {
-        pt: 'Código aberto. Escrevi-o e construí-o a meias com o Claude, entre outras ferramentas.',
-        en: 'Open source. I wrote it and built it together with Claude, among other tools.',
-        fr: 'Code ouvert. Je l’ai écrit et construit à deux avec Claude, parmi d’autres outils.',
-        es: 'Código abierto. Lo escribí y lo construí a medias con Claude, entre otras herramientas.',
+        pt: 'Código aberto.',
+        en: 'Open source.',
+        fr: 'Code ouvert.',
+        es: 'Código abierto.',
       },
     ],
     stack: ['Astro', 'TypeScript', 'Claude Code'],

@@ -54,11 +54,16 @@ export const posicoes = parse(Posicao.array(), [
   },
   {
     id: 'cml',
+    /* «Conselheiro Político» não é designação de gabinete autárquico português:
+       soava a tradução de «Political Adviser», e o corpo da entrada — que começa
+       em «Assessoria ao vereador» — desmentia o próprio título. Em francês,
+       «conseiller» sozinho confunde-se com o eleito: «de cabinet» diz que é do
+       gabinete e não da assembleia. */
     cargo: {
-      pt: 'Conselheiro Político',
-      en: 'Political Adviser',
-      fr: 'Conseiller politique',
-      es: 'Asesor Político',
+      pt: 'Assessor',
+      en: 'Adviser',
+      fr: 'Conseiller de cabinet',
+      es: 'Asesor',
     },
     organizacao: 'Câmara Municipal de Lisboa',
     organizacaoUrl: 'https://www.lisboa.pt',
