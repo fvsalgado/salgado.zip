@@ -237,15 +237,24 @@ async function pdf(nome, rota, idioma) {
     // 760px em JPEG deixa-o abaixo de 400 kB, e a 84 mm de largura continua
     // acima dos 220 dpi. Sem o decode() o pdf() dispara antes das imagens
     // chegarem e sai um documento sem capturas nenhumas, em silêncio.
-    const imgs = Array.from(document.querySelectorAll('.captura img'))
+    // As capas entram no mesmo ciclo desde que passaram a sair no documento:
+    // em webp cru levavam o PDF de ~300 kB para 637 kB, porque o Chromium
+    // embute o bitmap descodificado e não o ficheiro. Não se reamostram — a
+    // 34mm os 280px de altura já dão perto de 300 ppp, e ampliar não
+    // acrescenta detalhe nenhum; o que poupa os bytes é trocar o lossless
+    // pelo JPEG. Menos compressão do que as capturas (0,82 contra 0,72)
+    // porque uma capa é tipografia sobre fotografia e marca os artefactos.
+    const imgs = Array.from(document.querySelectorAll('.captura img, .capa-doc img'))
     await Promise.all(imgs.map((i) => i.decode().catch(() => {})))
     for (const img of imgs) {
       if (!img.naturalWidth) continue
+      const captura = img.closest('.captura') !== null
+      const alvo = captura ? 760 : Math.min(img.naturalWidth, 280)
       const c = document.createElement('canvas')
-      c.width = 760
-      c.height = Math.round((img.naturalHeight / img.naturalWidth) * 760)
+      c.width = alvo
+      c.height = Math.round((img.naturalHeight / img.naturalWidth) * alvo)
       c.getContext('2d').drawImage(img, 0, 0, c.width, c.height)
-      img.src = c.toDataURL('image/jpeg', 0.72)
+      img.src = c.toDataURL('image/jpeg', captura ? 0.72 : 0.82)
       await img.decode().catch(() => {})
     }
   })

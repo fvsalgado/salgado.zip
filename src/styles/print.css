@@ -66,8 +66,18 @@
   .dossie h1 { font-size: 26pt; letter-spacing: -0.02em; }
   .dossie .cabecalho__areas { font-size: 8pt; margin-top: 2mm; }
   .dossie .cabecalho--dossie { margin-top: 4mm; max-width: none; }
-  .cabecalho--dossie p { font-size: 10.4pt; line-height: 1.45; }
-  .cabecalho--dossie p + p { margin-top: 1.6mm; }
+  /* O prefixo `.dossie` não é enfeite: sem ele estas duas regras nunca
+     chegaram a valer nada. O base.css casa `.cabecalho--dossie
+     p:not(.cabecalho__cargo)` — (0,2,1) contra os (0,1,1) que aqui estavam —
+     e o que saía impresso era o tamanho de ecrã, não este. A apresentação
+     imprimia a 12pt enquanto o ficheiro jurava mandar 10,4.
+
+     Fica nos 12pt que já saíam, e não nos 10,4 que nunca saíram: a 178mm de
+     mancha, 12pt dá linhas na casa dos 70 caracteres, que é onde se lê melhor;
+     10,4pt punha-as acima de 90. Ou seja, a regra morta estava a proteger o
+     documento por acidente. Agora protege-o de propósito. */
+  .dossie .cabecalho--dossie p { font-size: 12pt; line-height: 1.45; }
+  .dossie .cabecalho--dossie p + p { margin-top: 1.8mm; }
   .retrato--dossie { width: 26mm; height: 26mm; border-radius: 2px; }
 
   /* Apertada em relação ao ecrã: são vinte pixels, e são exatamente os que
@@ -99,6 +109,24 @@
     border-top: 1px solid var(--rule);
   }
   section:first-of-type h2 { margin-top: 4.5mm; }
+
+  /* ── Onde as folhas partem ─────────────────────────────────────────────
+     Três dos pedidos — o percurso com a apresentação, os projetos em duas
+     folhas com as imagens, e as capas no fim da voz — são todos sobre
+     paginação, e nenhum se aguenta a fluxo livre. Sem estas quebras o
+     documento dá as mesmas quatro folhas nos sítios errados: bastou apertar a
+     apresentação sessenta pixels para o primeiro projeto subir ao pé da folha
+     1, e para as capas se partirem ao meio, com metade órfã no cimo da 4,
+     longe da frase que nomeia os autores. Custa o branco no fim da 1 e da 3, e
+     compra em troca uma paginação que não muda quando o conteúdo muda.
+
+     O `margin-top: 0` não aparece em medição de fluxo contínuo, só no PDF: o
+     Chromium honra a margem de topo do rótulo no cimo da folha que a quebra
+     abriu, e um rótulo encostado ao papel não tem de se separar de nada. Tem
+     de ficar DEPOIS do bloco `.dossie h2` — ambos são (0,1,1) e quem decide é
+     a ordem no ficheiro. */
+  [data-seccao='projetos'], [data-seccao='voz'] { break-before: page; }
+  [data-seccao='projetos'] h2, [data-seccao='voz'] h2 { margin-top: 0; }
 
   .dossie h3 { font-size: 11pt; }
   .entrada + .entrada { margin-top: 4mm; }
