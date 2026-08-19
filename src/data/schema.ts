@@ -142,6 +142,16 @@ export const Posicao = z.object({
    * Wikipédia uma entidade reconhecível.
    */
   organizacaoUrl: HttpsUrl.nullable().default(null),
+  /**
+   * Marca da organização em public/logos/, ou `null`. Só existe onde houve um
+   * ficheiro de proveniência limpa: o da Câmara é domínio público e vem da
+   * página de identidade gráfica do próprio município; o da ATREVIA é o
+   * logótipo da empresa, usado aqui para a identificar como empregador.
+   *
+   * Os dois são monocromáticos com transparência, e é isso que lhes permite
+   * inverter no tema escuro sem um segundo ficheiro.
+   */
+  logo: z.string().regex(/^[a-z0-9-]+\.webp$/).nullable().default(null),
   periodo: Periodo,
   /** Duas a quatro linhas: o que fizeste e com que resultado. */
   linhas: z.array(Lang).min(1).max(4),

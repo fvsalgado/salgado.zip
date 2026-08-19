@@ -444,6 +444,22 @@ h2.linha, h3.linha { font: inherit; }
 .linha__ligacoes a:hover { color: var(--accent); }
 summary { padding-bottom: 0.35rem; }
 
+/* ── Marcas das organizações ──────────────────────────────────────────────
+   Monocromáticas e com transparência, o que deixa uma inversão resolver o tema
+   escuro sem um segundo ficheiro. A altura é fixa e a largura acompanha: a da
+   Câmara é vertical e a da ATREVIA é horizontal, e uma largura fixa esmagava
+   uma das duas. */
+.marca-org {
+  display: block;
+  width: auto;
+  height: 2.6rem;
+  margin: 0.15rem 0 0.85rem;
+}
+:root[data-theme='dark'] .marca-org { filter: invert(1); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .marca-org { filter: invert(1); }
+}
+
 /* ── Leitor de áudio ──────────────────────────────────────────────────────
    Controlo nativo do browser: é o único leitor que funciona com o JavaScript
    desligado e dentro de uma CSP sem 'unsafe-inline'. Não se lhe estiliza o

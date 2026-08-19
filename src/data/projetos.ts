@@ -70,26 +70,30 @@ export const projetos = parse(Projeto.array().min(1), [
     },
     estado: 'ativo',
     periodo: { inicio: '2016-11', fim: null },
+    // «A Cultura no melhor lugar» abre a linha nas quatro línguas e não se
+    // traduz: é a frase da casa, e uma frase da casa traduzida deixa de ser a
+    // frase da casa — a mesma regra dos títulos das leituras em `voz.ts`.
+    //
     // A cobertura nacional — todos os distritos e regiões autónomas — é facto
     // confirmado pelo Fábio (18/08/2026); a homepage não expõe um contador de
     // distritos que se possa ler à máquina, ao contrário dos três números.
     linha: {
       pt:
         centena && cobertura
-          ? `A agenda cultural de Portugal num sítio só: mais de ${centena.pt} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos — todos os distritos e regiões autónomas.`
-          : 'A agenda cultural de Portugal num sítio só, de todos os distritos e regiões autónomas: teatros, salas de concerto, museus e cinemas.',
+          ? `A Cultura no melhor lugar. A agenda cultural de Portugal num sítio só: mais de ${centena.pt} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos — todos os distritos e regiões autónomas.`
+          : 'A Cultura no melhor lugar. A agenda cultural de Portugal num sítio só, de todos os distritos e regiões autónomas: teatros, salas de concerto, museus e cinemas.',
       en:
         centena && cobertura
-          ? `Portugal's cultural agenda in one place: over ${centena.en} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities — every district and autonomous region.`
-          : "Portugal's cultural agenda in one place, from every district and autonomous region: theatres, concert halls, museums and cinemas.",
+          ? `A Cultura no melhor lugar. Portugal's cultural agenda in one place: over ${centena.en} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities — every district and autonomous region.`
+          : "A Cultura no melhor lugar. Portugal's cultural agenda in one place, from every district and autonomous region: theatres, concert halls, museums and cinemas.",
       fr:
         centena && cobertura
-          ? `L’agenda culturel du Portugal en un seul endroit : plus de ${centena.fr} spectacles à l’affiche, dans ${cobertura.salas} salles de ${cobertura.concelhos} communes — tous les districts et régions autonomes.`
-          : 'L’agenda culturel du Portugal en un seul endroit, de tous les districts et régions autonomes : théâtres, salles de concert, musées et cinémas.',
+          ? `A Cultura no melhor lugar. L’agenda culturel du Portugal en un seul endroit : plus de ${centena.fr} spectacles à l’affiche, dans ${cobertura.salas} salles de ${cobertura.concelhos} communes — tous les districts et régions autonomes.`
+          : 'A Cultura no melhor lugar. L’agenda culturel du Portugal en un seul endroit, de tous les districts et régions autonomes : théâtres, salles de concert, musées et cinémas.',
       es:
         centena && cobertura
-          ? `La agenda cultural de Portugal en un solo sitio: más de ${centena.es} espectáculos en cartel, en ${cobertura.salas} salas de ${cobertura.concelhos} municipios — todos los distritos y regiones autónomas.`
-          : 'La agenda cultural de Portugal en un solo sitio, de todos los distritos y regiones autónomas: teatros, salas de conciertos, museos y cines.',
+          ? `A Cultura no melhor lugar. La agenda cultural de Portugal en un solo sitio: más de ${centena.es} espectáculos en cartel, en ${cobertura.salas} salas de ${cobertura.concelhos} municipios — todos los distritos y regiones autónomas.`
+          : 'A Cultura no melhor lugar. La agenda cultural de Portugal en un solo sitio, de todos los distritos y regiones autónomas: teatros, salas de conciertos, museos y cines.',
     },
     detalhe: [
       {

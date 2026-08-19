@@ -384,6 +384,15 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               nome={`${t(p.cargo, idioma)} · ${p.organizacao}`}
               colunas={[{ classe: 'periodo', valor: periodo(p.periodo) }]}
             >
+              {p.logo && (
+                <img
+                  class="marca-org"
+                  src={`/logos/${p.logo}`}
+                  alt={p.organizacao}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
               <div class="no__texto">
                 {p.linhas.map((l) => <p>{t(l, idioma)}</p>)}
               </div>
