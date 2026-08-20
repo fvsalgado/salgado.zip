@@ -302,12 +302,6 @@ export const projetos = parse(Projeto.array().min(1), [
         fr: 'Né d’un besoin réel : une organisation communautaire devait contrôler sa facturation de l’intérieur. Il est en service, et il reste disponible pour d’autres.',
         es: 'Nació de una necesidad real: una organización comunitaria necesitaba controlar su facturación desde dentro. Está en uso, y queda disponible para otras.',
       },
-      {
-        pt: 'Aplicação privada, atrás de autenticação — sem ligação pública.',
-        en: 'Private application, behind authentication — no public link.',
-        fr: 'Application privée, derrière une authentification — sans lien public.',
-        es: 'Aplicación privada, tras autenticación — sin enlace público.',
-      },
     ],
     stack: ['React', 'Vite'],
     url: null,

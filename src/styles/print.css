@@ -145,8 +145,14 @@
      ficar DEPOIS do bloco `.dossie h2` — ambos são (0,1,1) e quem decide é a
      ordem no ficheiro. */
   [data-seccao='projetos'] { break-before: page; }
-  [data-seccao='projetos'] h2 { margin-top: 0; }
   [data-seccao='voz'] { break-inside: avoid; }
+  /* Os mandatos abrem a última folha. Sem isto ficavam no pé da terceira,
+     separados dos certificados e dos idiomas — que é a cauda de que fazem
+     parte: a folha 3 é a das imagens, e a 4 é a do que se lê em texto. Medido
+     no PDF antes de mexer, com o texto de cada folha lido pelo mapa de glifos:
+     «Mandatos institucionais» aparecia na folha 3 e os certificados na 4. */
+  [data-seccao='mandatos'] { break-before: page; }
+  [data-seccao='projetos'] h2, [data-seccao='mandatos'] h2 { margin-top: 0; }
 
   .dossie h3 { font-size: 11pt; }
   .entrada + .entrada { margin-top: 4mm; }

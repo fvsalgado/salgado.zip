@@ -18,9 +18,11 @@ import { abrirBrowser, BASE } from './browser.mjs'
 import { lerZip } from './zip-ler.mjs'
 import { lerMp3 } from './mp3-ler.mjs'
 import { lerMp4 } from './mp4-ler.mjs'
+import { textoPorPagina, achatar } from './pdf-ler.mjs'
 import { definicoes } from '../src/data/ficheiros.ts'
 import { IDIOMAS, LINGUAS } from '../src/data/idiomas.ts'
 import { posicoes, formacao } from '../src/data/percurso.ts'
+import { mandatos } from '../src/data/mandatos.ts'
 import { cabecalho } from '../src/data/cabecalho.ts'
 import { contacto } from '../src/data/contacto.ts'
 import { projetos } from '../src/data/projetos.ts'
@@ -489,6 +491,42 @@ function imagensPorPagina(buf) {
       }
       if (porPagina[FOLHAS - 1] > 0) {
         problemas.push(`${nome}: a última folha é a da cauda em texto e apareceram-lhe ${porPagina[FOLHAS - 1]} imagens — a voz partiu-se`)
+      }
+    }
+
+    /* A cauda inteira na última folha. Contar imagens não responde a isto: os
+       mandatos, os certificados, os idiomas e o colofão não levam imagem
+       nenhuma, e por isso a conta de cima nunca soube onde estavam. Souberam-no
+       os olhos do Fábio, e antes de mim: os mandatos ficavam no pé da folha 3,
+       separados do resto da cauda de que fazem parte.
+
+       As frases procuradas saem dos dados — a casa do primeiro mandato e a
+       instituição do último certificado — e não escritas aqui: assim a
+       verificação continua a apontar ao sítio certo no dia em que o conteúdo
+       mudar. As duas juntas fazem de parênteses à cauda: se a primeira está na
+       última folha e a penúltima não a tem, a secção abre onde deve.
+
+       O texto sai do `scripts/pdf-ler.mjs`, que traduz os identificadores de
+       glifo pelo `/ToUnicode` embutido — procurar as palavras no ficheiro cru
+       dá zero em todas as folhas, e foi o que me aconteceu à primeira. */
+    const texto = textoPorPagina(buf)
+    if (texto === null) {
+      problemas.push(`${nome}: não consegui ler o texto das folhas`)
+    } else if (texto.length === FOLHAS) {
+      const abre = mandatos[0]?.organizacao
+      const fecha = formacao[formacao.length - 1]?.instituicao
+      const ultima = achatar(texto[FOLHAS - 1])
+      const penultima = achatar(texto[FOLHAS - 2])
+      if (abre !== undefined) {
+        if (!ultima.includes(achatar(abre))) {
+          problemas.push(`${nome}: os mandatos deviam abrir a folha ${FOLHAS}; não encontrei lá «${abre}»`)
+        }
+        if (penultima.includes(achatar(abre))) {
+          problemas.push(`${nome}: os mandatos estão a começar na folha ${FOLHAS - 1}, separados do resto da cauda`)
+        }
+      }
+      if (fecha !== undefined && !ultima.includes(achatar(fecha))) {
+        problemas.push(`${nome}: os certificados deviam fechar na folha ${FOLHAS}; não encontrei lá «${fecha}»`)
       }
     }
     // Retrato, QR, uma captura por projeto que a tenha, os registos da voz e as
