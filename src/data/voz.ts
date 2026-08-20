@@ -89,6 +89,15 @@ export const leituras = parse(Leitura.array(), [
     formato: 'video',
     data: '2025',
     origem: 'https://www.facebook.com/reel/1567148937283493',
+    /* O que se ouve, fala a fala. Quem transcreve decide onde uma fala acaba;
+       os tempos saem depois de uma conta sobre isto e sobre a duração medida
+       do ficheiro — ver o scripts/voz.mjs. Transcrito pelo Fábio a 20/08/2026. */
+    transcricao: [
+      'Transborda — 5.ª Mostra Internacional de Artes Performativas de Almada,',
+      'de 17 de abril a 11 de maio.',
+      'Espetáculos, laboratórios, performances e conversas.',
+      'Artistas movidos pelo desejo de exceder fronteiras!',
+    ],
     origemAudio: null,
     sha256: 'c192d38bf2a429584d08b0828e8e36f7bfe45090408c70ab4ebe00ce0569c75d',
   },
@@ -108,6 +117,12 @@ export const leituras = parse(Leitura.array(), [
     formato: 'video',
     data: '2023',
     origem: 'https://www.facebook.com/reel/259311793127459',
+    transcricao: [
+      'Transborda — 3.ª Mostra Internacional de Artes Performativas de Almada.',
+      'Espetáculos, oficinas, conversas e performances.',
+      'De 29 de abril a 14 de maio.',
+      'Artistas movidos pelo desejo de exceder fronteiras!',
+    ],
     origemAudio: null,
     sha256: 'dcee08eb75e92e45fe91e485b46773b4f51375694bfb26ed2d2795dbeef3616f',
   },

@@ -125,6 +125,20 @@ export const Leitura = z.object({
    */
   data: z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/, 'usa YYYY, YYYY-MM ou YYYY-MM-DD'),
   /**
+   * O que se diz na gravação, uma fala por entrada.
+   *
+   * É a fonte das legendas: o scripts/voz.mjs escreve o .vtt a partir daqui e
+   * da duração medida do ficheiro, com o tempo de cada fala proporcional ao
+   * seu comprimento. Os tempos são derivados, como tudo o resto — o que se
+   * escreve à mão é onde uma fala acaba e a seguinte começa, que é decisão de
+   * quem transcreve e não conta que se possa fazer.
+   *
+   * Vazio significa «não há transcrição», e é o que a declaração de
+   * acessibilidade diz das nove leituras: são textos de outros autores, e
+   * publicá-los aqui por extenso era republicá-los.
+   */
+  transcricao: z.array(z.string().min(1)).default([]),
+  /**
    * A casa e a morada onde a leitura aconteceu. Só nas presenciais: numa
    * gravação o sítio onde se gravou não é facto publicado em lado nenhum, e
    * escrevê-lo era inventar.
@@ -222,6 +236,9 @@ export const Leitura = z.object({
       if (l.sha256 !== null) erro('leitura presencial não tem ficheiro, logo não tem sha256', ['sha256'])
       if (l.origemAudio !== null) erro('leitura presencial não tem ficheiro para descarregar', ['origemAudio'])
       if (l.local === null) erro('uma leitura presencial aconteceu nalgum sítio', ['local'])
+      // Sem ficheiro não há nada a legendar, e um .vtt sem média a que se
+      // prender seria um ficheiro publicado que nada usa.
+      if (l.transcricao.length > 0) erro('a transcrição legenda uma gravação, e esta não tem ficheiro', ['transcricao'])
     } else {
       if (l.sha256 === null) erro('uma gravação tem de trazer o sha256 do ficheiro', ['sha256'])
       if (l.imagens.length > 0) erro('as imagens são só das leituras presenciais', ['imagens'])

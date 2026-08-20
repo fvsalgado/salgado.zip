@@ -67,6 +67,7 @@ interface Rotulos {
   dimensoes: string
   ondeLbl: string
   imagensLbl: string
+  transcricaoLbl: string
   organizaLbl: string
   quandoLbl: string
   paginaLbl: string
@@ -88,7 +89,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     notaFicheiros: 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.',
     autor: 'autoria', rubricaLbl: 'rubrica', publicado: 'publicado', duracaoLbl: 'duração',
     ficheiroLbl: 'ficheiro', original: 'no editor', ouvir: 'Ouvir', ver: 'Ver', dimensoes: 'imagem',
-    ondeLbl: 'onde', imagensLbl: 'imagens',
+    ondeLbl: 'onde', imagensLbl: 'imagens', transcricaoLbl: 'o que se ouve',
     organizaLbl: 'organização', quandoLbl: 'quando', paginaLbl: 'página',
     notaVoz: (n, v, p) =>
       `As ${n} leituras são os ficheiros originais, byte a byte, do que o esquerda.net publicou — vivem aqui porque o feed do podcast só guarda os episódios mais recentes, e estas caíram fora dele. Os ${v} vídeos vieram da página do Transborda e foram recodificados uma vez, para tocarem em todos os browsers. Das ${p} leituras em palco não ficou gravação nenhuma — ficaram as imagens que houve, e a página de quem as acolheu ou escreveu sobre elas. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
@@ -107,7 +108,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     notaFicheiros: 'Every size above is read from the real file at build time. Nothing here is typed by hand.',
     autor: 'author', rubricaLbl: 'series', publicado: 'published', duracaoLbl: 'length',
     ficheiroLbl: 'file', original: 'at the publisher', ouvir: 'Listen to', ver: 'Watch', dimensoes: 'picture',
-    ondeLbl: 'where', imagensLbl: 'pictures',
+    ondeLbl: 'where', imagensLbl: 'pictures', transcricaoLbl: 'what is said',
     organizaLbl: 'organiser', quandoLbl: 'when', paginaLbl: 'page',
     notaVoz: (n, v, p) =>
       `The ${n} readings are the original files, byte for byte, of what esquerda.net published — they live here because the podcast feed keeps only the most recent episodes, and these dropped out of it. The ${v} films came from the Transborda page and were re-encoded once, so they play in every browser. Of the ${p} readings on stage no recording survives — what is left are whatever pictures there were, and the page of whoever hosted them or wrote about them. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
@@ -126,7 +127,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     notaFicheiros: 'Toutes les tailles ci-dessus sont lues sur le fichier réel au build. Rien ici n’est saisi à la main.',
     autor: 'auteur', rubricaLbl: 'rubrique', publicado: 'publié', duracaoLbl: 'durée',
     ficheiroLbl: 'fichier', original: 'chez l’éditeur', ouvir: 'Écouter', ver: 'Regarder', dimensoes: 'image',
-    ondeLbl: 'où', imagensLbl: 'images',
+    ondeLbl: 'où', imagensLbl: 'images', transcricaoLbl: 'ce qui est dit',
     organizaLbl: 'organisation', quandoLbl: 'quand', paginaLbl: 'page',
     notaVoz: (n, v, p) =>
       `Les ${n} lectures sont les fichiers originaux, octet par octet, de ce qu’esquerda.net a publié — ils vivent ici parce que le flux du podcast ne garde que les épisodes les plus récents, et ceux-ci en sont sortis. Les ${v} vidéos viennent de la page de Transborda et ont été réencodées une fois, pour être lues par tous les navigateurs. Des ${p} lectures sur scène il ne reste aucun enregistrement — il reste les images qu’il y avait, et la page de qui les a accueillies ou en a écrit. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
@@ -145,7 +146,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     notaFicheiros: 'Todos los tamaños de arriba se leen del fichero real en el build. Nada aquí se escribe a mano.',
     autor: 'autoría', rubricaLbl: 'sección', publicado: 'publicado', duracaoLbl: 'duración',
     ficheiroLbl: 'fichero', original: 'en el editor', ouvir: 'Escuchar', ver: 'Ver', dimensoes: 'imagen',
-    ondeLbl: 'dónde', imagensLbl: 'imágenes',
+    ondeLbl: 'dónde', imagensLbl: 'imágenes', transcricaoLbl: 'lo que se oye',
     organizaLbl: 'organización', quandoLbl: 'cuándo', paginaLbl: 'página',
     notaVoz: (n, v, p) =>
       `Las ${n} lecturas son los ficheros originales, byte a byte, de lo que esquerda.net publicó — viven aquí porque el feed del podcast solo guarda los episodios más recientes, y estas quedaron fuera. Los ${v} vídeos vinieron de la página de Transborda y se recodificaron una vez, para reproducirse en todos los navegadores. De las ${p} lecturas en escena no quedó ninguna grabación — quedaron las imágenes que hubo, y la página de quien las acogió o escribió sobre ellas. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
@@ -426,7 +427,17 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                   width={medidasVoz[l.id].largura}
                   height={medidasVoz[l.id].altura}
                   aria-label={`${rot.ver} ${l.titulo} — ${l.autoria}`}
-                />
+                >
+                  {/* As legendas. `default` ligado de propósito: numa peça de
+                      vinte segundos em que a fala é a mensagem inteira, umas
+                      legendas escondidas atrás do menu do leitor são legendas
+                      que quem precisa delas não sabe que existem. O ficheiro é
+                      gerado pelo scripts/voz.mjs a partir da transcrição e da
+                      duração medida — ver lá a conta dos tempos. */}
+                  {l.transcricao.length > 0 && (
+                    <track kind="captions" src={`/voz/${l.id}.vtt`} srclang="pt" label="Português" default />
+                  )}
+                </video>
               ) : (
                 <audio
                   class="leitor"
@@ -439,6 +450,18 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               <div class="no__texto">
                 <p>{t(l.fonte, idioma)}</p>
               </div>
+              {/* A transcrição também em texto, e não só dentro do vídeo. Umas
+                  legendas servem quem está a ver; isto serve quem não vai pôr
+                  o vídeo a andar — por não ouvir, por estar num sítio onde não
+                  pode, ou por preferir ler vinte segundos a esperá-los. É o
+                  mesmo texto de onde saiu o .vtt, e por isso não pode divergir
+                  dele: os dois vêm do mesmo campo. */}
+              {l.transcricao.length > 0 && (
+                <div class="transcricao">
+                  <p class="transcricao__rotulo">{rot.transcricaoLbl}</p>
+                  <p lang="pt">{l.transcricao.join(' ')}</p>
+                </div>
+              )}
               <dl class="no__campos">
                 <dt>{rot.autor}</dt>
                 <dd>{l.autoria}</dd>

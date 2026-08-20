@@ -14,6 +14,14 @@
  * As leituras presenciais não têm ficheiro nenhum e não entram no voz.json;
  * delas só se verifica que as imagens declaradas existem em disco.
  *
+ * Escreve também as LEGENDAS: um .vtt por gravação que traga transcrição em
+ * src/data/voz.ts. O texto é de quem transcreve; os tempos saem daqui, de uma
+ * conta — cada fala fica com a fatia da duração medida que lhe cabe pelo seu
+ * comprimento. É uma aproximação, e é a honesta que se consegue sem alinhar o
+ * som à mão: a alternativa era escrever tempos inventados, ou não ter legendas
+ * nenhumas. Numa peça de vinte segundos com quatro falas, o desvio é de
+ * décimas, e uma legenda com décimas de atraso continua a ser uma legenda.
+ *
  *   node scripts/voz.mjs
  */
 import { createHash } from 'node:crypto'
@@ -81,9 +89,38 @@ if (problemas.length) {
 mkdirSync(raiz + 'src/generated', { recursive: true })
 writeFileSync(raiz + 'src/generated/voz.json', JSON.stringify(medidas, null, 2) + '\n')
 
+/* ── As legendas ──────────────────────────────────────────────────────────
+   WebVTT, um por gravação com transcrição. O relógio do formato é
+   `hh:mm:ss.mmm`, e o último tempo é exatamente a duração medida do ficheiro:
+   arredondar cada fatia e somar dava um fim uns milissegundos fora do fim do
+   vídeo, e uma legenda que sobrevive ao vídeo fica presa no ecrã. */
+const relogio = (seg) => {
+  const ms = Math.round(seg * 1000)
+  const h = String(Math.floor(ms / 3600000)).padStart(2, '0')
+  const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0')
+  const s2 = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')
+  return `${h}:${m}:${s2}.${String(ms % 1000).padStart(3, '0')}`
+}
+let legendados = 0
+for (const l of leituras) {
+  if (l.transcricao.length === 0) continue
+  const total = medidas[l.id].segundos
+  const letras = l.transcricao.map((f) => f.length)
+  const soma = letras.reduce((a, b) => a + b, 0)
+  const linhas = ['WEBVTT', '']
+  let acumulado = 0
+  l.transcricao.forEach((fala, i) => {
+    const inicio = acumulado
+    acumulado = i === l.transcricao.length - 1 ? total : acumulado + (letras[i] / soma) * total
+    linhas.push(`${relogio(inicio)} --> ${relogio(acumulado)}`, fala, '')
+  })
+  writeFileSync(pub + `voz/${l.id}.vtt`, linhas.join('\n'))
+  legendados += 1
+}
+
 const total = Object.values(medidas).reduce((s, m) => s + m.segundos, 0)
 const bytes = Object.values(medidas).reduce((s, m) => s + m.bytes, 0)
 const conta = (f) => leituras.filter((l) => l.formato === f).length
 console.log(
-  `voz: ${leituras.length} peças (${conta('audio')} áudio, ${conta('video')} vídeo, ${conta('presencial')} em palco) · ${Math.floor(total / 3600)}h${String(Math.floor((total % 3600) / 60)).padStart(2, '0')} · ${(bytes / 1e6).toFixed(1)} MB`
+  `voz: ${leituras.length} peças (${conta('audio')} áudio, ${conta('video')} vídeo, ${conta('presencial')} em palco) · ${Math.floor(total / 3600)}h${String(Math.floor((total % 3600) / 60)).padStart(2, '0')} · ${(bytes / 1e6).toFixed(1)} MB · ${legendados} com legendas`
 )

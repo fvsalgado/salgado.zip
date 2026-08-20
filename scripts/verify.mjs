@@ -639,8 +639,13 @@ function imagensPorPagina(buf) {
   // Um ficheiro sem entrada é som ou imagem publicados que não dizem de quem são.
   const declarados = new Set(
     leituras.flatMap((l) => {
-      if (l.formato === 'presencial') return l.imagens.map((i) => i.ficheiro)
-      return l.formato === 'video' ? [`${l.id}.mp4`, `${l.id}.webp`] : [`${l.id}.mp3`]
+      // O .vtt não é declarado em lado nenhum: é derivado da transcrição, e por
+      // isso a lista de ficheiros esperados também tem de o derivar dela.
+      const legenda = l.transcricao.length > 0 ? [`${l.id}.vtt`] : []
+      if (l.formato === 'presencial') return [...l.imagens.map((i) => i.ficheiro), ...legenda]
+      return l.formato === 'video'
+        ? [`${l.id}.mp4`, `${l.id}.webp`, ...legenda]
+        : [`${l.id}.mp3`, ...legenda]
     })
   )
   if (existsSync(dirVoz)) {
@@ -682,6 +687,39 @@ function imagensPorPagina(buf) {
         problemas.push(`${rota}: o vídeo ${l.id} não tem capa`)
       }
     }
+  }
+
+  /* As legendas. Três coisas, e cada uma já falhou nalgum sítio na vida real:
+     que o ficheiro exista, que seja WebVTT (sem o cabeçalho `WEBVTT` o browser
+     recusa-o em silêncio e ninguém dá por nada), e que o último tempo seja
+     exatamente a duração medida do vídeo — uma legenda que sobrevive ao fim do
+     vídeo fica presa no ecrã. E que o marcado a vá buscar: um .vtt publicado
+     que nenhum `<track>` aponta é um ficheiro a mais, não umas legendas. */
+  let legendas = 0
+  for (const l of leituras.filter((x) => x.transcricao.length > 0)) {
+    const vtt = pub + `voz/${l.id}.vtt`
+    if (!existsSync(vtt)) {
+      problemas.push(`${l.id}: falta public/voz/${l.id}.vtt — corre \`npm run voz\``)
+      continue
+    }
+    const texto = readFileSync(vtt, 'utf8')
+    if (!texto.startsWith('WEBVTT')) problemas.push(`${l.id}.vtt não começa por WEBVTT`)
+    const tempos = [...texto.matchAll(/(\d\d):(\d\d):(\d\d)\.(\d\d\d) --> (\d\d):(\d\d):(\d\d)\.(\d\d\d)/g)]
+    if (tempos.length !== l.transcricao.length) {
+      problemas.push(`${l.id}.vtt tem ${tempos.length} falas e a transcrição tem ${l.transcricao.length}`)
+    } else {
+      const u = tempos[tempos.length - 1]
+      const fim = Number(u[5]) * 3600 + Number(u[6]) * 60 + Number(u[7]) + Number(u[8]) / 1000
+      if (Math.abs(fim - medidas[l.id].segundos) > 0.001) {
+        problemas.push(`${l.id}.vtt acaba aos ${fim}s e o vídeo tem ${medidas[l.id].segundos}s`)
+      }
+    }
+    for (const rota of paginas) {
+      if (!new RegExp(`<track[^>]*src="/voz/${l.id}\\.vtt"`).test(html(rota))) {
+        problemas.push(`${rota}: o vídeo ${l.id} tem legendas em disco e nenhum <track> a apontar-lhes`)
+      }
+    }
+    legendas += 1
   }
 
   const totalSegundos = Object.values(medidas).reduce((s, m) => s + m.segundos, 0)

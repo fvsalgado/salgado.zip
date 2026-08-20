@@ -378,6 +378,18 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
    «Cartaz das Terças de Poesia Clandestina» dava uma figura de 48mm e a fila
    partia-se em três mais um, com um registo órfão na folha seguinte. Largura
    fixa: a legenda quebra dentro dela, e quatro figuras cabem numa linha. */
+/* A transcrição em texto, por baixo do leitor. Recuada e com um filete à
+   esquerda: lê-se como uma citação do que se ouve, que é o que é, e distingue-se
+   da prosa que descreve a peça sem precisar de um título a mais. */
+.transcricao { margin-top: 0.9rem; padding-left: 0.9rem; border-left: 2px solid var(--rule); }
+.transcricao__rotulo {
+  font-family: var(--mono);
+  font-size: var(--t-meta);
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin-bottom: 0.2rem;
+}
+
 .registos { display: flex; flex-wrap: wrap; gap: 1rem 1.2rem; margin-top: 1rem; }
 .registo-doc { margin: 0; break-inside: avoid; width: 13rem; }
 .registo-doc img {
