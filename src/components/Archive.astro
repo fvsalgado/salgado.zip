@@ -3,6 +3,7 @@ import Node from './Node.astro'
 import { projetos, leituras, posicoes, mandatos, formacao, contacto, ficheiros, medidasVoz, RUBRICA, CANONICO } from '../data'
 import { colofaoSite, codigoDoSite, licenca, notaCertificados } from '../data/textos.ts'
 import { privacidade, notaPrivacidade } from '../data/privacidade.ts'
+import { acessibilidade, notaAcessibilidade } from '../data/acessibilidade.ts'
 import type { Idioma } from '../data'
 import { t, periodo, periodoLongo, tamanho, estado, duracao, duracaoLonga, dataCurta } from '../data/formato'
 
@@ -27,6 +28,7 @@ interface Rotulos {
   formacao: string
   contacto: string
   privacidade: string
+  acessibilidade: string
   ficheiros: string
   colofao: string
   entradas: (n: number) => string
@@ -52,9 +54,6 @@ interface Rotulos {
   idiomas: string
   visitar: string
   codigoAberto: string
-  captura: string
-  capaDe: (obra: string, autoria: string) => string
-  fotograma: string
   notaFicheiros: string
   /** Os campos de uma leitura. */
   autor: string
@@ -77,7 +76,7 @@ interface Rotulos {
 const ROTULOS: Record<Idioma, Rotulos> = {
   pt: {
     projetos: 'projetos/', voz: 'voz/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/',
-    contacto: 'contacto/', privacidade: 'privacidade/', ficheiros: 'ficheiros/', colofao: 'colofão/',
+    contacto: 'contacto/', privacidade: 'privacidade/', acessibilidade: 'acessibilidade/', ficheiros: 'ficheiros/', colofao: 'colofão/',
     entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
     contaProjetos: 'projetos', contaLeituras: 'peças de voz', contaCargos: 'cargos', contaMandatos: 'mandatos',
     nascido: (ano) => `nascido em ${ano}`,
@@ -85,8 +84,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
     privado: 'privado, atrás de autenticação', codigo: 'código', licenca: 'licença',
     onde: 'onde', deOnde: 'de onde', idiomas: 'idiomas',
-    visitar: 'visitar', codigoAberto: 'código aberto', captura: 'Captura de ecrã de',
-    capaDe: (obra, autoria) => `Capa de «${obra}», de ${autoria}`, fotograma: 'Imagem de',
+    visitar: 'visitar', codigoAberto: 'código aberto',
     notaFicheiros: 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.',
     autor: 'autoria', rubricaLbl: 'rubrica', publicado: 'publicado', duracaoLbl: 'duração',
     ficheiroLbl: 'ficheiro', original: 'no editor', ouvir: 'Ouvir', ver: 'Ver', dimensoes: 'imagem',
@@ -97,7 +95,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
   },
   en: {
     projetos: 'projects/', voz: 'voice/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/',
-    contacto: 'contact/', privacidade: 'privacy/', ficheiros: 'files/', colofao: 'colophon/',
+    contacto: 'contact/', privacidade: 'privacy/', acessibilidade: 'accessibility/', ficheiros: 'files/', colofao: 'colophon/',
     entradas: (n) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
     contaProjetos: 'projects', contaLeituras: 'voice pieces', contaCargos: 'positions', contaMandatos: 'mandates',
     nascido: (ano) => `born ${ano}`,
@@ -105,8 +103,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
     privado: 'private, behind authentication', codigo: 'source', licenca: 'licence',
     onde: 'where', deOnde: 'from', idiomas: 'languages',
-    visitar: 'visit', codigoAberto: 'open source', captura: 'Screenshot of',
-    capaDe: (obra, autoria) => `Cover of “${obra}”, by ${autoria}`, fotograma: 'Still from',
+    visitar: 'visit', codigoAberto: 'open source',
     notaFicheiros: 'Every size above is read from the real file at build time. Nothing here is typed by hand.',
     autor: 'author', rubricaLbl: 'series', publicado: 'published', duracaoLbl: 'length',
     ficheiroLbl: 'file', original: 'at the publisher', ouvir: 'Listen to', ver: 'Watch', dimensoes: 'picture',
@@ -117,7 +114,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
   },
   fr: {
     projetos: 'projets/', voz: 'voix/', percurso: 'parcours/', mandatos: 'mandats/', formacao: 'certificats/',
-    contacto: 'contact/', privacidade: 'confidentialite/', ficheiros: 'fichiers/', colofao: 'colophon/',
+    contacto: 'contact/', privacidade: 'confidentialite/', acessibilidade: 'accessibilite/', ficheiros: 'fichiers/', colofao: 'colophon/',
     entradas: (n) => `${n} ${n === 1 ? 'entrée' : 'entrées'}`,
     contaProjetos: 'projets', contaLeituras: 'pièces de voix', contaCargos: 'postes', contaMandatos: 'mandats',
     nascido: (ano) => `né en ${ano}`,
@@ -125,8 +122,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     papel: 'rôle', periodo: 'période', stack: 'stack', endereco: 'adresse', acesso: 'accès',
     privado: 'privé, derrière une authentification', codigo: 'code', licenca: 'licence',
     onde: 'où', deOnde: 'd’où', idiomas: 'langues',
-    visitar: 'visiter', codigoAberto: 'code ouvert', captura: 'Capture d’écran de',
-    capaDe: (obra, autoria) => `Couverture de « ${obra} », de ${autoria}`, fotograma: 'Image de',
+    visitar: 'visiter', codigoAberto: 'code ouvert',
     notaFicheiros: 'Toutes les tailles ci-dessus sont lues sur le fichier réel au build. Rien ici n’est saisi à la main.',
     autor: 'auteur', rubricaLbl: 'rubrique', publicado: 'publié', duracaoLbl: 'durée',
     ficheiroLbl: 'fichier', original: 'chez l’éditeur', ouvir: 'Écouter', ver: 'Regarder', dimensoes: 'image',
@@ -137,7 +133,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
   },
   es: {
     projetos: 'proyectos/', voz: 'voz/', percurso: 'trayectoria/', mandatos: 'mandatos/', formacao: 'certificados/',
-    contacto: 'contacto/', privacidade: 'privacidad/', ficheiros: 'archivos/', colofao: 'colofón/',
+    contacto: 'contacto/', privacidade: 'privacidad/', acessibilidade: 'accesibilidad/', ficheiros: 'archivos/', colofao: 'colofón/',
     entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
     contaProjetos: 'proyectos', contaLeituras: 'piezas de voz', contaCargos: 'cargos', contaMandatos: 'mandatos',
     nascido: (ano) => `nacido en ${ano}`,
@@ -145,8 +141,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'dirección', acesso: 'acceso',
     privado: 'privado, tras autenticación', codigo: 'código', licenca: 'licencia',
     onde: 'dónde', deOnde: 'de dónde', idiomas: 'idiomas',
-    visitar: 'visitar', codigoAberto: 'código abierto', captura: 'Captura de pantalla de',
-    capaDe: (obra, autoria) => `Portada de «${obra}», de ${autoria}`, fotograma: 'Imagen de',
+    visitar: 'visitar', codigoAberto: 'código abierto',
     notaFicheiros: 'Todos los tamaños de arriba se leen del fichero real en el build. Nada aquí se escribe a mano.',
     autor: 'autoría', rubricaLbl: 'sección', publicado: 'publicado', duracaoLbl: 'duración',
     ficheiroLbl: 'fichero', original: 'en el editor', ouvir: 'Escuchar', ver: 'Ver', dimensoes: 'imagen',
@@ -227,14 +222,23 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                   e a descrição passa a viver dentro do nó aberto, com o resto.
                   Quem não tem captura — os dois de baixo — continua a mostrar a
                   descrição, que é melhor do que uma linha vazia. */}
+              {/* `alt=""`, e é a auditoria de acessibilidade de 20/08/2026 que
+                  o manda. A miniatura vive DENTRO do `<summary>`, e o texto
+                  alternativo de uma imagem dentro de um controlo entra no nome
+                  acessível desse controlo. Este dizia «Captura de ecrã de
+                  primeiraplateia.pt:» seguido da descrição inteira do projeto —
+                  a mesma que o resumo já diz em texto, dois centímetros à
+                  esquerda. Medido na árvore de acessibilidade: o nome deste
+                  controlo tinha 276 caracteres, e outros seis passavam dos 140.
+                  Quem navega por teclado ouvia um parágrafo por linha.
+
+                  Uma imagem ao lado de texto que já a identifica é decorativa.
+                  Nada se perde: o domínio, o papel, as datas e a descrição
+                  estão todos no resumo, e a descrição repete-se por extenso
+                  dentro do nó aberto. */}
               {p.shot !== null ? (
                 <span class="shot shot--resumo">
-                  <img
-                    src={`/shots/${p.shot}`}
-                    alt={`${rot.captura} ${p.dominio}: ${t(p.linha, idioma)}`}
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <img src={`/shots/${p.shot}`} alt="" loading="lazy" decoding="async" />
                 </span>
               ) : (
                 <span class="linha__desc">{t(p.linha, idioma)}</span>
@@ -244,13 +248,20 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                 dois controlos aninhados são um `nested-interactive` do axe, e um
                 leitor de ecrã absorve-os no nome do resumo em vez de os expor.
                 Aqui dentro são links normais, e com área de toque a sério. */}
+            {/* O nome acessível leva o domínio. Cinco ligações chamavam-se
+                todas «visitar ↗», e quem navega pela lista de ligações de um
+                leitor de ecrã — que é como muita gente navega — recebia cinco
+                entradas iguais para cinco sítios diferentes. Em contexto o
+                critério 2.4.4 cumpre-se, porque cada uma está dentro do nó que
+                a nomeia; fora de contexto, não dizia nada. O texto visível
+                continua curto. */}
             {((p.url !== null && p.url !== CANONICO) || p.codigo !== null) && (
               <p class="linha__ligacoes">
                 {p.url !== null && p.url !== CANONICO && (
-                  <a href={p.url} rel="noopener">{rot.visitar} ↗</a>
+                  <a href={p.url} rel="noopener" aria-label={`${rot.visitar} ${p.dominio}`}>{rot.visitar} ↗</a>
                 )}
                 {p.codigo !== null && (
-                  <a href={p.codigo} rel="noopener">{rot.codigoAberto} ↗</a>
+                  <a href={p.codigo} rel="noopener" aria-label={`${rot.codigoAberto} — ${p.dominio}`}>{rot.codigoAberto} ↗</a>
                 )}
               </p>
             )}
@@ -348,23 +359,20 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                     controlo dentro de um controlo — o `nested-interactive` do
                     axe — e um leitor de ecrã engole-o no nome do resumo. O
                     leitor fica no corpo, a um clique de distância. */}
+                {/* Decorativas pela mesma razão das capturas: estão dentro do
+                    `<summary>` e o que diriam já lá está em texto. A da leitura
+                    em palco era o caso mais claro — a MESMA imagem aparecia
+                    duas vezes na página com o mesmo texto alternativo, aqui e
+                    ao tamanho a que foi feita lá dentro, e um leitor de ecrã
+                    lia a descrição duas vezes. A do vídeo dizia «Imagem de
+                    Transborda 2025», que não descreve nada. */}
                 {l.capa !== null ? (
                   <span class="capa capa--resumo">
-                    <img
-                      src={`/capas/${l.capa.ficheiro}`}
-                      alt={rot.capaDe(l.capa.obra, l.autoria)}
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    <img src={`/capas/${l.capa.ficheiro}`} alt="" loading="lazy" decoding="async" />
                   </span>
                 ) : l.imagens.length > 0 ? (
                   <span class="capa capa--resumo">
-                    <img
-                      src={`/voz/${l.imagens[0].ficheiro}`}
-                      alt={t(l.imagens[0].alt, idioma)}
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    <img src={`/voz/${l.imagens[0].ficheiro}`} alt="" loading="lazy" decoding="async" />
                   </span>
                 ) : l.formato === 'video' ? (
                   <span class="capa capa--resumo">
@@ -373,12 +381,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                         exportada a 960×540 venha ele de onde vier. Como o CSS
                         fixa a altura, o que falta declarar é a largura, e essa
                         não desloca nada por baixo. */}
-                    <img
-                      src={`/voz/${l.id}.webp`}
-                      alt={`${rot.fotograma} ${l.titulo}`}
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    <img src={`/voz/${l.id}.webp`} alt="" loading="lazy" decoding="async" />
                   </span>
                 ) : null}
               </Fragment>
@@ -400,7 +403,14 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                   {l.imagens.map((img) => (
                     <figure class="registo__peca">
                       <img src={`/voz/${img.ficheiro}`} alt={t(img.alt, idioma)} loading="lazy" decoding="async" />
-                      <figcaption>{img.credito}</figcaption>
+                      {/* O crédito é escrito em português e não se traduz: é
+                          uma linha de crédito de um contexto português. Numa
+                          página que não é portuguesa isso obriga a declarar a
+                          língua — critério 3.1.2 —, senão um leitor de ecrã
+                          inglês diz «Fotografia» com fonética inglesa. Os
+                          títulos de obra e os nomes das casas ficam sem marca
+                          por serem nomes próprios, que a norma isenta. */}
+                      <figcaption lang={idioma === 'pt' ? undefined : 'pt'}>{img.credito}</figcaption>
                     </figure>
                   ))}
                 </div>
@@ -475,7 +485,9 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                 {l.imagens.length > 0 && (
                   <>
                     <dt>{rot.imagensLbl}</dt>
-                    <dd>{[...new Set(l.imagens.map((i) => i.credito))].join(' · ')}</dd>
+                    <dd lang={idioma === 'pt' ? undefined : 'pt'}>
+                      {[...new Set(l.imagens.map((i) => i.credito))].join(' · ')}
+                    </dd>
                   </>
                 )}
                 <dt>{palco ? rot.paginaLbl : rot.original}</dt>
@@ -525,10 +537,16 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                     que foi o que obrigou a envolver a captura num `<span>`. */}
                 {p.logo && (
                   <span class="marca-org marca-org--resumo">
+                    {/* Decorativo, pelo mesmo argumento que já valia para a camada a
+                        cores, um passo mais atrás: quem nomeia a casa é o TEXTO do
+                        resumo, que diz «Consultor de Public Affairs · ATREVIA 2022 →»
+                        dois centímetros à direita. Com o nome no `alt`, um leitor de
+                        ecrã anunciava «ATREVIA Consultor de Public Affairs · ATREVIA»
+                        — a casa duas vezes antes de dizer o cargo. */}
                     <img
                       class="marca-org__base"
                       src={`/logos/${p.logo}`}
-                      alt={p.organizacao}
+                      alt=""
                       loading="lazy"
                       decoding="async"
                     />
@@ -660,6 +678,23 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
     <p class="no__texto no__texto--nota">{t(notaPrivacidade, idioma)}</p>
     <dl class="no__campos">
       {privacidade.map((c) => (
+        <>
+          <dt>{t(c.rotulo, idioma)}</dt>
+          <dd>{t(c.texto, idioma)}</dd>
+        </>
+      ))}
+    </dl>
+  </Node>
+
+  {/* A seguir à privacidade, e não dentro dela como esteve: são a mesma
+      promessa — o que o sítio faz a quem o lê, dito de maneira a poder ser
+      conferido — mas uma declaração de conformidade com nível, método, data e
+      não-conformidades nomeadas não cabia num campo de outro nó. E assim as
+      duas ligações do rodapé passam a ter destinos próprios. */}
+  <Node id="acessibilidade" nivel={2} nome={rot.acessibilidade}>
+    <p class="no__texto no__texto--nota">{t(notaAcessibilidade, idioma)}</p>
+    <dl class="no__campos">
+      {acessibilidade.map((c) => (
         <>
           <dt>{t(c.rotulo, idioma)}</dt>
           <dd>{t(c.texto, idioma)}</dd>
