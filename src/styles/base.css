@@ -47,6 +47,28 @@ a {
 }
 a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentColor; }
 
+/* A seta das ligações que saem do sítio. Quem a desenha é o Externo.astro (e o
+   Node.astro, para as linhas de credencial): aqui só se lhe dá a forma.
+
+   `inline-block` não é feitio, é o que a tira do sublinhado. Uma decoração de
+   texto propaga-se aos descendentes em fluxo e o filho não a consegue recusar —
+   `text-decoration: none` aqui não faria nada. Uma caixa em linha-bloco é
+   atómica e a propagação pára nela, e a seta deixa de ficar riscada por baixo.
+
+   A margem é pequena e não é zero, e isso viu-se em vez de se ter suposto. Sem
+   ela a seta encosta à última letra e, no mono das linhas de credencial, lê-se
+   como um apóstrofo — «Politics'» em vez de «Politics ↗». Grande de mais
+   afastava-se para o outro lado e passava a ler-se como um símbolo à parte. Vai
+   em margem e não em espaço porque uma margem não abre por onde mudar de linha:
+   com um espaço, a seta ia sozinha para o início da linha seguinte. */
+.seta-fora {
+  display: inline-block;
+  margin-left: 0.12em;
+  font-size: 0.85em;
+  line-height: 1;
+  vertical-align: 0.1em;
+}
+
 /* ── Estrutura ───────────────────────────────────────────────────────────── */
 .folha {
   max-width: var(--larg);

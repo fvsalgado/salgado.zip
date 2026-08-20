@@ -50,8 +50,13 @@
   .entrada--linha, .no, .captura { break-inside: avoid; }
 
   /* Ligações a preto e sem sublinhado: o endereço já é o texto visível, e
-     repeti-lo entre parênteses depois de cada uma sujava a página inteira. */
+     repeti-lo entre parênteses depois de cada uma sujava a página inteira.
+
+     Pela mesma razão sai a seta das que saem do sítio: no ecrã avisa que se vai
+     abrir uma janela, e numa folha de papel não há janela nenhuma para abrir —
+     ficava um símbolo a mais no fim de cada certificado. */
   a { color: inherit; text-decoration: none; }
+  .seta-fora { display: none; }
 
   /* ── Cabeça do documento ───────────────────────────────────────────────── */
   /* A apresentação corre à volta do retrato em vez de ficar ao lado dele.

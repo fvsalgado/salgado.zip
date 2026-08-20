@@ -16,6 +16,7 @@ import { cabecalho, projetos, leituras, posicoes, mandatos, formacao, contacto, 
 import { colofaoDocumento, notaCertificados } from '../data/textos.ts'
 import type { Idioma } from '../data'
 import { t, periodoLongo, estado } from '../data/formato'
+import Externo from './Externo.astro'
 
 interface Props { idioma: Extract<Idioma, 'pt' | 'en'> }
 const { idioma } = Astro.props
@@ -171,8 +172,10 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
     <div class="tarja__campos">
       <p>
         {contacto.email && <a href={`mailto:${contacto.email}`}>{contacto.email}</a>}
-        {contacto.linkedin && <a href={contacto.linkedin} rel="noopener">{curto(contacto.linkedin)}</a>}
-        <a href="https://salgado.zip">salgado.zip</a>
+        {contacto.linkedin && (
+          <Externo href={contacto.linkedin} nome={curto(contacto.linkedin)} idioma={idioma} />
+        )}
+        <a href={CANONICO}>salgado.zip</a>
       </p>
       <p class="tarja__onde">{t(contacto.concelho, idioma)} · {t(contacto.naturalidade, idioma)}</p>
     </div>
@@ -205,7 +208,9 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
       projetos.map((p) => (
         <div class="entrada" id={`d-${p.id}`}>
           <div class="entrada__cabeca">
-            <h3>{p.url !== null ? <a href={p.url} rel="noopener">{p.dominio}</a> : p.dominio}</h3>
+            <h3>
+              {p.url !== null ? <Externo href={p.url} nome={p.dominio} idioma={idioma} /> : p.dominio}
+            </h3>
             <span class="entrada__quando">
               {p.periodo ? periodoLongo(p.periodo, idioma) : ''}
               {/* «em curso · ativo» dizia duas vezes a mesma coisa: só o privado acrescenta. */}
@@ -323,7 +328,7 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
                 {f.credencial === null ? (
                   t(f.curso, idioma)
                 ) : (
-                  <a href={f.credencial} rel="noopener">{t(f.curso, idioma)}</a>
+                  <Externo href={f.credencial} nome={t(f.curso, idioma)} idioma={idioma} />
                 )}
               </h3>
               <span class="entrada__quando">{periodoLongo(f.periodo, idioma)}</span>
