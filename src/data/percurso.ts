@@ -153,16 +153,27 @@ export const posicoes = parse(Posicao.array(), [
  * O LinkedIn tem vinte e nove, e vinte e sete deles foram tirados entre
  * setembro e novembro de 2024. Publicados todos, é isso que se lê primeiro —
  * uma maratona de três meses — e os que valem alguma coisa desaparecem no
- * meio. Seis lidos como escolha dizem mais do que vinte e nove lidos como
+ * meio. Oito lidos como escolha dizem mais do que vinte e nove lidos como
  * pilha, e as datas continuam à vista para quem as quiser somar.
  *
- * O critério foi um só: fazem as duas metades do ofício que está no topo da
- * página. POLÍTICA PÚBLICA E ADVOCACIA — Yale, o centro de formação da OIT, e
+ * O critério foi um só: fazem o ofício que está no topo da página.
+ * POLÍTICA PÚBLICA E ADVOCACIA — Yale, o centro de formação da OIT, e
  * Michigan. COMUNICAÇÃO INSTITUCIONAL — UC Irvine, o certificado profissional
- * de relações públicas, e a IESE. É o que «public affairs» quer dizer, e é o
- * que a listagem passa a mostrar sem ter de o explicar.
+ * de relações públicas, e a IESE. GERIR O QUE SE DEFENDE — a gestão de
+ * projetos da Google e a organização da London Business School: uma campanha
+ * de assuntos públicos é um programa com prazos, riscos e gente, e essa parte
+ * também se aprende.
  *
- * Três dos seis são programas de vários cursos e não cursos soltos, e todos
+ * As duas últimas entraram por decisão do Fábio a 20/08/2026, depois de eu
+ * lhas ter apontado como as duas exclusões mais discutíveis das vinte e três.
+ * Eu tinha-as cortado por competirem com prova vivida — quem funda e gere
+ * projetos há dez anos não precisa de um certificado que diga que sabe geri-los
+ * —, e o argumento do outro lado é bom: são as duas de emissores de topo, as
+ * duas são programas de vários cursos, e nomeiam uma competência que um júri
+ * de recrutamento procura por escrito mesmo quando a vê provada em obra. Fica
+ * escrito quem decidiu, que é o que separa uma escolha de um acidente.
+ *
+ * Cinco dos oito são programas de vários cursos e não cursos soltos, e todos
  * os emissores são casas que quem lê reconhece sem ter de procurar.
  *
  * O que ficou de fora, e porquê: turismo, gentrificação, gestão de eventos,
@@ -256,5 +267,32 @@ export const formacao = parse(Formacao.array(), [
     instituicao: 'University of Michigan',
     periodo: { inicio: '2024-09', fim: '2024-09' },
     credencial: 'https://www.coursera.org/account/accomplishments/verify/7TNLCAUMTMAH',
+  },
+  {
+    id: 'google-project-management',
+    curso: {
+      pt: 'Project Management',
+      en: 'Project Management',
+      fr: 'Project Management',
+      es: 'Project Management',
+    },
+    // Sem «Google» no nome do curso: a coluna do lado já diz de quem é, e
+    // «Google Project Management · Google» gagueja. A mesma razão que tirou o
+    // «Microsoft» ao certificado de relações públicas.
+    instituicao: 'Google',
+    periodo: { inicio: '2024-09', fim: '2024-09' },
+    credencial: 'https://www.coursera.org/account/accomplishments/professional-cert/XF2W2PIEBHSB',
+  },
+  {
+    id: 'lbs-future-ready',
+    curso: {
+      pt: 'Future Ready Company',
+      en: 'Future Ready Company',
+      fr: 'Future Ready Company',
+      es: 'Future Ready Company',
+    },
+    instituicao: 'London Business School',
+    periodo: { inicio: '2024-09', fim: '2024-09' },
+    credencial: 'https://www.coursera.org/account/accomplishments/specialization/2WP0O96SG206',
   },
 ], 'percurso.formacao')
