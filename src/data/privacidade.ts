@@ -42,10 +42,10 @@ export const privacidade = parse(Campo.array().min(1), [
   {
     rotulo: { pt: 'responsável', en: 'controller', fr: 'responsable', es: 'responsable' },
     texto: {
-      pt: 'Fábio Salgado, a título pessoal. O contacto está no nó acima.',
-      en: 'Fábio Salgado, in a personal capacity. The contact is in the node above.',
-      fr: 'Fábio Salgado, à titre personnel. Le contact se trouve dans le nœud ci-dessus.',
-      es: 'Fábio Salgado, a título personal. El contacto está en el nodo de arriba.',
+      pt: 'Fábio Salgado, a título pessoal. O contacto está no nó do contacto.',
+      en: 'Fábio Salgado, in a personal capacity. The contact is in the contact node.',
+      fr: 'Fábio Salgado, à titre personnel. Le contact se trouve dans le nœud contact.',
+      es: 'Fábio Salgado, a título personal. El contacto está en el nodo de contacto.',
     },
   },
   {
