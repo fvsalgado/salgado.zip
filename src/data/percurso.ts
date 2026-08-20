@@ -147,6 +147,41 @@ export const posicoes = parse(Posicao.array(), [
  * estudado, e não foi isso que aconteceu. O rótulo tem de dizer a verdade
  * sozinho, sem depender de quem lê abrir e reparar.
  */
+/**
+ * Os certificados, escolhidos e não despejados.
+ *
+ * O LinkedIn tem vinte e nove, e vinte e sete deles foram tirados entre
+ * setembro e novembro de 2024. Publicados todos, é isso que se lê primeiro —
+ * uma maratona de três meses — e os que valem alguma coisa desaparecem no
+ * meio. Seis lidos como escolha dizem mais do que vinte e nove lidos como
+ * pilha, e as datas continuam à vista para quem as quiser somar.
+ *
+ * O critério foi um só: fazem as duas metades do ofício que está no topo da
+ * página. POLÍTICA PÚBLICA E ADVOCACIA — Yale, o centro de formação da OIT, e
+ * Michigan. COMUNICAÇÃO INSTITUCIONAL — UC Irvine, o certificado profissional
+ * de relações públicas, e a IESE. É o que «public affairs» quer dizer, e é o
+ * que a listagem passa a mostrar sem ter de o explicar.
+ *
+ * Três dos seis são programas de vários cursos e não cursos soltos, e todos
+ * os emissores são casas que quem lê reconhece sem ter de procurar.
+ *
+ * O que ficou de fora, e porquê: turismo, gentrificação, gestão de eventos,
+ * Linux, dois da Adobe, dois de IA, cibersegurança, três do KAICIID, dois da
+ * Fundação Aga Khan, género na educação, desinformação, governação. Nenhum é
+ * mau; todos ou saem do eixo, ou provam pior o que o resto da página já prova
+ * melhor — quem produz espetáculos há dez anos não precisa de um certificado
+ * de gestão de eventos, e quem construiu este sítio não precisa de um de
+ * fundamentos de design.
+ *
+ * Dois casos à parte: o EF SET C2 não está aqui porque já está no nó do
+ * contacto, que é onde uma língua pertence; e a formação de delegado de
+ * segurança contra incêndio, de 2019, é uma qualificação a sério mas serve um
+ * perfil que esta página já não apresenta.
+ *
+ * As credenciais foram conferidas uma a uma a 20/08/2026, e o teste não foi
+ * «a página responde» — foi «a página nomeia-o». Uma credencial inventada na
+ * Coursera devolve 200 e uma página bonita; o que ela não devolve é o nome.
+ */
 export const formacao = parse(Formacao.array(), [
   {
     id: 'yale-moral-foundations',
@@ -158,6 +193,31 @@ export const formacao = parse(Formacao.array(), [
     },
     instituicao: 'Yale University',
     periodo: { inicio: '2024-11', fim: '2024-11' },
+    credencial: 'https://www.coursera.org/account/accomplishments/verify/TNN97YY02RWX',
+  },
+  {
+    id: 'uci-corporate-communications',
+    curso: {
+      pt: 'Corporate Communications',
+      en: 'Corporate Communications',
+      fr: 'Corporate Communications',
+      es: 'Corporate Communications',
+    },
+    instituicao: 'University of California, Irvine',
+    periodo: { inicio: '2024-11', fim: '2024-11' },
+    credencial: 'https://www.coursera.org/account/accomplishments/specialization/ZX91VP5BF59S',
+  },
+  {
+    id: 'microsoft-public-relations',
+    curso: {
+      pt: 'Public Relations and Communications Associate',
+      en: 'Public Relations and Communications Associate',
+      fr: 'Public Relations and Communications Associate',
+      es: 'Public Relations and Communications Associate',
+    },
+    instituicao: 'Microsoft',
+    periodo: { inicio: '2024-10', fim: '2024-10' },
+    credencial: 'https://www.coursera.org/account/accomplishments/professional-cert/YQ0ZB227GS6L',
   },
   {
     id: 'itcilo-lobbying',
@@ -169,6 +229,21 @@ export const formacao = parse(Formacao.array(), [
     },
     instituicao: 'Centro Internacional de Formação da OIT (ITCILO)',
     periodo: { inicio: '2024-09', fim: '2024-09' },
+    // Emite código de credencial — 115406363 — mas não publica página onde ele
+    // se confirme. Fica sem ligação, que é o que é verdade.
+    credencial: null,
+  },
+  {
+    id: 'iese-communicating-presence',
+    curso: {
+      pt: 'Communicating with Presence',
+      en: 'Communicating with Presence',
+      fr: 'Communicating with Presence',
+      es: 'Communicating with Presence',
+    },
+    instituicao: 'IESE Business School',
+    periodo: { inicio: '2024-09', fim: '2024-09' },
+    credencial: 'https://www.coursera.org/account/accomplishments/specialization/IK0J8UUOCWOQ',
   },
   {
     id: 'michigan-public-policy',
@@ -180,5 +255,6 @@ export const formacao = parse(Formacao.array(), [
     },
     instituicao: 'University of Michigan',
     periodo: { inicio: '2024-09', fim: '2024-09' },
+    credencial: 'https://www.coursera.org/account/accomplishments/verify/7TNLCAUMTMAH',
   },
 ], 'percurso.formacao')

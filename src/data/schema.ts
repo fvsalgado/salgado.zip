@@ -314,6 +314,18 @@ export const Formacao = z.object({
   curso: Lang,
   instituicao: z.string().min(1),
   periodo: Periodo,
+  /**
+   * A página onde a credencial se confirma, e não a página do curso.
+   *
+   * A diferença é tudo: uma página de curso descreve o que o curso ensina e
+   * qualquer pessoa lhe pode apontar; uma página de credencial nomeia quem a
+   * tirou. Num sítio cuja regra é não publicar o que não se pode conferir, uma
+   * lista de certificados sem isto era a secção mais fraca da página.
+   *
+   * `null` onde não há — o ITCILO emite código de credencial mas não publica
+   * página para ele, e inventar uma era pior do que não ter nenhuma.
+   */
+  credencial: HttpsUrl.nullable(),
 })
 export type Formacao = z.infer<typeof Formacao>
 
