@@ -154,6 +154,14 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
 .arvore { list-style: none; padding: 0; font-family: var(--mono); font-size: var(--t-mono); }
 [data-arvore] > .no + .no { margin-top: 0.5rem; }
 .arvore--filha { margin-left: var(--recuo); }
+/* A folga por cima só existe quando a árvore filha vem depois de outra coisa —
+   dentro do colofão vem a seguir aos campos do código e da licença, e sem ela
+   a ligação da licença ficava a menos de 24px do centro da primeira linha
+   filha. A verificação 17 apanhou isso no minuto em que a árvore mudou de
+   forma, com o `target-size` do axe: alvos pequenos precisam de folga, e a
+   folga é isto. Onde a árvore filha é a primeira coisa do corpo — nos
+   ficheiros, na formação — o seletor não casa e nada muda. */
+.no__corpo > * + .arvore--filha { margin-top: 1.1rem; }
 
 .no { position: relative; }
 

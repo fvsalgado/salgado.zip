@@ -694,63 +694,20 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
     </dl>
   </Node>
 
-  {/* A seguir ao contacto de propósito: o campo «responsável» remete para o
-      endereço que está no nó de cima, e um leitor que salte para aqui a partir
-      do rodapé encontra os dois juntos. */}
-  <Node id="privacidade" nivel={2} nome={rot.privacidade}>
-    <p class="no__texto no__texto--nota">{t(notaPrivacidade, idioma)}</p>
-    <dl class="no__campos">
-      {privacidade.map((c) => (
-        <>
-          <dt>{t(c.rotulo, idioma)}</dt>
-          <dd>{t(c.texto, idioma)}</dd>
-        </>
-      ))}
-    </dl>
-  </Node>
+  {/* ── O último nó, e o que ele passou a guardar ──────────────────────
+      Estavam quatro nós seguidos no fim da árvore — privacidade, acessibilidade,
+      ficheiros e colofão — e os quatro respondiam à mesma pergunta: o que é
+      este sítio, como é feito, o que faz a quem o lê e o que se pode levar
+      dele. Quatro linhas para uma pergunta é a listagem a dizer que são quatro
+      assuntos quando é um.
 
-  {/* A seguir à privacidade, e não dentro dela como esteve: são a mesma
-      promessa — o que o sítio faz a quem o lê, dito de maneira a poder ser
-      conferido — mas uma declaração de conformidade com nível, método, data e
-      não-conformidades nomeadas não cabia num campo de outro nó. E assim as
-      duas ligações do rodapé passam a ter destinos próprios. */}
-  <Node id="acessibilidade" nivel={2} nome={rot.acessibilidade}>
-    <p class="no__texto no__texto--nota">{t(notaAcessibilidade, idioma)}</p>
-    <dl class="no__campos">
-      {acessibilidade.map((c) => (
-        <>
-          <dt>{t(c.rotulo, idioma)}</dt>
-          <dd>{t(c.texto, idioma)}</dd>
-        </>
-      ))}
-    </dl>
-  </Node>
+      Ficam dentro do colofão, que é a palavra que a tipografia tem para
+      exatamente isto: a nota no fim de um livro que diz como o livro foi feito.
+      Na web o costume alargou-a às políticas da casa, e alargá-la aos ficheiros
+      não custa nada — as quatro saídas são as edições da mesma obra.
 
-  <Node
-    id="ficheiros"
-    nivel={2}
-    nome={rot.ficheiros}
-    colunas={[{ classe: 'nota', valor: rot.entradas(ficheiros.length) }]}
-  >
-    <ul class="arvore arvore--filha" role="list">
-      {
-        ficheiros.map((f) => (
-          <Node
-            id={f.id}
-            nome={f.nome}
-            href={f.href}
-            colunas={[{ classe: 'tam', valor: tamanho(f.bytes) }]}
-          >
-            <Fragment slot="resumo">
-              <span class="linha__desc">{t(f.descricao, idioma)}</span>
-            </Fragment>
-          </Node>
-        ))
-      }
-    </ul>
-    <p class="no__texto no__texto--nota">{rot.notaFicheiros}</p>
-  </Node>
-
+      O código e a licença já viviam aqui em campos próprios, e é por isso que
+      o rodapé podia apontar-lhes: não se mudou nada para isso ser verdade. */}
   <Node id="colofao" nivel={2} nome={rot.colofao}>
     <div class="no__texto">
       {colofaoSite.map((l) => <p>{t(l, idioma)}</p>)}
@@ -761,5 +718,56 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
       <dt>{rot.licenca}</dt>
       <dd><a href={licenca.url} rel="noopener">{licenca.nome}</a></dd>
     </dl>
+
+    <ul class="arvore arvore--filha" role="list">
+      <Node
+        id="ficheiros"
+        nivel={3}
+        nome={rot.ficheiros}
+        colunas={[{ classe: 'nota', valor: rot.entradas(ficheiros.length) }]}
+      >
+        <ul class="arvore arvore--filha" role="list">
+          {
+            ficheiros.map((f) => (
+              <Node
+                id={f.id}
+                nome={f.nome}
+                href={f.href}
+                colunas={[{ classe: 'tam', valor: tamanho(f.bytes) }]}
+              >
+                <Fragment slot="resumo">
+                  <span class="linha__desc">{t(f.descricao, idioma)}</span>
+                </Fragment>
+              </Node>
+            ))
+          }
+        </ul>
+        <p class="no__texto no__texto--nota">{rot.notaFicheiros}</p>
+      </Node>
+
+      <Node id="privacidade" nivel={3} nome={rot.privacidade}>
+        <p class="no__texto no__texto--nota">{t(notaPrivacidade, idioma)}</p>
+        <dl class="no__campos">
+          {privacidade.map((c) => (
+            <>
+              <dt>{t(c.rotulo, idioma)}</dt>
+              <dd>{t(c.texto, idioma)}</dd>
+            </>
+          ))}
+        </dl>
+      </Node>
+
+      <Node id="acessibilidade" nivel={3} nome={rot.acessibilidade}>
+        <p class="no__texto no__texto--nota">{t(notaAcessibilidade, idioma)}</p>
+        <dl class="no__campos">
+          {acessibilidade.map((c) => (
+            <>
+              <dt>{t(c.rotulo, idioma)}</dt>
+              <dd>{t(c.texto, idioma)}</dd>
+            </>
+          ))}
+        </dl>
+      </Node>
+    </ul>
   </Node>
 </ul>
