@@ -20,7 +20,8 @@ import { lerMp3 } from './mp3-ler.mjs'
 import { lerMp4 } from './mp4-ler.mjs'
 import { definicoes } from '../src/data/ficheiros.ts'
 import { IDIOMAS, LINGUAS } from '../src/data/idiomas.ts'
-import { posicoes } from '../src/data/percurso.ts'
+import { posicoes, formacao } from '../src/data/percurso.ts'
+import { cabecalho } from '../src/data/cabecalho.ts'
 import { contacto } from '../src/data/contacto.ts'
 import { projetos } from '../src/data/projetos.ts'
 import { leituras } from '../src/data/voz.ts'
@@ -778,6 +779,29 @@ function imagensPorPagina(buf) {
   }
   if (contacto.email === null) problemas.push('src/data/contacto.ts: email por confirmar')
   if (contacto.linkedin === null) problemas.push('src/data/contacto.ts: linkedin por confirmar')
+  /* As credenciais dos certificados. Não basta a página responder: a Coursera
+     é uma aplicação de página única e devolve 200 com uma página bonita a
+     qualquer código inventado — testei com um. O que distingue uma credencial
+     real de uma inventada é o NOME de quem a tirou, e é isso que se procura.
+
+     Conferidas à mão a 20/08/2026 e agora a cada publicação, porque um sítio
+     que publica uma ligação de prova tem de saber o dia em que ela morrer. */
+  for (const f of formacao.filter((x) => x.credencial !== null)) {
+    try {
+      const r = await fetch(f.credencial, { redirect: 'follow' })
+      if (!r.ok) {
+        problemas.push(`${f.id}: a credencial devolveu ${r.status}`)
+        continue
+      }
+      const corpo = await r.text()
+      const apelido = cabecalho.nome.split(' ').pop()
+      if (!corpo.includes(apelido)) {
+        problemas.push(`${f.id}: a credencial responde mas não nomeia «${apelido}» — pode ter deixado de existir`)
+      }
+    } catch (e) {
+      problemas.push(`${f.id}: não consegui abrir a credencial (${e.message})`)
+    }
+  }
   decide('conteúdo confirmado (percurso e contacto)', problemas)
 }
 

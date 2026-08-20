@@ -636,10 +636,14 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
         colunas={[{ classe: 'nota', valor: rot.entradas(formacao.length) }]}
       >
         <ul class="arvore arvore--filha" role="list">
+          {/* O nome do curso leva à credencial onde ela existe. Não à página do
+              curso — essa descreve o que se ensina e qualquer pessoa lhe pode
+              apontar; a da credencial é a que nomeia quem a tirou. */}
           {formacao.map((f) => (
             <Node
               id={f.id}
               nome={t(f.curso, idioma)}
+              href={f.credencial ?? undefined}
               colunas={[
                 { classe: 'papel', valor: f.instituicao },
                 { classe: 'periodo', valor: periodo(f.periodo) },

@@ -314,7 +314,18 @@ const curto = (u: string) => u.replace(/^https:\/\/(www\.)?/, '')
         {formacao.map((f) => (
           <div class="entrada entrada--linha" id={`d-${f.id}`}>
             <div class="entrada__cabeca">
-              <h3>{t(f.curso, idioma)}</h3>
+              {/* No papel a ligação não se vê — o print.css tira-lhe cor e
+                  sublinhado —, mas o PDF guarda-a: quem abrir o documento no
+                  ecrã carrega no nome do curso e cai na credencial. Um
+                  currículo que se lê num leitor de PDF é o caso normal, e é
+                  onde uma prova a um clique vale mais. */}
+              <h3>
+                {f.credencial === null ? (
+                  t(f.curso, idioma)
+                ) : (
+                  <a href={f.credencial} rel="noopener">{t(f.curso, idioma)}</a>
+                )}
+              </h3>
               <span class="entrada__quando">{periodoLongo(f.periodo, idioma)}</span>
             </div>
             <p class="entrada__onde">{f.instituicao}</p>
