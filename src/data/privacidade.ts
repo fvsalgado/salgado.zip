@@ -22,13 +22,11 @@ import { Lang, parse } from './schema.ts'
  * já se percebia, «e não sobrevive de um dia para o outro» a dizer segunda vez
  * o que «24 horas» diz.
  *
- * O sétimo campo não é do RGPD: é a ACESSIBILIDADE, e está aqui porque é a
- * mesma promessa noutra matéria — o que o sítio faz a quem o lê, dito de
- * maneira a poder ser conferido. Cada afirmação dele tem um sítio no código
- * onde se confirma: o atalho e o foco no base.css, o contraste na verificação
- * 5, o funcionamento sem JavaScript na 4, a paragem das animações na consulta
- * a `prefers-reduced-motion`. O que não se pode provar — uma auditoria formal
- * — diz-se que não existe, em vez de se ficar calado sobre isso.
+ * A ACESSIBILIDADE esteve aqui como sétimo campo e mudou-se para nó próprio a
+ * 20/08/2026, quando a frase «auditoria formal não há» deixou de ser verdade.
+ * Uma frase cabia num campo; uma declaração de conformidade com nível, método,
+ * data e não-conformidades nomeadas, não. Ficam os seis deveres do artigo 13.º,
+ * que é o que este nó é.
  */
 
 const Campo = z.object({ rotulo: Lang, texto: Lang })
@@ -93,20 +91,6 @@ export const privacidade = parse(Campo.array().min(1), [
       en: 'Access, rectification, erasure, restriction, objection and portability: write to the address above. If I do not resolve it, you may complain to the Portuguese data protection authority (CNPD).',
       fr: 'Accès, rectification, effacement, limitation, opposition et portabilité : écrivez à l’adresse ci-dessus. Si je ne règle pas la question, vous pouvez saisir la CNPD.',
       es: 'Acceso, rectificación, supresión, limitación, oposición y portabilidad: escribe a la dirección de arriba. Si no lo resuelvo, puedes reclamar ante la CNPD.',
-    },
-  },
-  {
-    rotulo: {
-      pt: 'acessibilidade',
-      en: 'accessibility',
-      fr: 'accessibilité',
-      es: 'accesibilidad',
-    },
-    texto: {
-      pt: 'Funciona sem JavaScript, tem atalho para o conteúdo e o foco do teclado é sempre visível. O contraste é medido nos dois temas contra a norma AA, e as animações param quando o sistema o pede. Auditoria formal não há: se encontrares uma barreira, escreve-me e corrijo-a.',
-      en: 'It works without JavaScript, has a skip-to-content link, and the keyboard focus is always visible. Contrast is measured against AA in both themes, and animation stops when the system asks for it. There is no formal audit: if you hit a barrier, write to me and I will fix it.',
-      fr: 'Il fonctionne sans JavaScript, propose un lien d’évitement vers le contenu et le focus clavier reste toujours visible. Le contraste est mesuré face à la norme AA dans les deux thèmes, et les animations s’arrêtent si le système le demande. Il n’y a pas d’audit formel : si vous rencontrez un obstacle, écrivez-moi et je le corrige.',
-      es: 'Funciona sin JavaScript, tiene enlace para saltar al contenido y el foco del teclado siempre se ve. El contraste se mide contra la norma AA en los dos temas, y las animaciones paran cuando el sistema lo pide. Auditoría formal no hay: si encuentras una barrera, escríbeme y la corrijo.',
     },
   },
 ], 'privacidade')

@@ -743,6 +743,78 @@ function imagensPorPagina(buf) {
   decide('conteúdo confirmado (percurso e contacto)', problemas)
 }
 
+/* ══ 17. Acessibilidade: auditoria a cada publicação ════════════════════
+   A nota de acessibilidade do site dizia «auditoria formal não há». Passou a
+   haver, e a maneira de ela continuar verdadeira não é um relatório com data —
+   é isto, a correr antes de cada publicação.
+
+   Duas exigências, e as duas saem do que a auditoria de 20/08/2026 encontrou.
+
+   A PRIMEIRA é o axe-core com o conjunto WCAG 2.0/2.1/2.2 até AA, em todas as
+   rotas publicadas, nos dois temas, com a árvore fechada e aberta. Fechada e
+   aberta porque metade do conteúdo do sítio vive dentro de `<details>`, e o
+   que está fechado não existe para quem audita — auditar só o estado inicial
+   era auditar a casca.
+
+   A SEGUNDA é o que o axe não vê, e foi o achado que interessou. O texto
+   alternativo de uma imagem dentro de um `<summary>` entra no NOME ACESSÍVEL
+   do controlo. As miniaturas repetiam ali a descrição que o resumo já dava em
+   texto, e sete controlos ficaram com nomes de 143 a 276 caracteres: quem
+   navega por teclado ouvia um parágrafo por linha antes de saber onde estava.
+   Agora são decorativas, e esta conta impede que voltem a não ser.
+
+   O axe é dependência de desenvolvimento e corre no browser da verificação:
+   não vai para o sítio, não entra no orçamento de JavaScript, e não faz um
+   pedido a terceiros — a verificação 8 continua a valer. */
+{
+  const problemas = []
+  const axe = readFileSync(raiz + 'node_modules/axe-core/axe.min.js', 'utf8')
+  const REGRAS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa']
+  const rotas = ['/', '/en/', '/fr/', '/es/', '/cv/', '/en/cv/', '/404.html']
+  let combinacoes = 0
+  let controlos = 0
+  for (const tema of ['light', 'dark']) {
+    for (const rota of rotas) {
+      for (const aberta of [false, true]) {
+        const ctx = await browser.newContext({ colorScheme: tema })
+        const p = await ctx.newPage()
+        await p.goto(BASE + rota, { waitUntil: 'networkidle' })
+        await p.evaluate((t) => { document.documentElement.dataset.theme = t }, tema)
+        if (aberta) {
+          await p.evaluate(() => document.querySelectorAll('details').forEach((d) => (d.open = true)))
+        }
+        await p.addScriptTag({ content: axe })
+        const r = await p.evaluate(
+          (tags) => window.axe.run(document, { runOnly: { type: 'tag', values: tags }, resultTypes: ['violations'] }),
+          REGRAS
+        )
+        for (const v of r.violations) {
+          const onde = v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')
+          problemas.push(`${rota} ${tema}${aberta ? ' aberta' : ''}: [${v.impact}] ${v.id} — ${v.help} (${onde})`)
+        }
+        if (aberta) {
+          const falantes = await p.evaluate(() =>
+            [...document.querySelectorAll('summary img[alt]')]
+              .filter((i) => i.getAttribute('alt').trim() !== '')
+              .map((i) => i.getAttribute('src') + ' → «' + i.getAttribute('alt').slice(0, 40) + '»')
+          )
+          controlos += await p.evaluate(() => document.querySelectorAll('summary').length)
+          for (const f of falantes) {
+            problemas.push(`${rota}: imagem com texto alternativo dentro de um <summary> — entra no nome do controlo: ${f}`)
+          }
+        }
+        combinacoes += 1
+        await ctx.close()
+      }
+    }
+  }
+  decide(
+    'auditoria de acessibilidade: WCAG 2.2 AA em todas as rotas, nos dois temas',
+    problemas,
+    `axe-core · ${combinacoes} combinações · ${controlos} controlos`
+  )
+}
+
 await browser.close()
 if (servidor) servidor.kill()
 

@@ -12,8 +12,9 @@
  *
  * A linha das promessas diz três: o que não se faz a quem lê (sem cookies, sem
  * publicidade), o que se faz por quem lê (acessibilidade) e o que se dá a quem
- * quiser (código aberto, licença). As duas primeiras levam ao mesmo nó, que é
- * onde as duas estão escritas por extenso e onde se pode conferi-las.
+ * quiser (código aberto, licença). Cada uma leva ao nó onde está escrita por
+ * extenso — as duas primeiras apontaram ao mesmo enquanto a acessibilidade foi
+ * um campo da privacidade, e deixaram de o fazer quando ganhou nó próprio.
  *
  * A hora de atualização saiu. Dizia a data do último commit de conteúdo, que é
  * informação sobre o repositório e não sobre quem lê — e o `lastmod` do
@@ -110,13 +111,7 @@ const contactos = [
   <p class="rodape__nota">
     <a href="#privacidade">{rot.sem}</a>
     <span aria-hidden="true"> · </span>
-    {/* Aponta ao mesmo nó que a ligação anterior, e é de propósito: a
-        acessibilidade é o último campo lá dentro. Uma âncora ao próprio campo
-        obrigaria o navegador a abrir um <details> fechado para chegar ao
-        <dt>, coisa que os motores mais antigos não fazem sem JavaScript — e
-        aqui nada depende de JavaScript. Duas etiquetas, duas promessas, o
-        mesmo destino. */}
-    <a href="#privacidade">{rot.acesso}</a>
+    <a href="#acessibilidade">{rot.acesso}</a>
     <span aria-hidden="true"> · </span>
     <a href={codigoDoSite} rel="noopener">{rot.aberto}</a>
     <span aria-hidden="true"> · </span>
