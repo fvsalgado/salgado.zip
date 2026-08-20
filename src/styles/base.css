@@ -288,6 +288,28 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
 .no__campos dt { color: var(--ink-soft); }
 .no__campos dd { margin: 0; overflow-wrap: anywhere; }
 
+/* ── Os campos empilham-se quando duas colunas deixam de caber ────────────
+   A pergunta certa não é «que largura tem a janela» — é «que largura sobra a
+   este nó». Um nó com dois recuos, como a acessibilidade dentro do colofão,
+   tem menos espaço do que um de topo no mesmo ecrã, e são os dois recuos que
+   fazem a diferença entre ler e não ler. Por isso a consulta é ao CONTENTOR.
+
+   Medido, e o número saiu da medição: a coluna dos rótulos é fixa no mais
+   longo do sítio — «o que se verifica sozinho», 189px — e não encolhe. Num
+   corpo de 28rem sobram-lhe uns 33 caracteres para o valor, que ainda se lê.
+   Abaixo disso desmorona depressa: a 520px de ecrã eram 30 caracteres, a 360px
+   eram oito, e a 320px eram TRÊS. Três caracteres não são uma coluna, são uma
+   fita — e foi assim que o nó da acessibilidade apareceu num telemóvel.
+
+   Empilhados, o rótulo fica por cima e o valor ocupa a largura toda, que é o
+   que uma lista de definições faz quando não tem espaço para duas colunas. */
+.no__corpo { container-type: inline-size; }
+@container (max-width: 28rem) {
+  .no__campos { grid-template-columns: 1fr; gap: 0; }
+  .no__campos dt { margin-top: 0.7rem; }
+  .no__campos dt:first-child { margin-top: 0; }
+}
+
 /* ── Capturas: cinzento em repouso, cor no hover e no foco ───────────────── */
 .shot { margin-top: 0.85rem; padding-left: 0.35rem; }
 /* A captura dentro do `<summary>`: conteúdo de frase, e não um `<figure>`, que

@@ -846,6 +846,51 @@ function imagensPorPagina(buf) {
       }
     }
   }
+  /* A TERCEIRA, e entrou depois de o Fábio a apanhar num telemóvel: a largura
+     do valor de cada campo, num ecrã estreito.
+
+     A auditoria de 20/08/2026 mediu refluxo — se alguma coisa transborda para
+     fora da janela — e passou. Mas caber não é ler: a coluna dos rótulos é
+     fixa no mais longo, e no nó da acessibilidade, com dois recuos, o valor
+     ficava com TRÊS caracteres a 320px. Nada transbordava; simplesmente não se
+     lia. Uma medição que só pergunta «cabe?» deixa passar exatamente isto.
+
+     Vinte e quatro caracteres é um mínimo folgado — depois de os campos
+     passarem a empilhar-se abaixo de 28rem de corpo, o pior caso dá trinta e
+     dois. Está aqui para o dia em que um rótulo novo, mais comprido, empurrar
+     a coluna outra vez. */
+  {
+    const ctx = await browser.newContext({ viewport: { width: 360, height: 900 } })
+    const p = await ctx.newPage()
+    for (const rota of rotas.slice(0, 4)) {
+      await p.goto(BASE + rota, { waitUntil: 'networkidle' })
+      await p.evaluate(() => document.querySelectorAll('details').forEach((d) => (d.open = true)))
+      const estreitos = await p.evaluate(() => {
+        const primeiro = document.querySelector('.no__campos dd')
+        if (primeiro === null) return []
+        const s = getComputedStyle(primeiro)
+        const regua = document.createElement('span')
+        regua.style.font = s.font
+        regua.style.position = 'absolute'
+        regua.style.whiteSpace = 'pre'
+        regua.textContent = '0'.repeat(50)
+        document.body.append(regua)
+        const car = regua.getBoundingClientRect().width / 50
+        regua.remove()
+        return [...document.querySelectorAll('.no__campos dd')]
+          .map((dd) => ({
+            car: Math.round(dd.getBoundingClientRect().width / car),
+            rotulo: (dd.previousElementSibling?.textContent ?? '').trim().slice(0, 28),
+          }))
+          .filter((x) => x.car < 24)
+      })
+      for (const e of estreitos) {
+        problemas.push(`${rota} a 360px: o campo «${e.rotulo}» tem ${e.car} caracteres de largura — abaixo dos 24 que se leem`)
+      }
+    }
+    await ctx.close()
+  }
+
   decide(
     'auditoria de acessibilidade: WCAG 2.2 AA em todas as rotas, nos dois temas',
     problemas,
