@@ -5,7 +5,18 @@
  *
  * Dois modos: pasta (`<details>` nativo, com corpo no slot) e ficheiro
  * (`<a>` simples). Ambos funcionam sem JS.
+ *
+ * A linha de ficheiro tanto serve um PDF do próprio domínio como a credencial
+ * de um certificado noutro. Quando o endereço sai do sítio, a linha ganha o
+ * mesmo tratamento das outras ligações de fora — janela nova, seta e aviso no
+ * nome acessível. Ver o Externo.astro, que faz o mesmo para as ligações que
+ * vivem dentro de prosa.
  */
+import type { Idioma } from '../data'
+import { CANONICO } from '../data'
+import { t } from '../data/formato'
+import { avisoJanelaNova } from '../data/textos.ts'
+
 export interface Coluna {
   classe: 'papel' | 'periodo' | 'estado' | 'tam' | 'nota'
   valor: string
@@ -29,10 +40,23 @@ interface Props {
    * e não mostra nada é uma promessa falhada — a seta diz que há mais e não há.
    */
   folha?: boolean
+  /**
+   * A língua da página. Só é preciso quando o `href` sai do sítio: é dela que
+   * vem o aviso da janela nova. Sem ela, o build pára — ver em baixo.
+   */
+  idioma?: Idioma
 }
 
-const { id, nome, colunas = [], aberto = false, href, folha = false, nivel } = Astro.props
+const { id, nome, colunas = [], aberto = false, href, folha = false, nivel, idioma } = Astro.props
 const ehFicheiro = href !== undefined
+/* Derivado do próprio endereço, e não de uma opção que alguém se esqueça de
+   passar: sai do sítio quem é absoluto e não é nosso. */
+const saiDoSitio = href !== undefined && /^https?:\/\//.test(href) && !href.startsWith(CANONICO)
+/* Uma ligação que sai sem aviso é a promessa da nota de acessibilidade a ser
+   quebrada em silêncio. Mais vale parar o build. */
+if (saiDoSitio && idioma === undefined) {
+  throw new Error(`Node.astro: «${href}» sai do sítio e a linha não recebeu idioma`)
+}
 const Titulo = nivel === undefined ? 'span' : (`h${nivel}` as 'h2' | 'h3')
 ---
 
@@ -49,8 +73,19 @@ const Titulo = nivel === undefined ? 'span' : (`h${nivel}` as 'h2' | 'h3')
       </span>
     ) : ehFicheiro ? (
       <>
-        <a class="linha" id={id} href={href}>
-          <span class="linha__nome">{nome}</span>
+        <a
+          class="linha"
+          id={id}
+          href={href}
+          target={saiDoSitio ? '_blank' : undefined}
+          rel={saiDoSitio ? 'noopener' : undefined}
+          aria-label={saiDoSitio ? `${nome} — ${t(avisoJanelaNova, idioma!)}` : undefined}
+        >
+          {/* Sem espaço entre o nome e a seta: com ele, a seta tinha por onde
+              mudar de linha e ia aparecer sozinha por baixo do nome. */}
+          <span class="linha__nome">{nome}{
+            saiDoSitio && <span class="seta-fora" aria-hidden="true">↗</span>
+          }</span>
           {colunas.map((c) => (
             <span class={`linha__col linha__col--${c.classe}`} data-estado={c.dataEstado}>
               {c.valor}

@@ -81,6 +81,21 @@ export const notaCertificados = parse(Lang, {
   es: 'Cursos en línea, hechos por cuenta propia. No son títulos de estas instituciones.',
 }, 'textos.notaCertificados')
 
+/**
+ * O aviso que acompanha uma ligação que sai do sítio.
+ *
+ * Vive aqui, e não dentro do componente que o usa, porque são dois a usá-lo —
+ * o `Externo.astro` e a linha de ficheiro do `Node.astro` — e um aviso escrito
+ * em dois sítios acaba a dizer duas coisas diferentes. A seta ↗ é o mesmo
+ * aviso para quem vê; este é para quem ouve.
+ */
+export const avisoJanelaNova = parse(Lang, {
+  pt: 'abre numa janela nova',
+  en: 'opens in a new window',
+  fr: 'ouvre dans une nouvelle fenêtre',
+  es: 'abre en una ventana nueva',
+}, 'textos.avisoJanelaNova')
+
 /** O código deste site é público: a prova do colofão está no repositório. */
 export const codigoDoSite = 'https://github.com/fvsalgado/salgado.zip'
 

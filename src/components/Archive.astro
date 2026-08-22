@@ -1,6 +1,7 @@
 ---
 import Node from './Node.astro'
-import { projetos, leituras, posicoes, mandatos, formacao, contacto, ficheiros, medidasVoz, RUBRICA, CANONICO } from '../data'
+import Externo from './Externo.astro'
+import { projetos, leituras, posicoes, mandatos, formacao, contacto, ficheiros, medidasVoz, CANONICO } from '../data'
 import { colofaoSite, codigoDoSite, licenca, notaCertificados } from '../data/textos.ts'
 import { privacidade, notaPrivacidade } from '../data/privacidade.ts'
 import { acessibilidade, notaAcessibilidade } from '../data/acessibilidade.ts'
@@ -259,10 +260,10 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
             {((p.url !== null && p.url !== CANONICO) || p.codigo !== null) && (
               <p class="linha__ligacoes">
                 {p.url !== null && p.url !== CANONICO && (
-                  <a href={p.url} rel="noopener" aria-label={`${rot.visitar} ${p.dominio}`}>{rot.visitar} ↗</a>
+                  <Externo href={p.url} nome={`${rot.visitar} ${p.dominio}`} idioma={idioma}>{rot.visitar}</Externo>
                 )}
                 {p.codigo !== null && (
-                  <a href={p.codigo} rel="noopener" aria-label={`${rot.codigoAberto} — ${p.dominio}`}>{rot.codigoAberto} ↗</a>
+                  <Externo href={p.codigo} nome={`${rot.codigoAberto} — ${p.dominio}`} idioma={idioma}>{rot.codigoAberto}</Externo>
                 )}
               </p>
             )}
@@ -289,7 +290,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                 <>
                   <dt>{rot.codigo}</dt>
                   <dd>
-                    <a href={p.codigo} rel="noopener">{p.codigo.replace('https://', '')}</a>
+                    <Externo href={p.codigo} nome={p.codigo.replace('https://', '')} idioma={idioma} />
                   </dd>
                 </>
               )}
@@ -297,7 +298,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                 <>
                   <dt>{rot.endereco}</dt>
                   <dd>
-                    <a href={p.url} rel="noopener">{p.dominio}</a>
+                    <Externo href={p.url} nome={p.dominio} idioma={idioma} />
                   </dd>
                 </>
               )}
@@ -515,7 +516,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                 )}
                 <dt>{palco ? rot.paginaLbl : rot.original}</dt>
                 <dd>
-                  <a href={l.origem} rel="noopener">{l.origem.replace(/^https:\/\/(www\.)?/, '')}</a>
+                  <Externo href={l.origem} nome={l.origem.replace(/^https:\/\/(www\.)?/, '')} idioma={idioma} />
                 </dd>
               </dl>
             </Node>
@@ -644,6 +645,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               id={f.id}
               nome={t(f.curso, idioma)}
               href={f.credencial ?? undefined}
+              idioma={idioma}
               colunas={[
                 { classe: 'papel', valor: f.instituicao },
                 { classe: 'periodo', valor: periodo(f.periodo) },
@@ -671,7 +673,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
       {contacto.linkedin && (
         <>
           <dt>linkedin</dt>
-          <dd><a href={contacto.linkedin} rel="noopener">{contacto.linkedin.replace(/^https:\/\//, '')}</a></dd>
+          <dd><Externo href={contacto.linkedin} nome={contacto.linkedin.replace(/^https:\/\//, '')} idioma={idioma} /></dd>
         </>
       )}
       <dt>{rot.onde}</dt>
@@ -718,9 +720,9 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
     </div>
     <dl class="no__campos">
       <dt>{rot.codigo}</dt>
-      <dd><a href={codigoDoSite} rel="noopener">{codigoDoSite.replace('https://', '')}</a></dd>
+      <dd><Externo href={codigoDoSite} nome={codigoDoSite.replace('https://', '')} idioma={idioma} /></dd>
       <dt>{rot.licenca}</dt>
-      <dd><a href={licenca.url} rel="noopener">{licenca.nome}</a></dd>
+      <dd><Externo href={licenca.url} nome={licenca.nome} idioma={idioma} /></dd>
     </dl>
 
     <ul class="arvore arvore--filha" role="list">

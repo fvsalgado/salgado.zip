@@ -240,9 +240,20 @@ export const formacao = parse(Formacao.array(), [
     },
     instituicao: 'Centro Internacional de Formação da OIT (ITCILO)',
     periodo: { inicio: '2024-09', fim: '2024-09' },
-    // Emite código de credencial — 115406363 — mas não publica página onde ele
-    // se confirme. Fica sem ligação, que é o que é verdade.
-    credencial: null,
+    /* Havia página, e eu não a tinha encontrado: o LinkedIn guardara o
+       endereço do curso e não o da credencial. Este veio do Fábio.
+       Sem o fragmento `#acc.…` que o endereço original trazia — os dois
+       devolvem exatamente os mesmos bytes, porque um fragmento nunca chega ao
+       servidor, e um endereço mais curto é mais fácil de copiar.
+
+       É a única das oito que a verificação NÃO consegue conferir pelo nome:
+       a página é uma aplicação que só se preenche no browser, e o servidor só
+       a pré-renderiza para agentes de robô conhecidos. Confirmei-a uma vez por
+       esse caminho, à mão, e não o pus na verificação — dizer a um servidor
+       alheio que se é o Googlebot, a cada publicação e para sempre, é mentir a
+       alguém que não tem como saber. O que a verificação faz, e diz que faz,
+       está no scripts/verify.mjs. */
+    credencial: 'https://credentials.itcilo.org/81ebaf6f-012a-4df7-b1ef-631f25e3fa09',
   },
   {
     id: 'iese-communicating-presence',

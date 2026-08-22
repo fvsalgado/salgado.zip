@@ -1,0 +1,47 @@
+---
+/**
+ * Os três ícones do rodapé.
+ *
+ * Saíram do Rodape.astro quando as ligações se dividiram em duas: o `mailto:`
+ * continua uma âncora normal e as outras duas passaram pelo Externo.astro. Sem
+ * isto, os mesmos três desenhos ficavam escritos duas vezes, uma em cada ramo,
+ * e um desenho escrito duas vezes é um desenho que se corrige uma vez só.
+ *
+ * Desenho vetorial em linha e não imagem: segue a cor do texto nos dois temas,
+ * não faz um pedido, e não tem ficheiro para se perder. O do GitHub vem do
+ * conjunto Simple Icons, sob CC0; o do LinkedIn é a marca em domínio público; o
+ * envelope é desenhado aqui.
+ *
+ * `aria-hidden` em todos: quem nomeia a ligação é o `aria-label` da âncora, e
+ * um ícone que também se nomeasse dizia o nome duas vezes.
+ */
+interface Props {
+  icone: 'mail' | 'linkedin' | 'github'
+}
+const { icone } = Astro.props
+---
+
+{
+  icone === 'mail' && (
+    <svg class="icone icone--maior" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M1 3h14v10H1V3zm1.6 1.2L8 8.4l5.4-4.2H2.6zM2.2 5v6.8h11.6V5L8 9.6 2.2 5z"
+      />
+    </svg>
+  )
+}
+{
+  icone === 'linkedin' && (
+    <svg class="icone icone--maior" viewBox="0 0 36.1 36" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M 33.3,0 H 2.7 C 1.2,0 0,1.2 0,2.6 V 33.4 C 0,34.8 1.2,36 2.7,36 h 30.7 c 1.5,0 2.7,-1.2 2.7,-2.6 V 2.6 C 36,1.2 34.8,0 33.3,0 Z M 10.7,30.7 H 5.3 V 13.5 h 5.3 V 30.7 Z M 8,11.1 C 6.3,11.1 4.9,9.7 4.9,8 4.9,6.3 6.3,5 8,5 c 1.7,0 3.1,1.4 3.1,3.1 0,1.7 -1.4,3 -3.1,3 z m 22.7,19.6 h -5.3 v -8.4 c 0,-2 0,-4.6 -2.8,-4.6 -2.8,0 -3.2,2.2 -3.2,4.4 v 8.5 H 14 V 13.5 h 5.1 v 2.3 h 0.1 c 0.7,-1.4 2.5,-2.8 5.1,-2.8 5.4,0 6.4,3.6 6.4,8.2 z" />
+    </svg>
+  )
+}
+{
+  icone === 'github' && (
+    <svg class="icone icone--maior" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+    </svg>
+  )
+}

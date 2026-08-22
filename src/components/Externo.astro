@@ -1,0 +1,74 @@
+---
+/**
+ * Uma ligação que sai do sítio.
+ *
+ * Existe para que as três coisas que uma ligação dessas precisa andem sempre
+ * juntas, e não uma aqui e outra ali:
+ *
+ *   1. `target="_blank"`, para o arquivo não se perder atrás dela;
+ *   2. uma SETA visível, para quem vê saber que vai sair antes de carregar;
+ *   3. o mesmo aviso no NOME ACESSÍVEL, porque uma seta desenhada com um
+ *      caractere não chega a quem não a vê — e abrir uma janela sem avisar é
+ *      precisamente o que a técnica G201 da WCAG manda não fazer.
+ *
+ * O ponto 3 é o que obriga a um componente em vez de uma regra de CSS. Um
+ * `a[target="_blank"]::after { content: '↗' }` resolvia a seta em três linhas
+ * e não resolvia o aviso: o conteúdo gerado por CSS é anunciado por uns
+ * leitores de ecrã e ignorado por outros, e uma promessa de acessibilidade que
+ * depende de qual o leitor não é uma promessa.
+ *
+ * `rel="noopener"` fica explícito. Os browsers de hoje já o assumem com
+ * `_blank`, mas o que aqui se escreve não depende da versão de ninguém.
+ *
+ * Não passa por aqui o `mailto:`, que não abre janela nenhuma, nem o que fica
+ * no próprio domínio — os ficheiros, as âncoras, as outras línguas. Uma seta
+ * em todo o lado deixaria de querer dizer alguma coisa.
+ */
+import type { Idioma } from '../data'
+import { t } from '../data/formato'
+import { avisoJanelaNova } from '../data/textos.ts'
+
+interface Props {
+  href: string
+  /** O nome acessível, SEM o aviso: é este componente que o acrescenta. */
+  nome: string
+  idioma: Idioma
+  /** Quando o destino já se identifica sozinho — o logótipo de uma casa. */
+  semSeta?: boolean
+  classe?: string
+  /**
+   * A dica do rato. Só faz sentido numa ligação sem texto visível — um ícone —,
+   * onde quem usa rato não tem por onde saber o destino. Numa ligação com
+   * texto, repetiria o que já lá está escrito.
+   */
+  titulo?: string
+}
+const { href, nome, idioma, semSeta = false, classe, titulo } = Astro.props
+
+/* Uma ligação interna que passasse por aqui abria uma janela nova sem razão, e
+   o aviso passava a mentir. Rebenta no build em vez de sair publicada. */
+if (!/^https?:\/\//.test(href)) {
+  throw new Error(`Externo.astro: «${href}» não sai do sítio — usa uma ligação normal`)
+}
+---
+
+{/*
+  O `>` cola-se ao conteúdo e o `</a>` cola-se ao fim, sem uma mudança de linha
+  pelo meio. O Astro guarda o espaço do modelo tal como o HTML o guarda, e uma
+  quebra depois do `>` virava um espaço dentro da âncora: o sublinhado começava
+  uma letra antes do texto e acabava uma letra depois da seta. Do mesmo modo, a
+  seta não leva espaço antes — se levasse, tinha por onde mudar de linha e ia
+  aparecer sozinha no início da linha seguinte, longe da ligação que anuncia.
+*/}<a
+  href={href}
+  class:list={[classe]}
+  target="_blank"
+  rel="noopener"
+  title={titulo}
+  aria-label={`${nome} — ${t(avisoJanelaNova, idioma)}`}
+>{Astro.slots.has('default') ? <slot /> : nome}{
+  /* `aria-hidden` porque o aviso já está no nome acessível: sem isto, quem
+     ouve a ligação ouvia a seta duas vezes, uma como símbolo e outra como
+     frase. */
+  !semSeta && <span class="seta-fora" aria-hidden="true">↗</span>
+}</a>

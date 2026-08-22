@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Um comando, dezasseis verificações, código de saída não-zero em qualquer falha.
+ * Um comando, dezoito verificações, código de saída não-zero em qualquer falha.
  *
  * A v2 deste plano tinha uma lista de onze pontos para lembrar à mão antes de
- * cada publicação. O que não é executável não se cumpre. Quinze destas são
+ * cada publicação. O que não é executável não se cumpre. Dezassete destas são
  * binárias; só uma — a revisão à vista das oito capturas — precisa de olho
  * humano.
  *
@@ -27,6 +27,7 @@ import { cabecalho } from '../src/data/cabecalho.ts'
 import { contacto } from '../src/data/contacto.ts'
 import { projetos } from '../src/data/projetos.ts'
 import { leituras } from '../src/data/voz.ts'
+import { avisoJanelaNova } from '../src/data/textos.ts'
 
 const CANONICO = 'https://salgado.zip'
 
@@ -817,22 +818,37 @@ function imagensPorPagina(buf) {
   }
   if (contacto.email === null) problemas.push('src/data/contacto.ts: email por confirmar')
   if (contacto.linkedin === null) problemas.push('src/data/contacto.ts: linkedin por confirmar')
-  /* As credenciais dos certificados. Não basta a página responder: a Coursera
-     é uma aplicação de página única e devolve 200 com uma página bonita a
-     qualquer código inventado — testei com um. O que distingue uma credencial
-     real de uma inventada é o NOME de quem a tirou, e é isso que se procura.
+  /* As credenciais dos certificados, em dois níveis — e a diferença entre eles
+     é dita aqui para ninguém pensar que são o mesmo.
 
-     Conferidas à mão a 20/08/2026 e agora a cada publicação, porque um sítio
-     que publica uma ligação de prova tem de saber o dia em que ela morrer. */
+     O NÍVEL FORTE é o normal: a página tem de nomear quem tirou a credencial.
+     Não basta responder — a Coursera é uma aplicação de página única e devolve
+     200 com uma página bonita a qualquer código inventado; testei com um, e o
+     que ela não devolve é o nome.
+
+     O NÍVEL FRACO é para páginas que só se preenchem no browser. A do ITCILO é
+     uma delas: o HTML que chega é uma casca, e o servidor só a pré-renderiza
+     para agentes de robô conhecidos. Podia obter o nome dizendo-lhe que sou o
+     Googlebot — funciona, experimentei — e não o faço: uma verificação que
+     mente sobre quem é, a cada publicação e para sempre, não é uma coisa que
+     se deixe escrita num repositório aberto. Do que resta — a página responde,
+     e responde no domínio de quem emite — dá para saber o dia em que a
+     credencial desaparecer, que é metade do que interessa.
+
+     A lista é de hospedeiros e não de certificados: assim, no dia em que a
+     Coursera passar a esconder o nome, a conta acusa em vez de se calar. */
+  const SO_NO_BROWSER = ['credentials.itcilo.org']
+  const apelido = cabecalho.nome.split(' ').pop()
   for (const f of formacao.filter((x) => x.credencial !== null)) {
+    const hospedeiro = new URL(f.credencial).host
     try {
       const r = await fetch(f.credencial, { redirect: 'follow' })
       if (!r.ok) {
         problemas.push(`${f.id}: a credencial devolveu ${r.status}`)
         continue
       }
+      if (SO_NO_BROWSER.includes(hospedeiro)) continue
       const corpo = await r.text()
-      const apelido = cabecalho.nome.split(' ').pop()
       if (!corpo.includes(apelido)) {
         problemas.push(`${f.id}: a credencial responde mas não nomeia «${apelido}» — pode ter deixado de existir`)
       }
@@ -957,6 +973,92 @@ function imagensPorPagina(buf) {
     'auditoria de acessibilidade: WCAG 2.2 AA em todas as rotas, nos dois temas',
     problemas,
     `axe-core · ${combinacoes} combinações · ${controlos} controlos`
+  )
+}
+
+/* ══ 18. As ligações que saem do sítio dizem que saem ═══════════════════
+   Uma ligação que sai leva quatro coisas, e o que aqui se garante é que levam
+   as quatro SEMPRE, e não só onde alguém se lembrou: janela nova, `noopener`,
+   a seta que se vê, e o mesmo aviso escrito no nome acessível para quem não a
+   vê. É a técnica G201 da WCAG — avisar antes de abrir uma janela — e é uma
+   promessa que só vale se for de todas.
+
+   Não chega o componente existir. Um `<a href="https://…">` escrito à mão em
+   qualquer ficheiro .astro passa ao lado dele sem dar erro nenhum, e ninguém
+   dá por isso a olhar para a página. Quem dá por isso é isto, que lê o HTML
+   publicado — o resultado, não a intenção.
+
+   A SETA é a única das quatro que tem exceção, e a exceção deriva-se do próprio
+   HTML em vez de ser uma lista de endereços à parte: uma ligação SEM TEXTO
+   VISÍVEL — os três ícones do rodapé — não leva seta, porque não há palavra
+   nenhuma a que ela se encoste e uma seta ao lado de um ícone de dezasseis
+   pixels lê-se como sujidade. Tem texto, leva seta. Não tem, não leva. As duas
+   metades verificam-se, e por isso a exceção também não se pode espalhar.
+
+   O ESPELHO conta tanto como a regra: uma ligação que NÃO sai do sítio não pode
+   ter seta nem abrir janela. A seta só quer dizer alguma coisa enquanto quiser
+   dizer uma coisa só, e uma que aparecesse numa ligação interna transformava o
+   aviso em ruído — que é como se estraga um sinal destes, a pouco e pouco. */
+{
+  const problemas = []
+  const rotas = [
+    ['/', 'pt'],
+    ['/en/', 'en'],
+    ['/fr/', 'fr'],
+    ['/es/', 'es'],
+    ['/cv/', 'pt'],
+    ['/en/cv/', 'en'],
+    ['/404.html', 'pt'],
+  ]
+  let fora = 0
+  let dentro = 0
+
+  for (const [rota, lingua] of rotas) {
+    const aviso = avisoJanelaNova[lingua]
+    const pagina = readFileSync(
+      dist + (rota.endsWith('.html') ? rota.slice(1) : rota.slice(1) + 'index.html'),
+      'utf8'
+    )
+    /* As âncoras não se aninham, e por isso o `<\/a>` mais próximo é sempre o
+       fecho desta. Lá dentro há `<span>` e `<svg>`, que não interessam. */
+    for (const m of pagina.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)) {
+      const [, atributos, dentroDela] = m
+      const href = (/\bhref="([^"]*)"/.exec(atributos) ?? [])[1] ?? ''
+      const sai = /^https?:\/\//.test(href) && !href.startsWith(CANONICO)
+      const temSeta = /class="seta-fora"/.test(dentroDela)
+      const onde = `${rota} → ${href.slice(0, 52)}`
+
+      if (!sai) {
+        dentro += 1
+        if (temSeta) problemas.push(`${onde}: não sai do sítio e tem seta`)
+        if (/target="_blank"/.test(atributos)) problemas.push(`${onde}: não sai do sítio e abre janela nova`)
+        continue
+      }
+
+      fora += 1
+      if (!/target="_blank"/.test(atributos)) problemas.push(`${onde}: sai do sítio sem target="_blank"`)
+      if (!/\brel="[^"]*\bnoopener\b/.test(atributos)) problemas.push(`${onde}: sai do sítio sem rel="noopener"`)
+
+      const rotulo = (/\baria-label="([^"]*)"/.exec(atributos) ?? [])[1] ?? ''
+      if (!rotulo.includes(aviso)) {
+        problemas.push(`${onde}: o nome acessível não avisa da janela nova («${aviso}»)`)
+      }
+
+      /* O texto que se vê, sem as etiquetas e sem a própria seta. Vazio quer
+         dizer ligação de ícone — as três do rodapé, e mais nenhuma. */
+      const texto = dentroDela
+        .replace(/<span class="seta-fora"[\s\S]*?<\/span>/g, '')
+        .replace(/<[^>]*>/g, '')
+        .trim()
+      if (texto !== '' && !temSeta) problemas.push(`${onde}: sai do sítio, tem texto visível e não tem seta`)
+      if (texto === '' && temSeta) problemas.push(`${onde}: é uma ligação de ícone e tem seta`)
+    }
+  }
+
+  decide(
+    'as ligações que saem do sítio avisam — janela nova, noopener, seta e nome acessível',
+    problemas,
+    `${fora} para fora · ${dentro} cá dentro · ${rotas.length} rotas`
   )
 }
 
