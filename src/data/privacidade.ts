@@ -53,7 +53,7 @@ export const privacidade = parse(Campo.array().min(1), [
     texto: {
       pt: 'Registos do servidor: endereço IP, navegador e hora. Uma medição de visitas sem cookies: página, referenciador, país, sistema e tipo de aparelho, com a visita identificada por um resumo criptográfico do pedido. E o que me escreveres.',
       en: 'Server logs: IP address, browser and time. A cookieless measurement of visits: page, referrer, country, system and device type, with the visit identified by a cryptographic digest of the request. And whatever you write to me.',
-      fr: 'Les journaux du serveur : adresse IP, navigateur et heure. Une mesure de fréquentation sans cookies : page, référent, pays, système et type d’appareil, la visite étant identifiée par une empreinte de la requête. Et ce que vous m’écrivez.',
+      fr: 'Les journaux du serveur : adresse IP, navigateur et heure. Une mesure de fréquentation sans cookies : page, référent, pays, système et type d’appareil, la visite étant identifiée par une empreinte cryptographique de la requête. Et ce que vous m’écrivez.',
       es: 'Registros del servidor: dirección IP, navegador y hora. Una medición de visitas sin cookies: página, referente, país, sistema y tipo de aparato, con la visita identificada por un resumen criptográfico de la petición. Y lo que me escribas.',
     },
   },

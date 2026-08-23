@@ -45,10 +45,10 @@ export const definicoes = [
     nome: nomeCV('PT', mesRevisao),
     caminho: 'docs/' + nomeCV('PT', mesRevisao),
     descricao: {
-      pt: 'O documento completo, em português: projetos, percurso, mandatos, certificados e contacto.',
-      en: 'The full document, in Portuguese: projects, career, mandates, certificates and contact.',
-      fr: 'Le document complet, en portugais : projets, parcours, mandats, certificats et contact.',
-      es: 'El documento completo, en portugués: proyectos, trayectoria, mandatos, certificados y contacto.',
+      pt: 'O documento completo, em português: percurso, projetos, voz, mandatos, certificados, idiomas e contacto.',
+      en: 'The full document, in Portuguese: career, projects, voice, elected office, certificates, languages and contact.',
+      fr: 'Le document complet, en portugais : parcours, projets, voix, mandats, certificats, langues et contact.',
+      es: 'El documento completo, en portugués: trayectoria, proyectos, voz, mandatos, certificados, idiomas y contacto.',
     },
   },
   {

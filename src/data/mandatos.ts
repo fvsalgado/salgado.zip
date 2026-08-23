@@ -38,10 +38,20 @@ import { contacto } from './contacto.ts'
  */
 const idadeEm = (ano: number) => ano - Number(contacto.nascimento)
 
+/**
+ * O cargo, e o francês foi o que deu trabalho.
+ *
+ * Dizia «Élu à l’assemblée municipale» — «eleito». As outras três línguas usam
+ * um nome de cargo neutro, e o francês afirmava a forma de entrada. Na entrada
+ * de 2007-2009 isso ficava por cima da frase «et non par une élection»: o
+ * rótulo desmentia, na mesma linha, a ressalva mais cuidada desta listagem.
+ *
+ * «Membre» espelha o da freguesia e não afirma nada sobre como se entrou.
+ */
 const DEPUTADO = {
   pt: 'Deputado Municipal',
   en: 'Municipal Assembly Deputy',
-  fr: 'Élu à l’assemblée municipale',
+  fr: 'Membre de l’assemblée municipale',
   es: 'Diputado Municipal',
 }
 const NAZARE = 'Assembleia Municipal da Nazaré'
@@ -83,10 +93,15 @@ export const mandatos = parse(
       organizacao: NAZARE,
       periodo: { inicio: '2009-10', fim: '2013-10' },
       linhas: [
+        /* «Recandidatura» é um ato; «reeleito» é um resultado. O inglês e o
+           francês diziam o segundo e o português e o espanhol o primeiro — e é
+           precisamente a distinção que a entrada de baixo existe para guardar,
+           onde se diz que a entrada foi por substituição e não por eleição.
+           As quatro passam a dizer o que o português diz. */
         {
           pt: 'Recandidatura, e o único dos três que cumpri do princípio ao fim.',
-          en: 'Re-elected, and the only one of the three I served from start to finish.',
-          fr: 'Réélu, et le seul des trois que j’ai fait du début à la fin.',
+          en: 'A new candidacy, and the only one of the three I served from start to finish.',
+          fr: 'Nouvelle candidature, et le seul des trois que j’ai fait du début à la fin.',
           es: 'Recandidatura, y el único de los tres que cumplí de principio a fin.',
         },
       ],
@@ -98,10 +113,14 @@ export const mandatos = parse(
       periodo: { inicio: '2007-10', fim: '2009-10' },
       linhas: [
         {
-          pt: `Número dois da lista e mandatário da candidatura, aos ${idadeEm(2005)} anos.`,
-          en: `Number two on the list and election agent for the candidacy, at ${idadeEm(2005)}.`,
-          fr: `Numéro deux de la liste et mandataire de la candidature, à ${idadeEm(2005)} ans.`,
-          es: `Número dos de la lista y mandatario de la candidatura, a los ${idadeEm(2005)} años.`,
+          /* O ano vai na frase. Esta entrada está rotulada 2007–2009 e abria com
+             um facto de 2005 sem data nenhuma: quem lia via «19 anos» e «aos
+             21» na mesma ficha sem saber que são dois atos com dois anos de
+             intervalo. O 2005 só existia no `id`, que ninguém lê. */
+          pt: `Número dois da lista e mandatário da candidatura de 2005, aos ${idadeEm(2005)} anos.`,
+          en: `Number two on the list and election agent for the 2005 candidacy, at ${idadeEm(2005)}.`,
+          fr: `Numéro deux de la liste et mandataire de la candidature de 2005, à ${idadeEm(2005)} ans.`,
+          es: `Número dos de la lista y mandatario de la candidatura de 2005, a los ${idadeEm(2005)} años.`,
         },
         {
           pt: `Entrei por substituição em 2007, aos ${idadeEm(2007)} — a meio do mandato, e não por eleição.`,

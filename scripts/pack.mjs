@@ -181,7 +181,7 @@ const llms = [
     const onde =
       l.formato === 'presencial' ? l.origem : `${CANONICO}/voz/${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}`
     const sitio = l.local ? ` ${l.local}.` : ''
-    return `- [${l.titulo}](${onde}) (${l.data}): ${l.papel.pt}, peça de ${l.autoria}.${sitio} ${l.fonte.pt} Original: ${l.origem}`
+    return `- [${l.titulo}](${onde}) (${l.data}): ${l.papel.pt}, peça de ${l.autoria.replace(/\.$/, '')}.${sitio} ${l.fonte.pt} Original: ${l.origem}`
   }),
   '',
   '## Ficheiros',

@@ -41,7 +41,7 @@ export const acessibilidade = parse(
   Campo.array().min(1),
   [
     {
-      rotulo: { pt: 'o que se verifica sozinho', en: 'checked automatically', fr: 'vérifié automatiquement', es: 'lo que se verifica solo' },
+      rotulo: { pt: 'o que se verifica sozinho', en: 'checked automatically', fr: 'vérifié automatiquement', es: 'lo que se verifica por sí solo' },
       texto: {
         pt: 'O axe-core corre sobre as oito rotas publicadas, nos dois temas, com a árvore fechada e aberta — trinta e duas combinações — antes de cada publicação, e bloqueia-a se encontrar alguma coisa. O contraste é calculado a partir das três paletas de cor, a árvore inteira é aberta e fechada sem JavaScript, e as legendas dos vídeos são conferidas contra a duração medida de cada um. Cada ligação que sai do sítio é obrigada a avisar que abre uma janela nova — na seta, para quem a vê, e no nome acessível, para quem não a vê. E a página inteira é percorrida por tabulação, tecla a tecla, até voltar ao princípio: todos os elementos focáveis têm de ser alcançados, e nenhum pode prender o foco.',
         en: 'axe-core runs over the eight published routes, in both themes, with the tree closed and open — thirty-two combinations — before every release, and blocks it if anything turns up. Contrast is computed from all three colour palettes, the whole tree is opened and closed with JavaScript off, and the video captions are checked against each film’s measured length. Every link that leaves the site is made to warn that it opens a new window — in the arrow, for those who see it, and in the accessible name, for those who do not. And the whole page is walked by tabbing, key by key, until it comes back round: every focusable element has to be reached, and none may hold the focus.',
