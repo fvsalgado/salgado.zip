@@ -78,10 +78,10 @@ export const privacidade = parse(Campo.array().min(1), [
   {
     rotulo: { pt: 'quem mais lhes toca', en: 'who else handles it', fr: 'qui d’autre y touche', es: 'quién más los toca' },
     texto: {
-      pt: 'A Vercel, que aloja e mede, como subcontratante. Mais ninguém: a página não faz um único pedido a terceiros, e a verificação 8 falha se algum dia fizer.',
-      en: 'Vercel, which hosts and measures, as a processor. Nobody else: the page makes not a single third-party request, and check 8 fails if it ever does.',
-      fr: 'Vercel, qui héberge et mesure, en tant que sous-traitant. Personne d’autre : la page ne fait aucune requête à des tiers, et la vérification 8 échoue si cela arrive.',
-      es: 'Vercel, que aloja y mide, como subencargado. Nadie más: la página no hace ni una sola petición a terceros, y la verificación 8 falla si algún día la hiciera.',
+      pt: 'A Vercel, que aloja e mede, como subcontratante. Mais ninguém: a página não faz um único pedido a terceiros.',
+      en: 'Vercel, which hosts and measures, as a processor. Nobody else: the page makes not a single third-party request.',
+      fr: 'Vercel, qui héberge et mesure, en tant que sous-traitant. Personne d’autre : la page ne fait aucune requête à des tiers.',
+      es: 'Vercel, que aloja y mide, como subencargado. Nadie más: la página no hace ni una sola petición a terceros.',
     },
   },
   {
