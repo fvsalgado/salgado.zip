@@ -123,7 +123,11 @@ Entre elas: contraste WCAG calculado a partir de `tokens.css` nas três paletas
 (claro, escuro via alternador, escuro via sistema), passagem completa com
 `javaScriptEnabled: false`, orçamento de 10 kB de JavaScript, zero pedidos a
 terceiros, e a confirmação de que os tamanhos publicados na listagem batem
-certo com os ficheiros em disco.
+certo com os ficheiros em disco. A paleta escura é escrita duas vezes no
+`tokens.css` — uma sob `[data-theme='dark']` para quem carregou no alternador,
+e outra sob `@media (prefers-color-scheme: dark)` para quem tem o sistema em
+escuro e nunca lhe tocou — e a verificação confirma que são idênticas token a
+token.
 
 A verificação 16 falha enquanto houver conteúdo por confirmar — é o que impede
 o PR de sair de rascunho, em vez de um marcador `[POR PREENCHER]` no código.
@@ -156,12 +160,11 @@ dados existem, para quê, quanto tempo e quem lhes toca.
 `<style>` inline no site, nem um atributo `style=`. O tema é aplicado antes do
 primeiro paint por `/tema.js`, síncrono e mesmo-origem.
 
-Projetos privados entram na listagem pelo que fazem, sem endereço. A
-verificação 7 confirma que não há `href`, `src` nem `"url"` a apontar-lhes, em
-todo o conteúdo legível — HTML, JSON, XML, TXT, JS, CSS, SVG, PDF e
-webmanifest, tanto no site como no `resume.json` e dentro do `.zip`. Os PDF são
-verificados no texto descomprimido e nos bytes crus, onde as anotações `/URI`
-costumam ficar por comprimir.
+Projetos privados entram na listagem pelo que fazem, sem endereço e sem
+captura. A verificação 7 confirma que não há `href`, `src` nem `"url"` a
+apontar-lhes — no site, no `resume.json`, dentro do `.zip`, e também nos
+ficheiros `.js`, `.css`, `.svg` e PDF (tanto no texto extraído quanto nas
+anotações de ligação).
 
 ## Licença
 
