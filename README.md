@@ -119,10 +119,11 @@ Duas decisões que se leem no código e vale a pena dizer por extenso:
 não-zero em qualquer falha. Quinze são binárias; só uma — a revisão à vista das
 oito capturas em `.verify/` — precisa de olho humano.
 
-Entre elas: contraste WCAG calculado a partir de `tokens.css` nos dois temas,
-passagem completa com `javaScriptEnabled: false`, orçamento de 10 kB de
-JavaScript, zero pedidos a terceiros, e a confirmação de que os tamanhos
-publicados na listagem batem certo com os ficheiros em disco.
+Entre elas: contraste WCAG calculado a partir de `tokens.css` nas três paletas
+(claro, escuro via alternador, escuro via sistema), passagem completa com
+`javaScriptEnabled: false`, orçamento de 10 kB de JavaScript, zero pedidos a
+terceiros, e a confirmação de que os tamanhos publicados na listagem batem
+certo com os ficheiros em disco.
 
 A verificação 16 falha enquanto houver conteúdo por confirmar — é o que impede
 o PR de sair de rascunho, em vez de um marcador `[POR PREENCHER]` no código.
@@ -155,9 +156,12 @@ dados existem, para quê, quanto tempo e quem lhes toca.
 `<style>` inline no site, nem um atributo `style=`. O tema é aplicado antes do
 primeiro paint por `/tema.js`, síncrono e mesmo-origem.
 
-Projetos privados entram na listagem pelo que fazem, sem endereço e sem
-captura. A verificação 7 confirma que não há `href`, `src` nem `"url"` a
-apontar-lhes — no site, no `resume.json` e dentro do `.zip`.
+Projetos privados entram na listagem pelo que fazem, sem endereço. A
+verificação 7 confirma que não há `href`, `src` nem `"url"` a apontar-lhes, em
+todo o conteúdo legível — HTML, JSON, XML, TXT, JS, CSS, SVG, PDF e
+webmanifest, tanto no site como no `resume.json` e dentro do `.zip`. Os PDF são
+verificados no texto descomprimido e nos bytes crus, onde as anotações `/URI`
+costumam ficar por comprimir.
 
 ## Licença
 
