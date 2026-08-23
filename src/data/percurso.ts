@@ -20,9 +20,9 @@ export const posicoes = parse(Posicao.array(), [
       // «Public Affairs» e não «Assuntos Públicos» em português: é o nome por
       // que o ofício é conhecido cá, e é assim que ele se apresenta.
       pt: 'Consultor de Public Affairs',
-      en: 'Public Affairs Consultant',
+      en: 'Public affairs consultant',
       fr: 'Consultant en affaires publiques',
-      es: 'Consultor de Asuntos Públicos',
+      es: 'Consultor de asuntos públicos',
     },
     organizacao: 'ATREVIA',
     organizacaoUrl: 'https://www.atrevia.com',
@@ -112,7 +112,7 @@ export const posicoes = parse(Posicao.array(), [
         // estava a corrigir outra coisa; volta, porque era o que humanizava.
         pt: 'No Bartô, o bar e sala de espetáculos que fica no Chapitô, em Lisboa. Ao balcão, e apoio de palco na própria sala. A cultura vista do lado de quem monta e desmonta.',
         en: 'At Bartô, the bar and small venue inside Chapitô, in Lisbon. Behind the counter, and stage-hand work in the room itself. Culture seen from the side that sets up and tears down.',
-        fr: 'Au Bartô, le bar et la petite salle de spectacle qui se trouvent au Chapitô, à Lisbonne. Derrière le comptoir, et à la régie de plateau dans la salle même. La culture vue du côté de ceux qui montent et démontent.',
+        fr: 'Au Bartô, le bar et la petite salle de spectacle qui se trouvent au Chapitô, à Lisbonne. Derrière le comptoir, et un coup de main au plateau dans la salle même. La culture vue du côté de ceux qui montent et démontent.',
         es: 'En el Bartô, el bar y sala de espectáculos que está en el Chapitô, en Lisboa. En la barra, y apoyo de escenario en la propia sala. La cultura vista desde el lado de quien monta y desmonta.',
       },
     ],
@@ -238,7 +238,13 @@ export const formacao = parse(Formacao.array(), [
       fr: 'Lobbying and Advocacy',
       es: 'Lobbying and Advocacy',
     },
-    instituicao: 'Centro Internacional de Formação da OIT (ITCILO)',
+    /* Pelo nome próprio, como os outros sete. Estava traduzido para português
+       — e, sendo `instituicao` uma cadeia só, saía assim também no CV inglês,
+       entre a Yale e a Google. Mas a tradução era o desvio nas DUAS línguas:
+       nesta lista ninguém está traduzido, nem o «University of California,
+       Irvine» nem a «IESE Business School». «International Training Centre of
+       the ILO» é como a própria casa se nomeia — conferido em itcilo.org. */
+    instituicao: 'International Training Centre of the ILO (ITCILO)',
     periodo: { inicio: '2024-09', fim: '2024-09' },
     /* Havia página, e eu não a tinha encontrado: o LinkedIn guardara o
        endereço do curso e não o da credencial. Este veio do Fábio.

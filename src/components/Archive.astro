@@ -96,14 +96,25 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     ficheiroLbl: 'ficheiro', original: 'no editor', ouvir: 'Ouvir', ver: 'Ver', dimensoes: 'imagem',
     ondeLbl: 'onde', imagensLbl: 'imagens', transcricaoLbl: 'o que se ouve',
     organizaLbl: 'organização', quandoLbl: 'quando', paginaLbl: 'página',
+    /* «entradas em palco» e não «leituras»: das três, uma é peça montada e de
+       alinhamento próprio — o `voz.ts` diz por extenso porquê, e o dossiê já
+       respeitava a distinção («2 leituras em palco» mais «1 noite a solo»).
+       A página não respeitava, e ao chamar-lhe leitura atribuía a texto alheio
+       uma noite que é do Fábio. Agora as duas renderizações dizem o mesmo. */
     notaVoz: (n, v, p) =>
-      `As ${n} leituras são os ficheiros originais, byte a byte, do que o esquerda.net publicou — vivem aqui porque o feed do podcast só guarda os episódios mais recentes, e estas caíram fora dele. Os ${v} vídeos vieram da página do Transborda e foram recodificados uma vez, para tocarem em todos os browsers. Das ${p} leituras em palco não ficou gravação nenhuma — ficaram as imagens que houve, e a página de quem as acolheu ou escreveu sobre elas. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
+      `As ${n} leituras são os ficheiros originais, byte a byte, do que o esquerda.net publicou — vivem aqui porque o feed do podcast só guarda os episódios mais recentes, e estas caíram fora dele. Os ${v} vídeos vieram da página do Transborda e foram recodificados uma vez, para tocarem em todos os browsers. Das ${p} entradas em palco não ficou gravação nenhuma — ficaram as imagens que houve, e a página de quem as acolheu ou escreveu sobre elas. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
   },
+  /* «mandates» era falso amigo e saiu. Em inglês, um *mandate* é a autoridade
+     conferida — «a mandate for reform» —, não o cargo exercido: «4 mandates» na
+     primeira linha da página não se lia como quatro mandatos autárquicos, e
+     «Institutional mandates» como título de secção no CV inglês lia-se ainda
+     pior, porque é o documento que vai para quem recruta. O francês (`mandats`)
+     e o espanhol (`mandatos`) estão certos nas suas línguas e ficam. */
   en: {
-    projetos: 'projects/', voz: 'voice/', percurso: 'career/', mandatos: 'mandates/', formacao: 'certificates/',
+    projetos: 'projects/', voz: 'voice/', percurso: 'career/', mandatos: 'office/', formacao: 'certificates/',
     contacto: 'contact/', privacidade: 'privacy/', acessibilidade: 'accessibility/', ficheiros: 'files/', colofao: 'colophon/',
     entradas: (n) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
-    contaProjetos: 'projects', contaLeituras: 'voice pieces', contaCargos: 'positions', contaMandatos: 'mandates',
+    contaProjetos: 'projects', contaLeituras: 'voice pieces', contaCargos: 'positions', contaMandatos: 'terms in office',
     nascido: (ano) => `born ${ano}`,
     abrirTudo: 'expand all', fecharTudo: 'collapse all',
     tudoAberto: 'Everything open.', tudoFechado: 'Everything closed.',
@@ -117,7 +128,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     ondeLbl: 'where', imagensLbl: 'pictures', transcricaoLbl: 'what is said',
     organizaLbl: 'organiser', quandoLbl: 'when', paginaLbl: 'page',
     notaVoz: (n, v, p) =>
-      `The ${n} readings are the original files, byte for byte, of what esquerda.net published — they live here because the podcast feed keeps only the most recent episodes, and these dropped out of it. The ${v} films came from the Transborda page and were re-encoded once, so they play in every browser. Of the ${p} readings on stage no recording survives — what is left are whatever pictures there were, and the page of whoever hosted them or wrote about them. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
+      `The ${n} readings are the original files, byte for byte, of what esquerda.net published — they live here because the podcast feed keeps only the most recent episodes, and these dropped out of it. The ${v} films came from the Transborda page and were re-encoded once, so they play in every browser. Of the ${p} pieces performed on stage no recording survives — what is left are whatever pictures there were, and the page of whoever hosted them or wrote about them. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
   },
   fr: {
     projetos: 'projets/', voz: 'voix/', percurso: 'parcours/', mandatos: 'mandats/', formacao: 'certificats/',
@@ -137,7 +148,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     ondeLbl: 'où', imagensLbl: 'images', transcricaoLbl: 'ce qui est dit',
     organizaLbl: 'organisation', quandoLbl: 'quand', paginaLbl: 'page',
     notaVoz: (n, v, p) =>
-      `Les ${n} lectures sont les fichiers originaux, octet par octet, de ce qu’esquerda.net a publié — ils vivent ici parce que le flux du podcast ne garde que les épisodes les plus récents, et ceux-ci en sont sortis. Les ${v} vidéos viennent de la page de Transborda et ont été réencodées une fois, pour être lues par tous les navigateurs. Des ${p} lectures sur scène il ne reste aucun enregistrement — il reste les images qu’il y avait, et la page de qui les a accueillies ou en a écrit. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
+      `Les ${n} lectures sont les fichiers originaux, octet par octet, de ce qu’esquerda.net a publié — ils vivent ici parce que le flux du podcast ne garde que les épisodes les plus récents, et ceux-ci en sont sortis. Les ${v} vidéos viennent de la page de Transborda et ont été réencodées une fois, pour être lues par tous les navigateurs. Des ${p} pièces sur scène il ne reste aucun enregistrement — il reste les images qu’il y avait, et la page de qui les a accueillies ou qui en a parlé. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
   },
   es: {
     projetos: 'proyectos/', voz: 'voz/', percurso: 'trayectoria/', mandatos: 'mandatos/', formacao: 'certificados/',
@@ -157,7 +168,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     ondeLbl: 'dónde', imagensLbl: 'imágenes', transcricaoLbl: 'lo que se oye',
     organizaLbl: 'organización', quandoLbl: 'cuándo', paginaLbl: 'página',
     notaVoz: (n, v, p) =>
-      `Las ${n} lecturas son los ficheros originales, byte a byte, de lo que esquerda.net publicó — viven aquí porque el feed del podcast solo guarda los episodios más recientes, y estas quedaron fuera. Los ${v} vídeos vinieron de la página de Transborda y se recodificaron una vez, para reproducirse en todos los navegadores. De las ${p} lecturas en escena no quedó ninguna grabación — quedaron las imágenes que hubo, y la página de quien las acogió o escribió sobre ellas. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
+      `Las ${n} lecturas son los ficheros originales, byte a byte, de lo que esquerda.net publicó — viven aquí porque el feed del podcast solo guarda los episodios más recientes, y estas quedaron fuera. Los ${v} vídeos vinieron de la página de Transborda y se recodificaron una vez, para reproducirse en todos los navegadores. De las ${p} piezas en escena no quedó ninguna grabación — quedaron las imágenes que hubo, y la página de quien las acogió o escribió sobre ellas. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
   },
 }
 const rot = ROTULOS[idioma]
@@ -494,7 +505,12 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                     dia, e a página de quem a fez. Os rótulos mudam com o
                     formato porque descrevem coisas diferentes — deixá-los
                     fixos era pôr «publicado» em cima de uma noite. */}
-                <dt>{palco ? rot.organizaLbl : rot.rubricaLbl}</dt>
+                {/* Da RUBRICA e não do formato: quando ela é nula, o valor
+                    que sai é o editor, e chamar-lhe «rubrica» era rotular a
+                    casa que encomendou como se fosse uma secção. Acontecia nos
+                    dois vídeos — «rubrica / Transborda, Almada». A condição
+                    antiga olhava para o palco, e os vídeos não são palco. */}
+                <dt>{l.rubrica === null ? rot.organizaLbl : rot.rubricaLbl}</dt>
                 <dd>{l.rubrica ? `${l.rubrica} · ${l.editor}` : l.editor}</dd>
                 {l.local && (
                   <>

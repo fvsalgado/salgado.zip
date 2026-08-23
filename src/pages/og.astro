@@ -27,14 +27,24 @@ const visiveis = projetos.slice(0, 5)
       <div class="og__arvore">
         <div class="og__linha"><span>projetos/</span></div>
         {
-          visiveis.map((p, i) => (
+          visiveis.map((p) => (
             <div class="og__linha">
-              <span class="og__guia">{i === visiveis.length - 1 ? '└─' : '├─'}</span>
+              <span class="og__guia">├─</span>
               <span>{p.dominio}</span>
               <span class="og__meta">{estado(p.estado, idioma)}</span>
             </div>
           ))
         }
+        {/* O `└─` diz «acaba aqui», e o cartão mostra cinco de sete: fechava a
+            árvore num sítio onde ela não acaba. Agora todas as linhas visíveis
+            levam `├─` e a última diz quantas ficaram de fora — derivado, não
+            escrito, para o dia em que entrar o oitavo projeto. */}
+        {projetos.length > visiveis.length && (
+          <div class="og__linha">
+            <span class="og__guia">└─</span>
+            <span class="og__meta">+{projetos.length - visiveis.length}</span>
+          </div>
+        )}
       </div>
       <div class="og__pe">
         <span>salgado.zip</span>
