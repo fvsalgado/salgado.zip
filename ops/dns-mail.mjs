@@ -17,16 +17,24 @@
  *
  * Por omissão só mostra o plano. Escreve mesmo com `--aplicar`.
  *
- * Precisa de VERCEL_TOKEN e VERCEL_TEAM_ID no ambiente. O TEAM_ID não é
- * opcional: os domínios estão todos na equipa, e sem ele a API responde 200
- * com uma lista vazia — o que parece sucesso e não é.
+ * Sem VERCEL_TOKEN imprime só o estado desejado e sai. Com token, compara com
+ * o que lá está e mostra a diferença; escreve mesmo com `--aplicar`.
+ *
+ * O VERCEL_TEAM_ID não é opcional quando há token: os domínios estão todos na
+ * equipa, e sem ele a API responde 200 com uma lista vazia — o que parece
+ * sucesso e não é.
+ *
+ * Vive em ops/ e não em scripts/ por uma razão mecânica, não estética: o
+ * `scripts/pack.mjs` varre `scripts/*.mjs` para o contador de linhas do
+ * colofão, e a verificação 12 reconta e falha se o total congelado em
+ * `src/generated/linhas.json` deixar de bater certo. Um ficheiro operacional
+ * em scripts/ inflacionaria o número publicado como se fosse código do site,
+ * e partia o CI ao mesmo tempo.
  */
 const APLICAR = process.argv.includes('--aplicar')
 
 const TOKEN = process.env.VERCEL_TOKEN
 const EQUIPA = process.env.VERCEL_TEAM_ID
-if (!TOKEN) { console.error('Falta VERCEL_TOKEN no ambiente.'); process.exit(1) }
-if (!EQUIPA) { console.error('Falta VERCEL_TEAM_ID no ambiente.'); process.exit(1) }
 
 // A caixa que recebe os relatórios agregados. É um user real em salgado.zip.
 const CAIXA = 'dmarc@salgado.zip'
@@ -84,6 +92,28 @@ const querido = (dominio) => {
 // Normaliza para comparar: a Vercel devolve TXT sem aspas, mas há resolvers
 // e importações que as deixam ficar.
 const limpo = (v) => String(v).trim().replace(/^"|"$/g, '').replace(/\s+/g, ' ')
+
+// Sem token não há como ler o que lá está, portanto não há diferença para
+// mostrar — resta imprimir o estado desejado. Serve para rever o que o script
+// pretende escrever sem dar credenciais a ninguém.
+if (!TOKEN) {
+  console.log('Sem VERCEL_TOKEN: só o estado desejado, sem comparar com o que está publicado.\n')
+  let n = 0
+  for (const dominio of DOMINIOS) {
+    for (const q of querido(dominio)) {
+      console.log(`  ${dominio.padEnd(22)} ${q.nome.padEnd(34)} ${q.tipo.padEnd(6)} ${q.valor}`)
+      n++
+    }
+  }
+  console.log(`\n${n} registos desejados, mais os ${DOMINIOS.length} CNAME _dmarc que têm de sair primeiro.`)
+  console.log('Define VERCEL_TOKEN e VERCEL_TEAM_ID para veres a diferença face ao que está publicado.')
+  process.exit(0)
+}
+if (!EQUIPA) {
+  console.error('Falta VERCEL_TEAM_ID. Os domínios estão na equipa; sem ele a API devolve')
+  console.error('uma lista vazia com HTTP 200, o que parece sucesso e não é.')
+  process.exit(1)
+}
 
 const criar = [], apagar = [], jaLa = []
 
