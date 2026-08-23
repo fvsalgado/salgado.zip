@@ -11,8 +11,20 @@
  * cabeçalho Xing/Info quando existe — a contagem de frames, exata mesmo em
  * bitrate variável — e do tamanho a dividir pelo bitrate quando não existe,
  * que é exato em bitrate constante. Os nove ficheiros de public/voz/ trazem
- * cabeçalho, e quatro deles são mesmo VBR: sem ler o cabeçalho, a conta pelo
- * bitrate dava-lhes menos um minuto do que duram.
+ * cabeçalho, e SEIS deles são mesmo VBR. Sem ler o cabeçalho, a conta pelo
+ * bitrate erra por 10 a 43 segundos em cada um deles — 125 segundos somados,
+ * dois minutos ao todo. Medido, correndo esta função sobre os nove e
+ * comparando com o tamanho a dividir pelo bitrate:
+ *
+ *   documentos-do-pentagono  1263s   pelo bitrate 1220s   Δ +43
+ *   arvore-de-natal          1055s                1032s   Δ +23
+ *   uma-grande-familia        409s                 389s   Δ +20
+ *   revolucao-esquecida       803s                 786s   Δ +17
+ *   tres-criticas-de-marx     992s                 981s   Δ +11
+ *   futebol-origens           316s                 306s   Δ +10
+ *
+ * (Dizia «quatro» e «menos um minuto». Nenhuma das duas se sustentava: o pior
+ * ficheiro erra 43 segundos, não sessenta, e são seis e não quatro.)
  */
 
 const BITRATES = {

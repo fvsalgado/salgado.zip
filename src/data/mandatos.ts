@@ -1,5 +1,5 @@
 import { Mandato, parse } from './schema.ts'
-import { contacto } from './contacto.ts'
+import { idadeEm } from './contacto.ts'
 
 /**
  * Uma linha por mandato, e agora é literal: quatro mandatos, quatro entradas.
@@ -22,21 +22,6 @@ import { contacto } from './contacto.ts'
  * quem decide, que é o que o cargo pede.
  */
 
-/**
- * A idade num outubro, derivada e não escrita.
- *
- * O comentário antigo jurava que as idades saíam do ano de nascimento e não
- * saíam: estavam escritas à letra no texto, «aos 19 anos» e «aos 21». Uma
- * afirmação sobre a fonte de um número tem de ser verdadeira ou não vale nada,
- * e agora é — mudar o ano em contacto.ts muda estas duas frases.
- *
- * De `contacto.nascimento` só se publica o ano, que é o que basta para esta
- * conta e o que menos serve a quem se quisesse fazer passar por outra pessoa.
- * A conta é `ano − ano de nascimento`, e vale porque todas as datas daqui são
- * de outubro, depois do aniversário — o próprio Fábio confirmou os dois
- * números que ela devolve.
- */
-const idadeEm = (ano: number) => ano - Number(contacto.nascimento)
 
 /**
  * O cargo, e o francês foi o que deu trabalho.

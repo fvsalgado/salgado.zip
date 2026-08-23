@@ -138,14 +138,15 @@ export const posicoes = parse(Posicao.array(), [
  * um certificado traduzido é um certificado que não se encontra. As quatro
  * chaves repetem a mesma cadeia por isso mesmo.
  *
- * Três das vinte e nove licenças do LinkedIn, e só as que dizem respeito ao
- * cargo: política pública, lobbying e advocacia.
- *
  * São cursos online, feitos por conta própria, e o nó chama-se `certificados/`
  * e não `formacao/` por isso mesmo: uma lista com "Yale" e "University of
  * Michigan" debaixo de um nó chamado formação lê-se como se lá tivesse
  * estudado, e não foi isso que aconteceu. O rótulo tem de dizer a verdade
  * sozinho, sem depender de quem lê abrir e reparar.
+ *
+ * (Este bloco tinha uma linha a dizer «três das vinte e nove licenças», que
+ * ficou pendurada quando a seleção passou a seis e depois a oito. O bloco
+ * seguinte é o atual e conta a escolha inteira.)
  */
 /**
  * Os certificados, escolhidos e não despejados.
