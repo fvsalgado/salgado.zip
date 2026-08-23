@@ -272,8 +272,25 @@ const ROTAS_ARVORE = ROTAS.filter((r) => /data-arvore/.test(html(r)))
     if (!m) return null
     return Object.fromEntries([...m[1].matchAll(/--([a-z-]+):\s*(#[0-9a-f]{6})/gi)].map((x) => [x[1], x[2]]))
   }
-  const claro = bloco(/:root\s*\{([\s\S]*?)\}/)
-  const escuro = bloco(/:root\[data-theme='dark'\]\s*\{([\s\S]*?)\}/)
+  /* TRÊS blocos, e não dois. O `tokens.css` tem a paleta escura escrita duas
+     vezes: uma sob `[data-theme='dark']`, para quem carregou no alternador, e
+     outra sob `@media (prefers-color-scheme: dark)`, para quem tem o sistema em
+     escuro e nunca lhe tocou. Lia-se só a primeira.
+
+     A segunda é a que serve o caso NORMAL — o `tema.js` só põe o atributo se já
+     houver escolha guardada, portanto quem chega de novo com o sistema em
+     escuro recebe o bloco do `@media`. E a verificação 17 também não lhe toca:
+     põe `dataset.theme` antes de correr o axe, o que faz o bloco do atributo
+     ganhar na cascata. Medido com este bloco partido de propósito: 77
+     violações de contraste na página real, e as duas verificações verdes.
+
+     A âncora é o início de linha porque `:root {` aparece também dentro do
+     `@media (prefers-reduced-motion)`, mais abaixo e indentado. */
+  const claro = bloco(/^:root\s*\{([\s\S]*?)^\}/m)
+  const escuro = bloco(/^:root\[data-theme='dark'\]\s*\{([\s\S]*?)^\}/m)
+  const escuroSistema = bloco(
+    /@media \(prefers-color-scheme: dark\)\s*\{\s*:root:not\(\[data-theme='light'\]\)\s*\{([\s\S]*?)\}/
+  )
 
   const lum = (hex) => {
     const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -300,7 +317,11 @@ const ROTAS_ARVORE = ROTAS.filter((r) => /data-arvore/.test(html(r)))
   ]
   const problemas = []
   let pior = Infinity
-  for (const [tema, t] of [['claro', claro], ['escuro', escuro]]) {
+  for (const [tema, t] of [
+    ['claro', claro],
+    ['escuro (alternador)', escuro],
+    ['escuro (sistema)', escuroSistema],
+  ]) {
     if (!t) {
       problemas.push(`não consegui ler os tokens do tema ${tema}`)
       continue
@@ -315,7 +336,29 @@ const ROTAS_ARVORE = ROTAS.filter((r) => /data-arvore/.test(html(r)))
       if (r < min) problemas.push(`${tema}: --${a} sobre --${b} = ${r.toFixed(2)}:1, mínimo ${min}:1`)
     }
   }
-  decide('contraste AA nos dois temas', problemas, `pior par ${pior.toFixed(2)}:1`)
+  /* E as duas paletas escuras têm de ser a MESMA, token a token.
+
+     Medir as duas não chega: eram duas listas a envelhecer em paralelo, e o dia
+     em que uma mudasse sem a outra dava dois sítios com a mesma promessa e
+     cores diferentes — a mesma família de defeito que a contagem de linhas
+     copiada entre dois ficheiros. O CSS não deixa partilhar um bloco de
+     declarações entre um seletor dentro de `@media` e outro fora dele, por isso
+     a duplicação fica; o que não fica é ela poder divergir em silêncio. */
+  if (escuro !== null && escuroSistema !== null) {
+    for (const k of new Set([...Object.keys(escuro), ...Object.keys(escuroSistema)])) {
+      if (escuro[k] !== escuroSistema[k]) {
+        problemas.push(
+          `--${k}: o escuro do alternador diz ${escuro[k] ?? '(nada)'} e o do sistema diz ${escuroSistema[k] ?? '(nada)'}`
+        )
+      }
+    }
+  }
+
+  decide(
+    'contraste AA nas três paletas, e as duas escuras iguais token a token',
+    problemas,
+    `pior par ${pior.toFixed(2)}:1 · ${Object.keys(escuro ?? {}).length} tokens escuros`
+  )
 }
 
 /* ══ 6. Sem marcadores por preencher ════════════════════════════════════ */
@@ -361,11 +404,36 @@ const ROTAS_ARVORE = ROTAS.filter((r) => /data-arvore/.test(html(r)))
       }
     }
   }
+  /* Um PDF não é texto, e um endereço lá dentro esconde-se de duas maneiras:
+     no fluxo desenhado, que vem comprimido, e na anotação de ligação, que o
+     leitor de PDF usa para o tornar clicável. Procura-se nas duas — no texto
+     descomprimido pelo `pdf-ler.mjs`, e nos bytes crus, onde as anotações
+     `/URI (…)` costumam ficar por comprimir.
+
+     Isto entrou porque a varredura lia `.html`, `.json`, `.xml` e `.txt`, e
+     mais nada: um `fetch("https://travertina.casa/api")` no `tema.js` passava,
+     e um endereço dentro do CV passava duas vezes — no `dist/` e outra vez
+     dentro do `.zip`, que só abria `.txt` e `.json` e nunca os dois PDF que
+     leva lá dentro. */
+  const olhar = (buf, onde) => {
+    if (/\.pdf$/i.test(onde)) {
+      suspeito(buf.toString('latin1'), onde)
+      const folhas = textoPorPagina(buf)
+      if (folhas === null) problemas.push(`${onde}: não consegui ler o texto para conferir`)
+      else folhas.forEach((f, i) => suspeito(f, `${onde} folha ${i + 1}`))
+      return
+    }
+    suspeito(buf.toString('utf8'), onde)
+  }
+
+  /* Tudo o que é texto ou documento. As imagens e o som ficam de fora por não
+     poderem levar um endereço que um browser siga. */
+  const LEGIVEL = /\.(html|json|xml|txt|js|css|svg|pdf|webmanifest)$/i
   const varrerDist = (dir) => {
     for (const e of readdirSync(dir, { withFileTypes: true })) {
       if (e.isDirectory()) varrerDist(dir + e.name + '/')
-      else if (/\.(html|json|xml|txt)$/.test(e.name)) {
-        suspeito(readFileSync(dir + e.name, 'utf8'), 'dist/' + (dir + e.name).replace(dist, ''))
+      else if (LEGIVEL.test(e.name)) {
+        olhar(readFileSync(dir + e.name), 'dist/' + (dir + e.name).replace(dist, ''))
       }
     }
   }
@@ -373,14 +441,14 @@ const ROTAS_ARVORE = ROTAS.filter((r) => /data-arvore/.test(html(r)))
   if (existsSync(pub + 'salgado.zip')) {
     const z = lerZip(readFileSync(pub + 'salgado.zip'))
     for (const entrada of z.entradas) {
-      if (/\.(txt|json)$/.test(entrada.nome)) suspeito(z.ler(entrada.nome).toString('utf8'), `zip:${entrada.nome}`)
+      if (LEGIVEL.test(entrada.nome)) olhar(z.ler(entrada.nome), `zip:${entrada.nome}`)
     }
   }
   // Capturas de projetos privados são permitidas desde que mostrem dados de
   // demonstração — decisão do Fábio a 18/08/2026. O que continua proibido é
   // qualquer endereço que lhes aponte.
   decide(
-    'projetos privados sem endereço nem captura em lado nenhum',
+    'projetos privados sem endereço em lado nenhum — nem no HTML, nem no JS, nem dentro dos PDF',
     problemas,
     privados.map((p) => p.dominio).join(', ')
   )
@@ -958,15 +1026,46 @@ function imagensPorPagina(buf) {
    em produção — logótipos alheios, inglês, tema alheio. Qualquer caminho
    errado quebrava o site inteiro. */
 {
+  /* «Parece ser a nossa» era duas cordas que qualquer página satisfaz por
+     acidente: conter «salgado.zip» algures e ter um `href="/"`. Substituí a
+     404 por uma página de erro alheia — fundo preto, inglês, logótipo de outra
+     casa — com o domínio dentro de um comentário HTML e uma ligação vazia, e
+     passou verde. Era exatamente o cenário que o comentário aqui em cima diz
+     querer impedir.
+
+     O que prova mesmo que a página é nossa é partilhar a CASCA: os mesmos
+     pacotes de CSS que o build gerou para as outras rotas, com o mesmo resumo
+     no nome do ficheiro. Uma página de erro de outra casa nunca os traz, e uma
+     nossa não os pode perder sem deixar de ser a nossa.
+
+     O que NÃO se verifica aqui, e fica dito: se o servidor a entrega mesmo
+     para um caminho errado. O `astro preview` responde com o 404 dele próprio
+     («trailingSlash is set to always»), portanto medir isso contra o preview
+     dava uma falha do ambiente e não do sítio. Conferi à mão contra a
+     produção — 308 para a barra final e depois 404 com esta página — e é uma
+     propriedade do alojamento, que muda quando o `vercel.json` mudar e não
+     quando o sítio mudar. */
   const problemas = []
   if (!existsSync(dist + '404.html')) {
     problemas.push('dist/404.html não existe')
   } else {
-    const h = readFileSync(dist + '404.html', 'utf8')
-    if (!h.includes('salgado.zip')) problemas.push('a 404 não parece ser a nossa')
+    const h = html('/404.html')
+    const casa = html('/')
+    const folhas = (t) => [...t.matchAll(/href="(\/_astro\/[^"]+\.css)"/g)].map((m) => m[1])
+    const daCasa = folhas(casa)
+    const daErro = folhas(h)
+    for (const f of daCasa) {
+      if (!daErro.includes(f)) problemas.push(`a 404 não traz ${f}, que é a casca do resto do sítio`)
+    }
+    if (daCasa.length === 0) problemas.push('a home não traz folhas de estilo — o padrão deixou de casar')
+    const lingua = LINGUAS[IDIOMAS.find((i) => LINGUAS[i].raiz === '/')].html
+    if (!new RegExp(`<html[^>]*lang="${lingua}"`).test(h)) {
+      problemas.push(`a 404 não está em ${lingua}`)
+    }
+    if (!h.includes(cabecalho.nome)) problemas.push(`a 404 não nomeia ${cabecalho.nome}`)
     if (!/href="\/"/.test(h)) problemas.push('a 404 não liga de volta ao arquivo')
   }
-  decide('a página 404 é a do site, com caminho de volta', problemas)
+  decide('a página 404 é a do site — mesma casca, mesma língua, com caminho de volta', problemas)
 }
 
 /* ══ 13. Oito capturas para revisão à vista ═════════════════════════════ */
@@ -1132,14 +1231,34 @@ function imagensPorPagina(buf) {
           problemas.push(`${rota} ${tema}${aberta ? ' aberta' : ''}: [${v.impact}] ${v.id} — ${v.help} (${onde})`)
         }
         if (aberta) {
-          const falantes = await p.evaluate(() =>
-            [...document.querySelectorAll('summary img[alt]')]
-              .filter((i) => i.getAttribute('alt').trim() !== '')
-              .map((i) => i.getAttribute('src') + ' → «' + i.getAttribute('alt').slice(0, 40) + '»')
-          )
-          controlos += await p.evaluate(() => document.querySelectorAll('summary').length)
-          for (const f of falantes) {
-            problemas.push(`${rota}: imagem com texto alternativo dentro de um <summary> — entra no nome do controlo: ${f}`)
+          /* O NOME ACESSÍVEL de cada `<summary>`, medido e não inferido.
+
+             Media-se o `alt` das imagens lá dentro, que é UM dos caminhos por
+             onde um parágrafo entra no nome de um controlo. Há pelo menos três
+             outros — `alt="" aria-label`, `role="img" aria-label`, e um `<svg
+             role="img"><title>` — e por qualquer deles o nome ia a 237
+             caracteres sem esta conta dizer nada. Uma regra que nomeia o
+             caminho em vez de medir o resultado só apanha o caminho que quem a
+             escreveu já conhecia.
+
+             O limite é o comprimento da linha que se vê. Um controlo pode
+             chamar-se pelo que está escrito nele; o que não pode é levar atrás
+             a descrição inteira do resumo, e foi isso que aconteceu — sete
+             controlos entre 143 e 276 caracteres, e quem navega por teclado
+             ouvia um parágrafo por linha antes de saber onde estava. */
+          /* O limite é o comprimento de uma linha que se lê de uma vez. Hoje o
+             mais longo diz-se em 83 caracteres e o seguinte em 71: há folga,
+             e não é um número escolhido para caber no que já lá está. */
+          const LIMITE = 90
+          for (const sm of await p.locator('summary').all()) {
+            controlos += 1
+            const ax = await p.accessibility.snapshot({ root: await sm.elementHandle() })
+            const nome = (ax?.name ?? '').replace(/\s+/g, ' ').trim()
+            if (nome.length > LIMITE) {
+              problemas.push(
+                `${rota}: um <summary> chama-se com ${nome.length} caracteres (máximo ${LIMITE}) — «${nome.slice(0, 60)}…»`
+              )
+            }
           }
         }
         combinacoes += 1
