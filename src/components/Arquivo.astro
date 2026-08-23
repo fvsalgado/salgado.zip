@@ -4,6 +4,26 @@
  * `idioma` escolhe lá dentro —, e por isso vive num componente e não copiado
  * em quatro rotas: quatro cópias de uma barra de navegação são quatro sítios
  * onde a próxima alteração fica por fazer numa delas.
+ *
+ * O `<main>` envolve SÓ o arquivo, e a caixa de largura passou para um `<div>`
+ * à volta de tudo. Envolvia a página inteira — o menu de línguas, o botão do
+ * tema, o cabeçalho e o rodapé —, e daí saíam dois defeitos de uma só causa.
+ *
+ * O primeiro: a ligação «saltar para o conteúdo» não saltava nada. Apontava a
+ * este `<main>`, e o `<main>` continha aquilo que ela existe para saltar. Media
+ * -se: a página não rolava e a tabulação seguinte caía exatamente no menu de
+ * línguas. Um atalho que aterra no primeiro dos elementos que promete saltar é
+ * pior do que atalho nenhum, porque quem o usa acredita nele.
+ *
+ * O segundo: um `<header>` ou um `<footer>` dentro de `<main>` não é `banner`
+ * nem `contentinfo` — o HTML-AAM tira-lhes o papel quando estão aninhados. A
+ * página tinha uma região só, do tamanho de si própria, e o rodapé, que guarda
+ * os contactos, os CV e as ligações de privacidade e acessibilidade, não era
+ * encontrável por quem navega de marco em marco. Um `<div>` no meio não tira
+ * papel nenhum, e por isso a caixa de largura pode ficar onde ficou.
+ *
+ * O `tabindex="-1"` é o que faz o foco aterrar mesmo no destino em vez de só
+ * mudar o ponto de partida da tabulação. Não o põe na ordem de tabulação.
  */
 import Header from './Header.astro'
 import Tema from './Tema.astro'
@@ -16,15 +36,17 @@ interface Props { idioma: Idioma }
 const { idioma } = Astro.props
 ---
 
-<main class="folha" id="conteudo">
+<div class="folha">
   <div class="barra">
     <Linguas idioma={idioma} />
     <Tema idioma={idioma} />
   </div>
   <Header idioma={idioma} />
-  <Archive idioma={idioma} />
+  <main id="conteudo" tabindex="-1">
+    <Archive idioma={idioma} />
+  </main>
   <Rodape idioma={idioma} />
-</main>
+</div>
 <script>
   import '../scripts/arquivo'
 </script>

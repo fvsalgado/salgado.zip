@@ -41,6 +41,9 @@ interface Rotulos {
   nascido: (ano: string) => string
   abrirTudo: string
   fecharTudo: string
+  /** O que a região viva diz depois de cada um deles. */
+  tudoAberto: string
+  tudoFechado: string
   /** Os campos de um nó aberto. */
   papel: string
   periodo: string
@@ -83,6 +86,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     contaProjetos: 'projetos', contaLeituras: 'peças de voz', contaCargos: 'cargos', contaMandatos: 'mandatos',
     nascido: (ano) => `nascido em ${ano}`,
     abrirTudo: 'abrir tudo', fecharTudo: 'fechar tudo',
+    tudoAberto: 'Tudo aberto.', tudoFechado: 'Tudo fechado.',
     papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
     privado: 'privado, atrás de autenticação', codigo: 'código', licenca: 'licença',
     onde: 'onde', deOnde: 'de onde', idiomas: 'idiomas',
@@ -102,6 +106,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     contaProjetos: 'projects', contaLeituras: 'voice pieces', contaCargos: 'positions', contaMandatos: 'mandates',
     nascido: (ano) => `born ${ano}`,
     abrirTudo: 'expand all', fecharTudo: 'collapse all',
+    tudoAberto: 'Everything open.', tudoFechado: 'Everything closed.',
     papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
     privado: 'private, behind authentication', codigo: 'source', licenca: 'licence',
     onde: 'where', deOnde: 'from', idiomas: 'languages',
@@ -121,6 +126,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     contaProjetos: 'projets', contaLeituras: 'pièces de voix', contaCargos: 'postes', contaMandatos: 'mandats',
     nascido: (ano) => `né en ${ano}`,
     abrirTudo: 'tout ouvrir', fecharTudo: 'tout fermer',
+    tudoAberto: 'Tout est ouvert.', tudoFechado: 'Tout est fermé.',
     papel: 'rôle', periodo: 'période', stack: 'stack', endereco: 'adresse', acesso: 'accès',
     privado: 'privé, derrière une authentification', codigo: 'code', licenca: 'licence',
     onde: 'où', deOnde: 'd’où', idiomas: 'langues',
@@ -140,6 +146,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     contaProjetos: 'proyectos', contaLeituras: 'piezas de voz', contaCargos: 'cargos', contaMandatos: 'mandatos',
     nascido: (ano) => `nacido en ${ano}`,
     abrirTudo: 'abrir todo', fecharTudo: 'cerrar todo',
+    tudoAberto: 'Todo abierto.', tudoFechado: 'Todo cerrado.',
     papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'dirección', acesso: 'acceso',
     privado: 'privado, tras autenticación', codigo: 'código', licenca: 'licencia',
     onde: 'dónde', deOnde: 'de dónde', idiomas: 'idiomas',
@@ -189,10 +196,16 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
 <div class="totais">
   <p>{totais.join(' · ')}</p>
   <p class="totais__controlos" data-controlos hidden>
-    <button type="button" data-abrir-tudo>{rot.abrirTudo}</button>
+    <button type="button" data-abrir-tudo data-diz={rot.tudoAberto}>{rot.abrirTudo}</button>
     <span aria-hidden="true">·</span>
-    <button type="button" data-fechar-tudo>{rot.fecharTudo}</button>
+    <button type="button" data-fechar-tudo data-diz={rot.tudoFechado}>{rot.fecharTudo}</button>
   </p>
+  {/* Carregar em «abrir tudo» leva os nós de 2 para 39 e a página de 3500 para
+      14 700 pixels. Quem vê, vê acontecer; quem não vê, não recebia sinal
+      nenhum — o foco fica no botão, o rótulo continua a dizer o mesmo, e não
+      havia nesta página uma única região viva. Passa a haver esta, e o que ela
+      diz vem dos rótulos como tudo o resto. */}
+  <p class="so-leitor" role="status" data-anuncio></p>
 </div>
 
 <ul class="arvore" role="list" data-arvore>
@@ -341,6 +354,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
               id={l.id}
               nivel={3}
               nome={l.titulo}
+              lingua={idioma === 'pt' ? undefined : 'pt'}
               colunas={[
                 { classe: 'papel', valor: l.autoria },
                 { classe: 'periodo', valor: l.data.slice(0, 4) },

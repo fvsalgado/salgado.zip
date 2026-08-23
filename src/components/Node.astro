@@ -33,6 +33,16 @@ export interface Coluna {
 interface Props {
   id?: string
   nome: string
+  /**
+   * A língua do NOME, quando não é a da página. O título de uma leitura em
+   * português continua em português numa página inglesa — é um facto sobre o
+   * texto, não uma tradução em falta —, e sem isto um leitor de ecrã pronuncia
+   * «Documentos do Pentágono» com voz inglesa. É o critério 3.1.2.
+   *
+   * Só o nome, e não a linha toda: as colunas ao lado — a casa que publicou, o
+   * ano, a duração — são da língua da página.
+   */
+  lingua?: string
   colunas?: Coluna[]
   aberto?: boolean
   href?: string
@@ -54,7 +64,7 @@ interface Props {
   idioma?: Idioma
 }
 
-const { id, nome, colunas = [], aberto = false, href, folha = false, nivel, idioma } = Astro.props
+const { id, nome, colunas = [], aberto = false, href, folha = false, nivel, idioma, lingua } = Astro.props
 const ehFicheiro = href !== undefined
 /* Derivado do próprio endereço, e não de uma opção que alguém se esqueça de
    passar: sai do sítio quem é absoluto e não é nosso. */
@@ -71,7 +81,7 @@ const Titulo = nivel === undefined ? 'span' : (`h${nivel}` as 'h2' | 'h3')
   {
     folha && !ehFicheiro ? (
       <span class="linha" id={id}>
-        <span class="linha__nome">{nome}</span>
+        <span class="linha__nome" lang={lingua}>{nome}</span>
         {colunas.map((c) => (
           <span class={`linha__col linha__col--${c.classe}`} data-estado={c.dataEstado}>
             {c.valor}
@@ -89,7 +99,7 @@ const Titulo = nivel === undefined ? 'span' : (`h${nivel}` as 'h2' | 'h3')
         >
           {/* Sem espaço entre o nome e a seta: com ele, a seta tinha por onde
               mudar de linha e ia aparecer sozinha por baixo do nome. */}
-          <span class="linha__nome">{nome}{
+          <span class="linha__nome" lang={lingua}>{nome}{
             saiDoSitio && <span class="seta-fora" aria-hidden="true">↗</span>
           }</span>
           {colunas.map((c) => (
@@ -108,7 +118,7 @@ const Titulo = nivel === undefined ? 'span' : (`h${nivel}` as 'h2' | 'h3')
         <summary>
           <Titulo class="linha">
             <span class="linha__marca" aria-hidden="true" />
-            <span class="linha__nome">{nome}</span>
+            <span class="linha__nome" lang={lingua}>{nome}</span>
             {colunas.map((c) => (
               <span class={`linha__col linha__col--${c.classe}`} data-estado={c.dataEstado}>
                 {c.valor}
