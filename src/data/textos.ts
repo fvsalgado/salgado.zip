@@ -12,11 +12,15 @@ const m = (linhas as { ficheiros: number }).ficheiros
  * extenso — mostrado no artefacto, não afirmado em adjetivos.
  */
 export const colofaoSite = parse(z.array(Lang).min(1), [
+  /* Só o de que a página é feita. Dizia também «sem cookies e sem publicidade»
+     e que a medição é anónima — mas isso é o que a nota de privacidade abre a
+     dizer, DENTRO DO MESMO NÓ, três campos abaixo. O visitante lia a mesma
+     promessa duas vezes seguidas; cada casa fica com a sua parte. */
   {
-    pt: 'Astro estático, sem cookies e sem publicidade. A medição de visitas é anónima e sai do próprio domínio. Tipografia IBM Plex, auto-alojada.',
-    en: 'Static Astro, no cookies and no advertising. Visit measurement is anonymous and served from this domain. IBM Plex type, self-hosted.',
-    fr: 'Astro statique, sans cookies et sans publicité. La mesure de fréquentation est anonyme et servie depuis ce domaine. Typographie IBM Plex, auto-hébergée.',
-    es: 'Astro estático, sin cookies y sin publicidad. La medición de visitas es anónima y se sirve del propio dominio. Tipografía IBM Plex, autoalojada.',
+    pt: 'Astro estático; tipografia IBM Plex, auto-alojada.',
+    en: 'Static Astro; IBM Plex type, self-hosted.',
+    fr: 'Astro statique ; typographie IBM Plex, auto-hébergée.',
+    es: 'Astro estático; tipografía IBM Plex, autoalojada.',
   },
   {
     pt: `${num('pt')} linhas de código em ${m} ficheiros. Uma fonte de dados; a página, os PDF, o resume.json e o zip saem dela.`,

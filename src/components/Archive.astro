@@ -58,7 +58,6 @@ interface Rotulos {
   idiomas: string
   visitar: string
   codigoAberto: string
-  notaFicheiros: string
   /** Os campos de uma leitura. */
   autor: string
   rubricaLbl: string
@@ -91,7 +90,6 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     privado: 'privado, atrás de autenticação', codigo: 'código', licenca: 'licença',
     onde: 'onde', deOnde: 'de onde', idiomas: 'idiomas',
     visitar: 'visitar', codigoAberto: 'código aberto',
-    notaFicheiros: 'Todos os tamanhos acima são lidos do ficheiro real no build. Nada aqui é escrito à mão.',
     autor: 'autoria', rubricaLbl: 'rubrica', publicado: 'publicado', duracaoLbl: 'duração',
     ficheiroLbl: 'ficheiro', original: 'no editor', ouvir: 'Ouvir', ver: 'Ver', dimensoes: 'imagem',
     ondeLbl: 'onde', imagensLbl: 'imagens', transcricaoLbl: 'o que se ouve',
@@ -102,7 +100,7 @@ const ROTULOS: Record<Idioma, Rotulos> = {
        A página não respeitava, e ao chamar-lhe leitura atribuía a texto alheio
        uma noite que é do Fábio. Agora as duas renderizações dizem o mesmo. */
     notaVoz: (n, v, p) =>
-      `As ${n} leituras são os ficheiros originais, byte a byte, do que o esquerda.net publicou — vivem aqui porque o feed do podcast só guarda os episódios mais recentes, e estas caíram fora dele. Os ${v} vídeos vieram da página do Transborda e foram recodificados uma vez, para tocarem em todos os browsers. Das ${p} entradas em palco não ficou gravação nenhuma — ficaram as imagens que houve, e a página de quem as acolheu ou escreveu sobre elas. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
+      `As ${n} leituras são os ficheiros originais do que o esquerda.net publicou — o feed do podcast já não os serve, e é por isso que vivem aqui. Os ${v} vídeos vieram da página do Transborda. Das ${p} entradas em palco não ficou gravação nenhuma — ficaram as imagens que houve, e a página de quem as acolheu ou escreveu sobre elas. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
   },
   /* «mandates» era falso amigo e saiu. Em inglês, um *mandate* é a autoridade
      conferida — «a mandate for reform» —, não o cargo exercido: «4 mandates» na
@@ -122,13 +120,12 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     privado: 'private, behind authentication', codigo: 'source', licenca: 'licence',
     onde: 'where', deOnde: 'from', idiomas: 'languages',
     visitar: 'visit', codigoAberto: 'open source',
-    notaFicheiros: 'Every size above is read from the real file at build time. Nothing here is typed by hand.',
     autor: 'author', rubricaLbl: 'series', publicado: 'published', duracaoLbl: 'length',
     ficheiroLbl: 'file', original: 'at the publisher', ouvir: 'Listen to', ver: 'Watch', dimensoes: 'picture',
     ondeLbl: 'where', imagensLbl: 'pictures', transcricaoLbl: 'what is said',
     organizaLbl: 'organiser', quandoLbl: 'when', paginaLbl: 'page',
     notaVoz: (n, v, p) =>
-      `The ${n} readings are the original files, byte for byte, of what esquerda.net published — they live here because the podcast feed keeps only the most recent episodes, and these dropped out of it. The ${v} films came from the Transborda page and were re-encoded once, so they play in every browser. Of the ${p} pieces performed on stage no recording survives — what is left are whatever pictures there were, and the page of whoever hosted them or wrote about them. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
+      `The ${n} readings are the original files of what esquerda.net published — the podcast feed no longer serves them, which is why they live here. The ${v} films came from the Transborda page. Of the ${p} pieces performed on stage no recording survives — what is left are whatever pictures there were, and the page of whoever hosted them or wrote about them. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
   },
   fr: {
     projetos: 'projets/', voz: 'voix/', percurso: 'parcours/', mandatos: 'mandats/', formacao: 'certificats/',
@@ -142,13 +139,12 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     privado: 'privé, derrière une authentification', codigo: 'code', licenca: 'licence',
     onde: 'où', deOnde: 'd’où', idiomas: 'langues',
     visitar: 'visiter', codigoAberto: 'code ouvert',
-    notaFicheiros: 'Toutes les tailles ci-dessus sont lues sur le fichier réel au build. Rien ici n’est saisi à la main.',
     autor: 'auteur', rubricaLbl: 'rubrique', publicado: 'publié', duracaoLbl: 'durée',
     ficheiroLbl: 'fichier', original: 'chez l’éditeur', ouvir: 'Écouter', ver: 'Regarder', dimensoes: 'image',
     ondeLbl: 'où', imagensLbl: 'images', transcricaoLbl: 'ce qui est dit',
     organizaLbl: 'organisation', quandoLbl: 'quand', paginaLbl: 'page',
     notaVoz: (n, v, p) =>
-      `Les ${n} lectures sont les fichiers originaux, octet par octet, de ce qu’esquerda.net a publié — ils vivent ici parce que le flux du podcast ne garde que les épisodes les plus récents, et ceux-ci en sont sortis. Les ${v} vidéos viennent de la page de Transborda et ont été réencodées une fois, pour être lues par tous les navigateurs. Des ${p} pièces sur scène il ne reste aucun enregistrement — il reste les images qu’il y avait, et la page de qui les a accueillies ou qui en a parlé. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
+      `Les ${n} lectures sont les fichiers originaux de ce qu’esquerda.net a publié — le flux du podcast ne les sert plus, et c’est pour cela qu’ils vivent ici. Les ${v} vidéos viennent de la page de Transborda. Des ${p} pièces sur scène il ne reste aucun enregistrement — il reste les images qu’il y avait, et la page de qui les a accueillies ou qui en a parlé. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
   },
   es: {
     projetos: 'proyectos/', voz: 'voz/', percurso: 'trayectoria/', mandatos: 'mandatos/', formacao: 'certificados/',
@@ -162,13 +158,12 @@ const ROTULOS: Record<Idioma, Rotulos> = {
     privado: 'privado, tras autenticación', codigo: 'código', licenca: 'licencia',
     onde: 'dónde', deOnde: 'de dónde', idiomas: 'idiomas',
     visitar: 'visitar', codigoAberto: 'código abierto',
-    notaFicheiros: 'Todos los tamaños de arriba se leen del fichero real en el build. Nada aquí se escribe a mano.',
     autor: 'autoría', rubricaLbl: 'sección', publicado: 'publicado', duracaoLbl: 'duración',
     ficheiroLbl: 'fichero', original: 'en el editor', ouvir: 'Escuchar', ver: 'Ver', dimensoes: 'imagen',
     ondeLbl: 'dónde', imagensLbl: 'imágenes', transcricaoLbl: 'lo que se oye',
     organizaLbl: 'organización', quandoLbl: 'cuándo', paginaLbl: 'página',
     notaVoz: (n, v, p) =>
-      `Las ${n} lecturas son los ficheros originales, byte a byte, de lo que esquerda.net publicó — viven aquí porque el feed del podcast solo guarda los episodios más recientes, y estas quedaron fuera. Los ${v} vídeos vinieron de la página de Transborda y se recodificaron una vez, para reproducirse en todos los navegadores. De las ${p} piezas en escena no quedó ninguna grabación — quedaron las imágenes que hubo, y la página de quien las acogió o escribió sobre ellas. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
+      `Las ${n} lecturas son los ficheros originales de lo que esquerda.net publicó — el feed del podcast ya no los sirve, y por eso viven aquí. Los ${v} vídeos vinieron de la página de Transborda. De las ${p} piezas en escena no quedó ninguna grabación — quedaron las imágenes que hubo, y la página de quien las acogió o escribió sobre ellas. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
   },
 }
 const rot = ROTULOS[idioma]
@@ -785,7 +780,6 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
             ))
           }
         </ul>
-        <p class="no__texto no__texto--nota">{rot.notaFicheiros}</p>
       </Node>
 
       <Node id="privacidade" nivel={3} nome={rot.privacidade}>
