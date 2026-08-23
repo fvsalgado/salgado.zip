@@ -19,7 +19,8 @@ import { lerZip } from './zip-ler.mjs'
 import { lerMp3 } from './mp3-ler.mjs'
 import { lerMp4 } from './mp4-ler.mjs'
 import { textoPorPagina, achatar } from './pdf-ler.mjs'
-import { definicoes } from '../src/data/ficheiros.ts'
+import { definicoes, ficheiros } from '../src/data/ficheiros.ts'
+import { tamanho } from '../src/data/formato.ts'
 import { IDIOMAS, LINGUAS } from '../src/data/idiomas.ts'
 import { posicoes, formacao } from '../src/data/percurso.ts'
 import { mandatos } from '../src/data/mandatos.ts'
@@ -99,17 +100,63 @@ if (!(await esperar(BASE + '/', 1))) {
 }
 
 const browser = await abrirBrowser()
-/** Uma rota por língua: o que não se verifica nas quatro só está verificado numa. */
-const paginas = IDIOMAS.map((i) => LINGUAS[i].raiz)
+
+/**
+ * TODAS as rotas publicadas, e derivadas do que o build escreveu em disco.
+ *
+ * Esteve aqui uma lista de quatro — uma por língua — com um comentário a dizer
+ * «o que não se verifica nas quatro só está verificado numa». A frase estava
+ * certa e a lista é que não: o sítio publica oito rotas, e as outras quatro
+ * (os dois dossiês, o cartão e a página de erro) não eram varridas por
+ * verificação nenhuma. Um script de terceiros no CV passava verde; uma ligação
+ * interna morta no CV passava verde. Foi assim que se descobriu, a partir-se
+ * de propósito uma coisa em `/cv/` e ninguém dar por ela.
+ *
+ * Derivada e não escrita, porque uma lista escrita à mão envelhece exatamente
+ * como aquela envelheceu: quem acrescentar uma rota amanhã não tem de se
+ * lembrar de a vir inscrever em três sítios diferentes deste ficheiro. O que
+ * define «rota publicada» é ter saído um HTML dela, e é isso que isto lê.
+ */
+const ROTAS = (() => {
+  const achadas = []
+  const andar = (dir, prefixo) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      if (e.isDirectory()) andar(`${dir}${e.name}/`, `${prefixo}${e.name}/`)
+      else if (e.name === 'index.html') achadas.push(prefixo)
+      else if (e.name === '404.html') achadas.push(`${prefixo}${e.name}`)
+    }
+  }
+  andar(dist, '/')
+  return achadas.sort()
+})()
+
+/**
+ * A língua de cada rota, para quem precisa dela — o aviso da janela nova sai
+ * daqui. Um dossiê herda a língua do prefixo: `/en/cv/` é inglês.
+ */
+const linguaDe = (rota) =>
+  IDIOMAS.find((i) => LINGUAS[i].raiz !== '/' && rota.startsWith(LINGUAS[i].raiz)) ??
+  IDIOMAS.find((i) => LINGUAS[i].raiz === '/')
 
 function html(rota) {
-  return readFileSync(dist + (rota === '/' ? 'index.html' : rota.slice(1) + 'index.html'), 'utf8')
+  return readFileSync(dist + (rota.endsWith('.html') ? rota.slice(1) : rota.slice(1) + 'index.html'), 'utf8')
 }
+
+/**
+ * As rotas que trazem a árvore do arquivo.
+ *
+ * Nem tudo o que se exige se exige em todo o lado: um `<track>` de legendas não
+ * tem por que estar no dossiê, que não tem vídeo nenhum. Mas o âmbito também
+ * não pode voltar a ser uma lista escrita à mão — deriva-se do próprio marcado,
+ * perguntando a cada rota se tem árvore. Quem acrescentar uma quinta língua
+ * ganha a exigência de graça.
+ */
+const ROTAS_ARVORE = ROTAS.filter((r) => /data-arvore/.test(html(r)))
 
 /* ══ 2. Ligações internas ═══════════════════════════════════════════════ */
 {
   const alvos = new Set()
-  for (const rota of [...paginas, '/og/']) {
+  for (const rota of ROTAS) {
     for (const m of html(rota).matchAll(/(?:href|src)="(\/[^"#?]*)"/g)) alvos.add(m[1])
   }
   const problemas = []
@@ -117,13 +164,42 @@ function html(rota) {
     const r = await fetch(BASE + alvo, { redirect: 'follow' }).catch(() => null)
     if (!r || !r.ok) problemas.push(`${alvo} → ${r ? r.status : 'sem resposta'}`)
   }
-  decide('todas as ligações internas devolvem 200', problemas, `${alvos.size} alvos`)
+
+  /* E que as rotas varridas sejam mesmo as que os dados mandam publicar.
+     Sem isto, o âmbito derivado tem o defeito oposto ao da lista escrita: em
+     vez de envelhecer, encolhe sem dizer nada. Se o build deixasse de emitir
+     o dossiê inglês, o `ROTAS` passava a ter sete e todas as verificações que
+     o usam ficavam verdes sobre menos sítio — que é exatamente a falha que
+     este ficheiro acabou de corrigir, com outra roupa.
+
+     O esperado deriva-se: uma raiz por língua, um dossiê por cada CV que a
+     listagem de ficheiros declara, a página de erro e o cartão. */
+  const esperadas = [
+    ...IDIOMAS.map((i) => LINGUAS[i].raiz),
+    ...ficheiros
+      .filter((f) => f.id.startsWith('cv-'))
+      .map((f) => `${LINGUAS[f.id.slice(3)].raiz}cv/`),
+    '/404.html',
+    '/og/',
+  ].sort()
+  for (const r of esperadas) {
+    if (!ROTAS.includes(r)) problemas.push(`a rota ${r} devia estar publicada e não saiu do build`)
+  }
+  if (ROTAS_ARVORE.length !== IDIOMAS.length) {
+    problemas.push(`${ROTAS_ARVORE.length} rotas com árvore e ${IDIOMAS.length} línguas — devia ser uma por língua`)
+  }
+
+  decide(
+    'todas as ligações internas devolvem 200, em todas as rotas publicadas',
+    problemas,
+    `${alvos.size} alvos · ${ROTAS.length} rotas · ${ROTAS_ARVORE.length} com árvore`
+  )
 }
 
 /* ══ 3. Ligações externas (aviso, não bloqueia) ═════════════════════════ */
 {
   const externas = new Set()
-  for (const rota of paginas) {
+  for (const rota of ROTAS) {
     for (const m of html(rota).matchAll(/href="(https:\/\/[^"]+)"/g)) {
       if (!m[1].startsWith(CANONICO)) externas.add(m[1])
     }
@@ -318,7 +394,7 @@ function html(rota) {
   p.on('request', (r) => {
     if (!r.url().startsWith(BASE) && !r.url().startsWith('data:')) externos.push(r.url())
   })
-  for (const rota of paginas) {
+  for (const rota of ROTAS) {
     await p.goto(BASE + rota, { waitUntil: 'networkidle' })
   }
   await ctx.close()
@@ -341,11 +417,14 @@ function html(rota) {
       }
     }
   }
-  varrer(dist + '_astro/')
-  if (existsSync(dist + 'tema.js')) {
-    total += statSync(dist + 'tema.js').size
-    ficheiros.push(`tema.js ${statSync(dist + 'tema.js').size}B`)
-  }
+  /* O dist INTEIRO, e não só o `_astro/`.
+
+     Varria-se `_astro/` mais um caso especial para o `tema.js`, e um ficheiro
+     de meio megabyte posto em qualquer outra pasta de `dist/` não contava para
+     o orçamento — provado, com um `dist/js/app.js` de 500 kB carregado pela
+     home: passava verde a dizer «1591 B». Um orçamento que só conta o
+     JavaScript de uma pasta não é um orçamento. */
+  varrer(dist)
   // Scripts executáveis inline são incompatíveis com a CSP (`script-src 'self'`
   // sem 'unsafe-inline'): morreriam em produção sem erro visível. Os blocos
   // JSON-LD não contam — não são executáveis.
@@ -376,20 +455,45 @@ function html(rota) {
    língua que os motores de busca tratam como acidente. */
 {
   const problemas = []
-  const esperados = [...IDIOMAS.map((i) => `hreflang="${LINGUAS[i].html}"`), 'hreflang="x-default"']
+  const esperados = [...IDIOMAS.map((i) => LINGUAS[i].html), 'x-default']
+
+  /* Etiquetas a sério, e não a palavra «hreflang» algures no ficheiro.
+
+     Testava-se `h.includes('hreflang="fr"')` — uma substring. Passava com a
+     etiqueta inteira dentro de um comentário HTML, e passava com o `href` a
+     apontar para um domínio que não existe. Provado nas duas maneiras. Agora
+     lê-se a etiqueta, exige-se que seja `rel="alternate"`, e o destino tem de
+     ser uma das rotas que o sítio publica de facto. */
   for (const i of IDIOMAS) {
     const rota = LINGUAS[i].raiz
-    const ficheiro = dist + (rota === '/' ? 'index.html' : rota.slice(1) + 'index.html')
-    if (!existsSync(ficheiro)) {
-      problemas.push(`${rota} não foi gerada`)
-      continue
-    }
     const h = html(rota)
+    const marcadas = new Map()
+    for (const m of h.matchAll(/<link\b([^>]*\bhreflang="([^"]+)"[^>]*)>/g)) {
+      if (!/\brel="alternate"/.test(m[1])) continue
+      const destino = /\bhref="([^"]+)"/.exec(m[1])?.[1]
+      if (destino !== undefined) marcadas.set(m[2], destino)
+    }
     for (const esperado of esperados) {
-      if (!h.includes(esperado)) problemas.push(`${rota} sem ${esperado}`)
+      const destino = marcadas.get(esperado)
+      if (destino === undefined) {
+        problemas.push(`${rota}: sem <link rel="alternate" hreflang="${esperado}"> com href`)
+        continue
+      }
+      if (!destino.startsWith(CANONICO)) {
+        problemas.push(`${rota}: o hreflang="${esperado}" aponta para fora do sítio (${destino})`)
+        continue
+      }
+      const alvo = destino.slice(CANONICO.length) || '/'
+      if (!ROTAS.includes(alvo)) {
+        problemas.push(`${rota}: o hreflang="${esperado}" aponta para ${alvo}, que não é rota publicada`)
+      }
     }
   }
-  decide('hreflang simétrico com x-default', problemas, `${IDIOMAS.length} línguas`)
+  decide(
+    'hreflang simétrico com x-default, e cada um a apontar a uma rota que existe',
+    problemas,
+    `${IDIOMAS.length} línguas`
+  )
 }
 
 /**
@@ -455,16 +559,20 @@ function imagensPorPagina(buf) {
     const buf = readFileSync(caminho)
     if (buf.subarray(0, 5).toString() !== '%PDF-') problemas.push(`${nome} não é um PDF`)
     const paginas = conta(buf, /\/Type\s*\/Page[^s]/g)
-    if (paginas < 2) problemas.push(`${nome} tem ${paginas} página(s) — o documento completo tem mais`)
+    /* EXATAMENTE quatro. Estiveram aqui dois limites — «pelo menos 2» e «no
+       máximo 4» — e no meio deles cabia um documento de 3 folhas que passava
+       verde enquanto o título prometia 4. Pior: tudo o que vem a seguir vive
+       dentro de guardas `=== FOLHAS`, por isso um PDF de 3 folhas não só
+       passava como não verificava mais nada — nem o retrato, nem as capturas,
+       nem os mandatos a abrir a última. Provado a sério, gerando os dois PDF
+       com `scale: 0.45`: 3 folhas, tudo verde. */
+    if (paginas !== FOLHAS) problemas.push(`${nome} tem ${paginas} página(s) e devia ter ${FOLHAS}`)
     /* Quatro folhas, e é um teto. Não é gosto: é a diferença entre um documento
        que se imprime numa folha A4 frente e verso duas vezes e um que obriga a
        uma terceira quase vazia. O limite paga-se em desenho e ganha-se em
        leitura, e sem uma verificação a defendê-lo o primeiro parágrafo que
        alguém acrescentar empurra-o para cinco sem ninguém dar por isso.
        Quem quiser passar daqui muda este número de propósito, não por descuido. */
-    if (paginas > FOLHAS) {
-      problemas.push(`${nome} tem ${paginas} páginas; o limite são ${FOLHAS}`)
-    }
     /* Onde é que cada imagem caiu. Uma quebra forçada e uma proibição de corte
        seguram a paginação: os projetos abrem folha, e a secção da voz não se
        parte. Sem esta conta, a paginação voltava a depender do comprimento de
@@ -579,46 +687,121 @@ function imagensPorPagina(buf) {
       problemas.push('o resume.json dentro do .zip não abre')
     }
   }
-  // O contador de linhas congelado tem de bater certo com o código: se
-  // divergir, alguém mexeu no código sem correr `npm run pack`.
+  /* O contador de linhas: duas coisas distintas, e nenhuma era a que estava cá.
+
+     O QUE ESTAVA: uma recontagem, aqui, comparada com o `linhas.json`. Parecia
+     uma verificação e eram duas cópias do mesmo algoritmo — o bloco de contagem
+     do `pack.mjs` está copiado à letra neste ficheiro — a correrem sobre os
+     mesmos ficheiros, com o `prebuild` a reescrever o `linhas.json` segundos
+     antes. Não podiam discordar. Provado: três linhas a mais num ficheiro de
+     dados, e verde à mesma desde que houvesse um build pelo meio, que há
+     sempre, porque é a verificação 1 que o corre.
+
+     O RISCO A SÉRIO, que isso escondia: o `pack.mjs` escreve o `linhas.json`
+     dentro de `if (!process.env.VERCEL)`. Em produção NÃO o reescreve — usa o
+     que está commitado. Quem mexa no código e publique sem correr o `pack`
+     publica um número errado, e era precisamente esse o caso que a recontagem
+     dizia cobrir e não cobria, porque se refrescava a si própria primeiro.
+
+     Passam a ser duas asserções, cada uma com o seu trabalho. */
+
+  /* 1. O número chega à página. Compara-se o que a página imprime com o
+        `linhas.json` de onde ele sai — o que isto prova é o caminho do dado
+        até ao texto, e apanha o dia em que o componente deixar de o mostrar
+        ou passar a mostrar outro campo. */
   {
-    const contaveis = []
-    const apanhar = (dir, aceita) => {
-      for (const e of readdirSync(dir, { withFileTypes: true })) {
-        const c = dir + e.name
-        if (e.isDirectory()) apanhar(c + '/', aceita)
-        else if (aceita(c)) contaveis.push(c)
-      }
-    }
-    apanhar(raiz + 'src/', (f) => /\.(astro|ts|css)$/.test(f) && !f.includes('/generated/') && !f.endsWith('fonts.css'))
-    apanhar(raiz + 'scripts/', (f) => f.endsWith('.mjs'))
-    for (const f of ['public/tema.js', 'astro.config.mjs', 'tsconfig.json', 'vercel.json', 'package.json', '.github/workflows/verify.yml']) {
-      if (existsSync(raiz + f)) contaveis.push(raiz + f)
-    }
-    let frescas = 0
-    for (const f of contaveis) {
-      const texto = readFileSync(f, 'utf8')
-      frescas += texto.split('\n').length - (texto.endsWith('\n') ? 1 : 0)
-    }
     const congeladas = JSON.parse(readFileSync(raiz + 'src/generated/linhas.json', 'utf8'))
-    if (congeladas.total !== frescas || congeladas.ficheiros !== contaveis.length) {
-      problemas.push(
-        `linhas.json diz ${congeladas.total} linhas em ${congeladas.ficheiros} ficheiros; a recontagem dá ${frescas} em ${contaveis.length} — corre npm run pack`
-      )
+    const publicado = /([\d\u00a0.,\s]+)linhas de código em ([\d\u00a0.,\s]+)ficheiros/.exec(html('/'))
+    if (publicado === null) {
+      problemas.push('a página não publica a contagem de linhas — o padrão deixou de casar')
+    } else {
+      const numero = (t) => Number(t.replace(/[^\d]/g, ''))
+      if (numero(publicado[1]) !== congeladas.total || numero(publicado[2]) !== congeladas.ficheiros) {
+        problemas.push(
+          `a página publica ${numero(publicado[1])} linhas em ${numero(publicado[2])} ficheiros e o linhas.json diz ${congeladas.total} em ${congeladas.ficheiros}`
+        )
+      }
     }
   }
 
-  // Nenhum número é escrito à mão: o que a listagem publica tem de bater
-  // certo com o ficheiro em disco, byte a byte.
-  const publicados = JSON.parse(readFileSync(raiz + 'src/generated/tamanhos.json', 'utf8'))
-  for (const d of definicoes) {
-    const real = existsSync(pub + d.caminho) ? statSync(pub + d.caminho).size : null
-    if (real === null) problemas.push(`${d.caminho} não existe`)
-    else if (publicados[d.caminho] !== real) {
-      problemas.push(`${d.caminho}: a listagem diz ${publicados[d.caminho] ?? '—'} B, o disco diz ${real} B`)
+  /* 2. O que está commitado é o que os geradores produzem.
+
+        Esta é a que cobre a produção. Depois do build — que já correu, na
+        verificação 1, e que regenera tudo — nenhum ficheiro gerado e seguido
+        por git pode ficar por commeter: se ficou, o que o Vercel vai publicar
+        está velho.
+
+        Em CI é falha, porque é o CI que guarda o que se publica. Na máquina de
+        quem trabalha é aviso: enquanto se edita, é normal e certo que o
+        `linhas.json` fique sujo — o que não pode é ir assim para o remoto. */
+  let porCommeter = null
+  {
+    let sujos = ''
+    try {
+      sujos = execFileSync('git', ['status', '--porcelain', '--', 'src/generated', 'public/voz'], {
+        cwd: raiz,
+        encoding: 'utf8',
+      }).trim()
+    } catch (e) {
+      /* Sem git não se sabe o que está commitado, e não saber não é o mesmo
+         que estar mal — uma cópia exportada em tarball não tem repositório e
+         não tem culpa. Em CI é outra coisa: aí há sempre checkout, e um git
+         que falha é sinal de que o ambiente não é o que se julga. */
+      const recado = `não consegui perguntar ao git pelos ficheiros gerados (${e.message.split('\n')[0]})`
+      if (process.env.CI) problemas.push(recado)
+      else porCommeter = recado
+    }
+    if (sujos !== '') {
+      const lista = sujos.split('\n').map((l) => l.trim().split(/\s+/).pop())
+      const recado = `o build mexeu em ficheiros gerados que estão por commeter: ${lista.join(', ')} — em produção publica-se o que está commitado`
+      if (process.env.CI) problemas.push(recado)
+      else porCommeter = recado
     }
   }
-  decide('o .zip abre e os tamanhos publicados batem certo com o disco', problemas)
+
+  /* E os tamanhos, pela mesma razão e pelo mesmo caminho: lia-se o
+     `tamanhos.json`, que o `pack.mjs` escreve com o mesmo `statSync` que isto
+     usava para o conferir. Duas leituras do mesmo número não são uma
+     verificação. Confere-se contra a coluna que a página imprime, formatada
+     como quem lê a vê. */
+  const pagina = html('/')
+  for (const d of definicoes) {
+    if (!existsSync(pub + d.caminho)) {
+      problemas.push(`${d.caminho} não existe`)
+      continue
+    }
+    /* Pelo `id` da linha e não pelo `href`: o mesmo endereço aparece três vezes
+       na página — no campo `cv` do contacto, na linha da árvore e no rodapé —,
+       e das três só a da árvore traz a coluna do tamanho. Procurar pelo `href`
+       apanhava a primeira e lia «—» de uma linha que nunca teve o número.
+       A primeira versão disto fazia isso, e falhou à primeira execução. */
+    const linha = new RegExp(`<a class="linha" id="${d.id}"([^>]*)>([\\s\\S]*?)</a>`).exec(pagina)
+    if (linha === null) {
+      problemas.push(`${d.caminho}: a árvore não tem linha com id="${d.id}"`)
+      continue
+    }
+    const destino = /\bhref="([^"]*)"/.exec(linha[1])?.[1]
+    if (destino !== `/${d.caminho}`) {
+      problemas.push(`${d.id}: a linha aponta para ${destino} e o ficheiro está em /${d.caminho}`)
+    }
+    const esperado = tamanho(statSync(pub + d.caminho).size)
+    const col = /linha__col--tam"[^>]*>([^<]*)</.exec(linha[2])?.[1].trim()
+    if (col !== esperado) {
+      problemas.push(`${d.caminho}: a página diz «${col ?? '—'}» e o disco dá «${esperado}»`)
+    }
+  }
+
+  decide(
+    'o .zip abre, as linhas e os tamanhos chegam à página, e o que está gerado está commitado',
+    problemas,
+    `${definicoes.length} ficheiros`
+  )
+  /* Debaixo da 12 e não ao lado dela: é uma ressalva a esta verificação, não
+     uma verificação a mais, e um número na lista é coisa que se ganha. */
+  if (porCommeter !== null) {
+    console.log(`       \x1b[33m! ${porCommeter}\x1b[0m`)
+    avisos.push('ficheiros gerados por commeter')
+  }
 }
 
 /* ══ 16. As gravações batem certo com os ficheiros em disco ═════════════
@@ -704,7 +887,7 @@ function imagensPorPagina(buf) {
 
   // Sem `preload="none"` a página abria mais de cem megabytes de pedidos a quem
   // só passou por lá — e a verificação 8 não o apanha, porque o áudio é nosso.
-  for (const rota of paginas) {
+  for (const rota of ROTAS_ARVORE) {
     const h = html(rota)
     for (const l of leituras) {
       // Uma leitura em palco não tem leitor porque não tem ficheiro. O que se
@@ -754,7 +937,7 @@ function imagensPorPagina(buf) {
         problemas.push(`${l.id}.vtt acaba aos ${fim}s e o vídeo tem ${medidas[l.id].segundos}s`)
       }
     }
-    for (const rota of paginas) {
+    for (const rota of ROTAS_ARVORE) {
       if (!new RegExp(`<track[^>]*src="/voz/${l.id}\\.vtt"`).test(html(rota))) {
         problemas.push(`${rota}: o vídeo ${l.id} tem legendas em disco e nenhum <track> a apontar-lhes`)
       }
@@ -831,15 +1014,39 @@ function imagensPorPagina(buf) {
      para agentes de robô conhecidos. Podia obter o nome dizendo-lhe que sou o
      Googlebot — funciona, experimentei — e não o faço: uma verificação que
      mente sobre quem é, a cada publicação e para sempre, não é uma coisa que
-     se deixe escrita num repositório aberto. Do que resta — a página responde,
-     e responde no domínio de quem emite — dá para saber o dia em que a
-     credencial desaparecer, que é metade do que interessa.
+     se deixe escrita num repositório aberto.
+
+     O que o nível fraco prova, ao certo: que o DOMÍNIO responde. E mais nada.
+     Dizia aqui que dava «para saber o dia em que a credencial desaparecer», e
+     não dá — medi as quatro respostas e são a mesma casca de 26 317 bytes:
+
+       /81ebaf6f-012a-4df7-b1ef-631f25e3fa09   200   26317 B
+       /00000000-0000-0000-0000-000000000000   200   26317 B
+       /isto-nao-e-um-uuid                     200   26317 B
+       /                                       200   26317 B
+
+     Trocar o UUID por lixo deixa isto verde. É uma credencial que ninguém
+     confere sozinho, e fica dito em vez de ficar prometido.
 
      A lista é de hospedeiros e não de certificados: assim, no dia em que a
      Coursera passar a esconder o nome, a conta acusa em vez de se calar. */
   const SO_NO_BROWSER = ['credentials.itcilo.org']
   const apelido = cabecalho.nome.split(' ').pop()
-  for (const f of formacao.filter((x) => x.credencial !== null)) {
+
+  /* Quantas se esperava conferir, contadas ANTES do ciclo.
+
+     Sem isto o ciclo é o seu próprio critério: pus todas as `credencial` a
+     `null` e a verificação ficou verde de imediato — lista vazia, ciclo vazio,
+     zero problemas, e o comentário aqui em baixo a dizer que «a conta acusa em
+     vez de se calar». Não havia conta nenhuma. Um certificado que perca a
+     credencial passa a ser uma falha, e não um silêncio. */
+  const comCredencial = formacao.filter((x) => x.credencial !== null)
+  if (comCredencial.length === 0) {
+    problemas.push('nenhum certificado tem credencial — ou os dados esvaziaram-se, ou o filtro parou de casar')
+  }
+  let conferidas = 0
+
+  for (const f of comCredencial) {
     const hospedeiro = new URL(f.credencial).host
     try {
       const r = await fetch(f.credencial, { redirect: 'follow' })
@@ -851,12 +1058,28 @@ function imagensPorPagina(buf) {
       const corpo = await r.text()
       if (!corpo.includes(apelido)) {
         problemas.push(`${f.id}: a credencial responde mas não nomeia «${apelido}» — pode ter deixado de existir`)
+      } else {
+        conferidas += 1
       }
     } catch (e) {
       problemas.push(`${f.id}: não consegui abrir a credencial (${e.message})`)
     }
   }
-  decide('conteúdo confirmado (percurso e contacto)', problemas)
+  /* E quantas passaram mesmo pelo nível forte. Sem isto, um dia em que o
+     SO_NO_BROWSER crescesse — ou em que a Coursera mudasse de domínio — a
+     verificação continuava verde sem conferir uma única credencial a sério. */
+  const noBrowser = comCredencial.filter((f) => SO_NO_BROWSER.includes(new URL(f.credencial).host)).length
+  if (conferidas !== comCredencial.length - noBrowser) {
+    problemas.push(
+      `${conferidas} credenciais conferidas pelo nome e esperavam-se ${comCredencial.length - noBrowser}`
+    )
+  }
+
+  decide(
+    'conteúdo confirmado (percurso e contacto)',
+    problemas,
+    `${conferidas} credenciais nomeiam-no · ${noBrowser} só no browser`
+  )
 }
 
 /* ══ 17. Acessibilidade: auditoria a cada publicação ════════════════════
@@ -1001,24 +1224,25 @@ function imagensPorPagina(buf) {
    aviso em ruído — que é como se estraga um sinal destes, a pouco e pouco. */
 {
   const problemas = []
-  const rotas = [
-    ['/', 'pt'],
-    ['/en/', 'en'],
-    ['/fr/', 'fr'],
-    ['/es/', 'es'],
-    ['/cv/', 'pt'],
-    ['/en/cv/', 'en'],
-    ['/404.html', 'pt'],
-  ]
   let fora = 0
   let dentro = 0
 
-  for (const [rota, lingua] of rotas) {
-    const aviso = avisoJanelaNova[lingua]
-    const pagina = readFileSync(
-      dist + (rota.endsWith('.html') ? rota.slice(1) : rota.slice(1) + 'index.html'),
-      'utf8'
-    )
+  for (const rota of ROTAS) {
+    const aviso = avisoJanelaNova[linguaDe(rota)]
+    const pagina = html(rota)
+
+    /* Quantas âncoras há, contadas por fora do que se segue. Se o padrão de
+       baixo deixasse de casar — uma âncora escrita de outra maneira, um
+       `</a>` a mais —, este ciclo passava a olhar para menos ligações e a
+       verificação ficava verde sobre o que já não via. «0 para fora» não pode
+       ser um resultado aceitável. */
+    const quantas = (pagina.match(/<a\b[^>]*\bhref=/g) ?? []).length
+    const casadas = [...pagina.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].filter((m) =>
+      /\bhref=/.test(m[1])
+    ).length
+    if (casadas !== quantas) {
+      problemas.push(`${rota}: há ${quantas} âncoras na página e o padrão só apanhou ${casadas}`)
+    }
     /* As âncoras não se aninham, e por isso o `<\/a>` mais próximo é sempre o
        fecho desta. Lá dentro há `<span>` e `<svg>`, que não interessam. */
     for (const m of pagina.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)) {
@@ -1086,7 +1310,7 @@ function imagensPorPagina(buf) {
   decide(
     'as ligações que saem do sítio avisam — janela nova, noopener, seta e nome acessível',
     problemas,
-    `${fora} para fora · ${dentro} cá dentro · ${rotas.length} rotas`
+    `${fora} para fora · ${dentro} cá dentro · ${ROTAS.length} rotas`
   )
 }
 
