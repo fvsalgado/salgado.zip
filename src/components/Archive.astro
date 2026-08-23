@@ -243,7 +243,14 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                   <img src={`/shots/${p.shot}`} alt="" loading="lazy" decoding="async" />
                 </span>
               ) : (
-                <span class="linha__desc">{t(p.linha, idioma)}</span>
+                /* `aria-hidden` pela mesma razão que a captura ao lado é
+                   decorativa, e com a mesma prova: este texto está DUAS vezes
+                   na página, aqui e por extenso dentro do nó aberto. Sem isto
+                   entrava no nome do controlo, e o único projeto sem captura
+                   ficava com uma linha de 163 caracteres a dizer-se, quando o
+                   seguinte diz-se em 83. Quem ouve continua a ter a descrição
+                   onde a tem para todos os outros projetos: lá dentro. */
+                <span class="linha__desc" aria-hidden="true">{t(p.linha, idioma)}</span>
               )}
             </Fragment>
             {/* As ligações viviam dentro do `<summary>`, que já é um controlo:
