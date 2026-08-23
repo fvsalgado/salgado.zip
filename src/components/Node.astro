@@ -11,6 +11,13 @@
  * mesmo tratamento das outras ligações de fora — janela nova, seta e aviso no
  * nome acessível. Ver o Externo.astro, que faz o mesmo para as ligações que
  * vivem dentro de prosa.
+ *
+ * O aviso vai num `<span>` escondido e NÃO num `aria-label`. A diferença não é
+ * de gosto: uma linha destas tem três pedaços de texto — o título, a casa que
+ * emitiu e o ano —, e um `aria-label` substitui o nome acessível inteiro em vez
+ * de lhe somar. Com ele, quem ouvia a linha ouvia «Moral Foundations of
+ * Politics — abre numa janela nova» e perdia o «Yale University» e o «2024».
+ * Esteve assim durante uma tarde, num PR que era sobre acessibilidade.
  */
 import type { Idioma } from '../data'
 import { CANONICO } from '../data'
@@ -79,7 +86,6 @@ const Titulo = nivel === undefined ? 'span' : (`h${nivel}` as 'h2' | 'h3')
           href={href}
           target={saiDoSitio ? '_blank' : undefined}
           rel={saiDoSitio ? 'noopener' : undefined}
-          aria-label={saiDoSitio ? `${nome} — ${t(avisoJanelaNova, idioma!)}` : undefined}
         >
           {/* Sem espaço entre o nome e a seta: com ele, a seta tinha por onde
               mudar de linha e ia aparecer sozinha por baixo do nome. */}
@@ -91,6 +97,9 @@ const Titulo = nivel === undefined ? 'span' : (`h${nivel}` as 'h2' | 'h3')
               {c.valor}
             </span>
           ))}
+          {/* No fim, para o nome acessível se ler pela ordem em que a linha se
+              lê: título, casa, ano, e só depois o aviso. */}
+          {saiDoSitio && <span class="so-leitor">{t(avisoJanelaNova, idioma!)}</span>}
         </a>
         <slot name="resumo" />
       </>

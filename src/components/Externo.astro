@@ -44,6 +44,19 @@ interface Props {
   titulo?: string
 }
 const { href, nome, idioma, semSeta = false, classe, titulo } = Astro.props
+const aviso = t(avisoJanelaNova, idioma)
+
+/**
+ * Uma ligação de ícone — o slot traz o desenho e não há texto visível nenhum.
+ *
+ * É o que decide COMO o aviso entra, e são duas maneiras porque são dois casos.
+ * Onde há texto visível, o aviso vai num `<span>` escondido, que se SOMA ao
+ * nome acessível e deixa lá ficar o que se vê; um `aria-label` substituía-o, e
+ * quem ouvisse perdia tudo o que não fosse o `nome`. Onde não há texto nenhum,
+ * não há nada a preservar: aí o `aria-label` é a única forma de a ligação ter
+ * nome, porque o SVG lá dentro está escondido a quem ouve.
+ */
+const comIcone = Astro.slots.has('default')
 
 /* Uma ligação interna que passasse por aqui abria uma janela nova sem razão, e
    o aviso passava a mentir. Rebenta no build em vez de sair publicada. */
@@ -65,10 +78,10 @@ if (!/^https?:\/\//.test(href)) {
   target="_blank"
   rel="noopener"
   title={titulo}
-  aria-label={`${nome} — ${t(avisoJanelaNova, idioma)}`}
->{Astro.slots.has('default') ? <slot /> : nome}{
+  aria-label={comIcone ? `${nome} — ${aviso}` : undefined}
+>{comIcone ? <slot /> : nome}{
   /* `aria-hidden` porque o aviso já está no nome acessível: sem isto, quem
      ouve a ligação ouvia a seta duas vezes, uma como símbolo e outra como
      frase. */
   !semSeta && <span class="seta-fora" aria-hidden="true">↗</span>
-}</a>
+}{!comIcone && <span class="so-leitor">{` — ${aviso}`}</span>}</a>
