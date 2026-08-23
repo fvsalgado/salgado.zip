@@ -153,6 +153,17 @@ function html(rota) {
  */
 const ROTAS_ARVORE = ROTAS.filter((r) => /data-arvore/.test(html(r)))
 
+/**
+ * O cartão social não é uma página para ler.
+ *
+ * É uma superfície de 1200×630 que o `artifacts.mjs` fotografa uma vez para
+ * gerar o `og.png`: não tem menu, não tem rodapé, nenhuma página lhe aponta e
+ * ninguém a navega. Exigir-lhe marcos seria exigir moldura a uma tela. Continua
+ * no varrimento do axe, que é onde a diferença se faz — contraste e texto
+ * alternativo valem lá como em todo o lado.
+ */
+const SEM_MOLDURA = ['/og/']
+
 /* ══ 2. Ligações internas ═══════════════════════════════════════════════ */
 {
   const alvos = new Set()
@@ -1208,7 +1219,9 @@ function imagensPorPagina(buf) {
   const problemas = []
   const axe = readFileSync(raiz + 'node_modules/axe-core/axe.min.js', 'utf8')
   const REGRAS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa']
-  const rotas = ['/', '/en/', '/fr/', '/es/', '/cv/', '/en/cv/', '/404.html']
+  /* Ficou aqui uma lista escrita à mão depois de as outras terem saído: sete
+     entradas, quando o `ROTAS` já dava oito. O cartão social não era auditado. */
+  const rotas = ROTAS
   let combinacoes = 0
   let controlos = 0
   for (const tema of ['light', 'dark']) {
@@ -1266,6 +1279,172 @@ function imagensPorPagina(buf) {
       }
     }
   }
+  /* A QUARTA: a tabulação inteira, tecla a tecla.
+
+     A declaração de acessibilidade dizia «os cento e dez elementos focáveis
+     alcançados por tabulação sem armadilha». Era verdade no dia em que foi
+     medida à mão, e deixou de ser: entraram dois mandatos e oito certificados
+     com credencial clicável, e passaram a ser 121 — mais os onze leitores de
+     áudio e vídeo, que a conta original não tinha contado. Um número medido à
+     mão dentro de uma promessa pública envelhece sozinho.
+
+     A resposta não é reescrever o número para ele voltar a envelhecer: é tirá-lo
+     da frase e pôr a travessia a correr aqui. Assim a promessa deixa de ter um
+     número para estar errado, e passa a ter uma execução para a sustentar.
+
+     Tabula-se para a frente até voltar ao princípio e depois para trás, e
+     exige-se que os dois sentidos alcancem o mesmo conjunto. Uma armadilha é
+     exatamente isto a não fechar: o foco preso num elemento, ou um ciclo que
+     nunca sai. O limite de voltas é generoso e existe só para o laço terminar
+     se houver armadilha, em vez de a verificação ficar pendurada. */
+  {
+    const ctx = await browser.newContext()
+    const p = await ctx.newPage()
+    for (const rota of ROTAS_ARVORE) {
+      await p.goto(BASE + rota, { waitUntil: 'domcontentloaded' })
+      await p.evaluate(() => {
+        for (const d of document.querySelectorAll('details')) d.open = true
+      })
+      /* Cada focável ganha um número antes de se tabular. Sem identidade exata
+         não há medição: a primeira versão disto identificava o elemento pela
+         etiqueta e pelo texto, e onze `<summary>` seguidos — que são onze nós
+         diferentes — liam-se como o mesmo elemento repetido, ou seja como uma
+         armadilha que não existe.
+
+         E há repetição legítima: um `<audio controls>` ou um `<video controls>`
+         dá TRÊS paragens de tabulação, todas com o `activeElement` no mesmo
+         elemento, porque os botões do leitor vivem no shadow DOM do browser.
+         Medido: 144 paragens para 121 focáveis, e a diferença são exatamente os
+         onze leitores. Por isso o limite de repetições é 5 e não 1. */
+      const quantos = await p.evaluate(() => {
+        const f = [
+          ...document.querySelectorAll(
+            'a[href],button:not([hidden]),summary,audio[controls],video[controls],[tabindex]:not([tabindex="-1"])'
+          ),
+        ]
+        f.forEach((e, i) => (e.dataset.tabN = String(i)))
+        return f.length
+      })
+      const TETO = quantos * 4 + 40
+      const marca = () => p.evaluate(() => document.activeElement?.dataset?.tabN ?? '(fora)')
+
+      const vistos = new Set()
+      await p.evaluate(() => document.body.focus())
+      let anterior = null
+      let repetido = 0
+      let voltas = 0
+      while (voltas < TETO) {
+        await p.keyboard.press('Tab')
+        const agora = await marca()
+        if (agora === anterior) {
+          repetido += 1
+          if (repetido > 5) {
+            problemas.push(`${rota}: o foco fica preso no focável ${agora} — armadilha de tabulação`)
+            break
+          }
+        } else {
+          repetido = 0
+        }
+        if (agora === '(fora)' && vistos.size > 0) break
+        if (agora !== '(fora)') vistos.add(agora)
+        anterior = agora
+        voltas += 1
+      }
+      if (voltas >= TETO) {
+        problemas.push(`${rota}: a tabulação não voltou ao princípio em ${TETO} voltas — armadilha`)
+      }
+      if (vistos.size !== quantos) {
+        problemas.push(
+          `${rota}: a tabulação alcançou ${vistos.size} focáveis e a página tem ${quantos}`
+        )
+      }
+    }
+    await ctx.close()
+  }
+
+  /* A TERCEIRA: os marcos, o salto e os títulos — o que o axe dá por bom e um
+     leitor de ecrã dá por inútil.
+
+     O axe tem uma regra `bypass` e ela passava: confirma que existe uma
+     ligação de salto e que o destino resolve, e nunca mede o que é saltado. O
+     destino era um `<main>` que continha o menu de línguas, o botão do tema, o
+     cabeçalho e o rodapé — carregar nele não rolava a página e a tabulação
+     seguinte caía no primeiro dos elementos que a ligação promete saltar.
+
+     Pela mesma causa não havia `banner` nem `contentinfo`: o HTML-AAM tira o
+     papel a um `<header>` ou `<footer>` aninhado em `<main>`. Quem navega de
+     marco em marco tinha uma região só, do tamanho da página.
+
+     As regras que o axe tem para isto — `landmark-banner-is-top-level` e
+     `landmark-contentinfo-is-top-level` — são `best-practice` e ficam fora do
+     conjunto de etiquetas WCAG que se corre acima. Por isso é aqui.
+
+     E os TÍTULOS: `/` e `/cv/` tinham o mesmo, palavra por palavra, porque a
+     rota do dossiê reconstruía à mão a fórmula da página de arquivo. Dois
+     separadores abertos e indistinguíveis é o critério 2.4.2. O `document-title`
+     do axe só confirma que existe um dentro de cada página. */
+  {
+    const ctx = await browser.newContext()
+    const p = await ctx.newPage()
+    const titulos = new Map()
+    for (const rota of rotas) {
+      await p.goto(BASE + rota, { waitUntil: 'domcontentloaded' })
+
+      const titulo = await p.title()
+      if (titulos.has(titulo)) {
+        problemas.push(`${rota} e ${titulos.get(titulo)} têm o mesmo <title>: «${titulo}»`)
+      } else {
+        titulos.set(titulo, rota)
+      }
+
+      /* `interestingOnly: false` porque a poda por omissão engole os marcos, e
+         eu cheguei a medir «nenhum marco» em todas as rotas por causa disso. */
+      const ax = await p.accessibility.snapshot({ interestingOnly: false })
+      const papeis = new Set()
+      const andar = (n) => {
+        if (!n) return
+        papeis.add(n.role)
+        for (const c of n.children ?? []) andar(c)
+      }
+      andar(ax)
+      if (!SEM_MOLDURA.includes(rota) && !papeis.has('main')) {
+        problemas.push(`${rota}: sem marco main`)
+      }
+
+      /* A regra do que NÃO pode estar dentro do `<main>` vale só onde há
+         moldura para saltar. Num dossiê e na página de erro o `<header>` é o
+         cabeçalho do próprio documento — o nome e o retrato de um CV são o
+         começo do conteúdo, não a moldura do sítio —, e ali não há menu nem
+         rodapé para a ligação de salto passar à frente. */
+      if (ROTAS_ARVORE.includes(rota)) {
+        const dentro = await p.evaluate(() => {
+          const m = document.querySelector('main')
+          if (m === null) return null
+          return ['nav', 'header', 'footer'].filter((t) => m.querySelector(t) !== null)
+        })
+        if (dentro === null) problemas.push(`${rota}: não tem <main>`)
+        else if (dentro.length > 0) {
+          problemas.push(`${rota}: o <main> contém ${dentro.join(', ')} — o salto para o conteúdo não os salta`)
+        }
+
+        for (const papel of ['banner', 'contentinfo', 'navigation']) {
+          if (!papeis.has(papel)) problemas.push(`${rota}: sem marco ${papel}`)
+        }
+        const antes = await p.evaluate(() => {
+          const alvo = document.getElementById('conteudo')
+          if (alvo === null) return null
+          const f = [...document.querySelectorAll('a[href],button,summary,[tabindex]:not([tabindex="-1"])')]
+          return f.filter((e) => alvo.compareDocumentPosition(e) & Node.DOCUMENT_POSITION_PRECEDING).length
+        })
+        if (antes === null) problemas.push(`${rota}: não há #conteudo para onde saltar`)
+        else if (antes < 2) {
+          problemas.push(`${rota}: só ${antes} focável antes do #conteudo — a ligação de salto não salta nada`)
+        }
+      }
+    }
+    await ctx.close()
+  }
+
   /* A TERCEIRA, e entrou depois de o Fábio a apanhar num telemóvel: a largura
      do valor de cada campo, num ecrã estreito.
 

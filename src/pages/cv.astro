@@ -6,12 +6,10 @@
  */
 import Base from '../layouts/Base.astro'
 import Dossier from '../components/Dossier.astro'
-import { cabecalho } from '../data'
-import { t } from '../data/formato'
+import { paginaDossie } from '../data/pagina.ts'
 
 const idioma = 'pt' as const
-const titulo = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}`
-const descricao = `${cabecalho.nome} — ${t(cabecalho.areas, idioma)}. ${t(cabecalho.linhas[0]!, idioma)}`
+const { titulo, descricao } = paginaDossie(idioma)
 ---
 
 <Base idioma={idioma} titulo={titulo} descricao={descricao} caminho="/cv/" classe="dossie" robots="noindex, nofollow">

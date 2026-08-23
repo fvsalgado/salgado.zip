@@ -17,4 +17,10 @@ const ROTULOS: Record<Idioma, string> = {
 const rot = ROTULOS[idioma]
 ---
 
-<button type="button" class="tema" data-controlos data-tema aria-label={rot} title={rot} hidden>◐</button>
+{/* O glifo leva `aria-hidden` pela mesma razão que as setas das ligações que
+    saem: quem nomeia o botão é o `aria-label`, e um símbolo decorativo que
+    também se nomeasse punha o axe a assinalar que o nome não contém o que se
+    vê. É o mesmo tratamento em toda a casa, e agora sem exceção. */}
+<button type="button" class="tema" data-controlos data-tema aria-label={rot} title={rot} hidden>
+  <span aria-hidden="true">◐</span>
+</button>
