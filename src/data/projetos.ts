@@ -61,16 +61,22 @@ const cobertura =
  * que o campo `papel` já diz por cima de cada ficha, e diziam-no oito vezes
  * seguidas: lidas em fila, a repetição roubava-lhes a força que tinham uma a
  * uma. O papel continua a separar quem fundou de quem só construiu, que é a
- * distinção que interessa a quem lê. O que também saiu com elas foram as
- * relações pessoais — a companheira, a sobrinha permanece por ser o motivo da
- * ficha —, e essas não voltam: não são prova de trabalho.
+ * distinção que interessa a quem lê.
+ *
+ * Uma nota sobre as RELAÇÕES PESSOAIS, porque este comentário já disse mais do
+ * que era verdade. Dizia que tinham saído todas; saiu uma — «a Marta é minha
+ * companheira», da ficha da martarosa, que o Fábio mandou tirar a 19/08/2026.
+ * A da onofriana fica: «a curadoria artística é da Marta Rosa, minha
+ * companheira». Ele leu as duas fichas e pediu coisas diferentes de cada uma —
+ * dali só mandou tirar «Fundámo-lo os dois» —, e a diferença é deliberada. A
+ * sobrinha permanece por ser o motivo da ficha.
  *
  * Os MOTIVOS ficam, e são agora a única primeira pessoa da listagem: «fi-lo
  * porque gosto de teatro», «fi-lo como resposta a um problema de autonomia».
  *
  * `periodo: null` significa ano por confirmar. Não se publica por adivinhação:
  * são datas do percurso de uma pessoa real, num site que vai para
- * candidaturas. A verificação 14 bloqueia enquanto houver algum por confirmar.
+ * candidaturas. A verificação 16 bloqueia enquanto houver algum por confirmar.
  */
 export const projetos = parse(Projeto.array().min(1), [
   {

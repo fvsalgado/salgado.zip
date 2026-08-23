@@ -359,8 +359,13 @@ export const Contacto = z.object({
    * derivar de nada — não há ficheiro nem commit de onde o tirar —, e por isso
    * vive aqui, escrito uma vez, e não repetido em cada sítio onde aparece.
    *
-   * Serve duas coisas: a linha de totais, e o `birthDate` do JSON-LD. A
-   * segunda é a que interessa mais do que parece — há vários Fábio Salgado na
+   * Serve TRÊS coisas: a linha de totais, o `birthDate` do JSON-LD, e o
+   * `idadeEm()` que o `contacto.ts` exporta — de onde saem as idades da
+   * apresentação e dos mandatos. (Dizia duas; a terceira nasceu depois, para
+   * corrigir umas idades que estavam escritas à letra, e este comentário não
+   * deu por ela.)
+   *
+   * A do JSON-LD interessa mais do que parece — há vários Fábio Salgado na
    * web, e uma data de nascimento com um lugar ao lado é o que diz a um motor
    * de busca qual deles é este.
    */

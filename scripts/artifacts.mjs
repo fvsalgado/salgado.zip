@@ -101,7 +101,8 @@ async function paraWebp(pngBuffer, largura, altura) {
 }
 
 /* ── 1. Capturas dos sites ────────────────────────────────────────────────
-   Quatro. O Travertina não entra, e a decisão não se revisita por
+   Cinco — o filtro é `shot !== null && url !== null`, e não uma lista. (Dizia
+   quatro; o fado.today entrou depois e ninguém voltou aqui.) O Travertina não entra, e a decisão não se revisita por
    conveniência: está atrás de autenticação. Uma captura só podia mostrar um
    ecrã de acesso — inútil — ou registos reais — inaceitável. */
 // O que se CAPTURA são os sites públicos; o que se EMBEBE no PDF são todas

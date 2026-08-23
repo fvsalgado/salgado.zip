@@ -1,8 +1,12 @@
 /**
  * Camada JS progressiva. Nada aqui é necessário para a página funcionar: os
- * nós abrem com <details> nativo, o alternador de vista é um link e a
- * impressão tem regra CSS de recurso. Orçamento: < 10 kB no total, verificado
- * pela verificação 9 do verify.mjs.
+ * nós abrem com <details> nativo e a impressão tem regra CSS de recurso.
+ *
+ * (Dizia também «o alternador de vista é um link». Não há alternador de vista
+ * nenhum, e não havia há muito: o que restava dele era uma regra de print a
+ * esconder uma classe `.vista` que nenhum ficheiro escreve. Saíram os dois.)
+ *
+ * Orçamento: < 10 kB no total, verificado pela verificação 9 do verify.mjs.
  */
 
 const raiz = document.documentElement

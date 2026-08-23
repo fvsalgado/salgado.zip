@@ -1,4 +1,11 @@
 import { Cabecalho, parse } from './schema.ts'
+import { idadeEm } from './contacto.ts'
+
+/* O ano da candidatura que deu a estreia na política. A idade sai dele e do
+   ano de nascimento, e deixa de estar escrita à letra em quatro línguas: era
+   a MESMA idade que os mandatos já derivavam, e mudar o ano de nascimento
+   fazia a mesma página dizer duas coisas. */
+const ESTREIA = 2005
 
 export const cabecalho = parse(Cabecalho, {
   nome: 'Fábio Salgado',
@@ -44,15 +51,15 @@ export const cabecalho = parse(Cabecalho, {
        * fundia dois momentos diferentes num só que não aconteceu: aos 19 fui
        * número dois de uma lista à assembleia municipal, e em 2007 entrei por
        * substituição. Dar a posse como eleição é errado, e ainda por cima
-       * apagava o mais invulgar dos dois — o que se passou aos 19.
+       * apagava o mais invulgar dos dois — o que se passou na estreia.
        *
        * A entrada fica com o começo; o detalhe do que veio depois vive em
        * `mandatos.ts`, que é a linha do próprio cargo.
        */
-      pt: 'Nasci na Nazaré e foi lá que entrei na política, aos 19 anos, como número dois de uma lista à assembleia municipal. Divido-me hoje entre Alfama, em Lisboa, e Ribeira Branca, em Torres Novas.',
-      en: 'I was born in Nazaré, and it was there that I entered politics, at 19, as number two on a list for the municipal assembly. Today I split my time between Alfama, in Lisbon, and Ribeira Branca, in Torres Novas.',
-      fr: 'Je suis né à Nazaré, et c’est là que je suis entré en politique, à 19 ans, comme numéro deux d’une liste à l’assemblée municipale. Aujourd’hui je partage mon temps entre Alfama, à Lisbonne, et Ribeira Branca, à Torres Novas.',
-      es: 'Nací en Nazaré, y allí entré en política, a los 19 años, como número dos de una lista a la asamblea municipal. Hoy reparto mi tiempo entre Alfama, en Lisboa, y Ribeira Branca, en Torres Novas.',
+      pt: `Nasci na Nazaré e foi lá que entrei na política, aos ${idadeEm(ESTREIA)} anos, como número dois de uma lista à assembleia municipal. Divido-me hoje entre Alfama, em Lisboa, e Ribeira Branca, em Torres Novas.`,
+      en: `I was born in Nazaré, and it was there that I entered politics, at ${idadeEm(ESTREIA)}, as number two on a list for the municipal assembly. Today I split my time between Alfama, in Lisbon, and Ribeira Branca, in Torres Novas.`,
+      fr: `Je suis né à Nazaré, et c’est là que je suis entré en politique, à ${idadeEm(ESTREIA)} ans, comme numéro deux d’une liste à l’assemblée municipale. Aujourd’hui je partage mon temps entre Alfama, à Lisbonne, et Ribeira Branca, à Torres Novas.`,
+      es: `Nací en Nazaré, y allí entré en política, a los ${idadeEm(ESTREIA)} años, como número dos de una lista a la asamblea municipal. Hoy reparto mi tiempo entre Alfama, en Lisboa, y Ribeira Branca, en Torres Novas.`,
     },
     {
       pt: 'Desde então: uma loja minha, o balcão e o palco de uma sala de espetáculos, quatro anos num gabinete da Câmara de Lisboa, e hoje consultoria de assuntos públicos. Pelo meio comecei a construir software, e há pouco a produzir fado — sem largar nada.',

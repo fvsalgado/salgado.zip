@@ -395,7 +395,29 @@ const SEM_MOLDURA = ['/og/']
     }
   }
   varrer(raiz + 'src/')
-  decide('nenhum marcador por preencher em src/', problemas)
+  /* E os cabeçalhos numerados deste ficheiro pela ordem em que correm.
+     
+     Não é arrumação: há texto PUBLICADO que cita números de verificação — a
+     nota de privacidade diz «a verificação 8 falha se algum dia fizer», a
+     declaração de acessibilidade aponta à 17 —, e esses números são os que
+     saem na consola, contados por `n`. Os cabeçalhos aqui estiveram fora de
+     ordem (16 antes da 15, antes da 13, antes da 14) e um comentário do
+     `projetos.ts` chegou a apontar à 14 quando queria dizer 16. Com as duas
+     numerações a coincidir, quem cita um número cita o mesmo dos dois lados. */
+  const cabecalhos = [...readFileSync(raiz + 'scripts/verify.mjs', 'utf8').matchAll(/══ (\d+)\./g)].map(
+    (m) => Number(m[1])
+  )
+  cabecalhos.forEach((numero, i) => {
+    if (numero !== i + 1) {
+      problemas.push(`o cabeçalho «${numero}.» está na posição ${i + 1} — os números têm de seguir a ordem de execução`)
+    }
+  })
+
+  decide(
+    'nenhum marcador por preencher em src/, e as verificações numeradas pela ordem em que correm',
+    problemas,
+    `${cabecalhos.length} cabeçalhos`
+  )
 }
 
 /* ══ 7. Fuga do projeto privado ═════════════════════════════════════════ */
@@ -883,7 +905,7 @@ function imagensPorPagina(buf) {
   }
 }
 
-/* ══ 16. As gravações batem certo com os ficheiros em disco ═════════════
+/* ══ 13. As gravações batem certo com os ficheiros em disco ═════════════
    O nó `voz/` publica quatro coisas que ninguém escreveu à mão — o tamanho, a
    duração, as dimensões da imagem e o sha256 — e duas que ninguém deve poder
    desfazer sem dar por isso: nada pré-carrega, e todo o vídeo leva capa.
@@ -1032,7 +1054,7 @@ function imagensPorPagina(buf) {
   )
 }
 
-/* ══ 15. A página 404 é nossa ═══════════════════════════════════════════
+/* ══ 14. A página 404 é nossa ═══════════════════════════════════════════
    Sem 404.astro, um URL errado servia a página do Astro em dev e a da Vercel
    em produção — logótipos alheios, inglês, tema alheio. Qualquer caminho
    errado quebrava o site inteiro. */
@@ -1079,7 +1101,7 @@ function imagensPorPagina(buf) {
   decide('a página 404 é a do site — mesma casca, mesma língua, com caminho de volta', problemas)
 }
 
-/* ══ 13. Oito capturas para revisão à vista ═════════════════════════════ */
+/* ══ 15. Oito capturas para revisão à vista ═════════════════════════════ */
 {
   mkdirSync(revisao, { recursive: true })
   let feitas = 0
@@ -1098,7 +1120,7 @@ function imagensPorPagina(buf) {
   ok('oito capturas para revisão à vista', `.verify/ · ${feitas} ficheiros`)
 }
 
-/* ══ 14. Conteúdo confirmado ════════════════════════════════════════════
+/* ══ 16. Conteúdo confirmado ════════════════════════════════════════════
    O plano proíbe marcadores "[POR PREENCHER]" em commit. A regra só é real
    se houver quem a imponha: é esta verificação que impede o PR de sair de
    rascunho enquanto faltar conteúdo que só o Fábio pode confirmar. */

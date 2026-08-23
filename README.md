@@ -44,17 +44,24 @@ build não consegue derivar não entra.
 | `npm run voz` | mede os mp3 de `public/voz/` para `src/generated/voz.json` |
 | `npm run preview` | serve o `dist/` em `localhost:4321` |
 | `npm run artifacts` | capturas, PDFs e `og.png` — precisa de browser |
-| `npm run verify` | as dezasseis verificações |
+| `npm run verify` | as dezoito verificações |
 
-`npm run artifacts` aceita `--sem-shots` (salta os sites externos), `--so=<id>`
-(recaptura um só) e `DEBUG_TEMPO=1` (mostra o tempo de cada passo).
+`npm run artifacts` aceita `--sem-shots` (salta os sites externos) e
+`--so=<id>` (recaptura um só). Documentava-se aqui um terceiro,
+`DEBUG_TEMPO=1`, que nunca existiu em lado nenhum do repositório.
 
 ## Porque é que alguns ficheiros não estão no repositório
 
 `public/resume.json`, `public/salgado.zip`, `public/llms.txt` e
 `public/.well-known/security.txt` são gerados pelo `prebuild` a partir do que
-está commitado, e ficam em `.gitignore`: assim o Astro consegue ler-lhes o
-tamanho com `fs` no build e não há binários a inchar o histórico.
+está commitado, e ficam em `.gitignore` porque não há razão para versionar o
+que se regenera — e binários a inchar o histórico é o que se evita.
+
+O tamanho deles não é lido pelo Astro: é o `pack.mjs` que lhes faz `statSync`
+depois de os escrever e guarda o número em `src/generated/tamanhos.json`, que
+esse sim é commitado. O build não toca no sistema de ficheiros. (Este parágrafo
+dizia o contrário, e o nexo era falso de qualquer maneira: estar no
+`.gitignore` não tem relação nenhuma com poder ser lido por `fs`.)
 
 O `llms.txt` sai da mesma fonte que a página — acrescentar um projeto em
 `src/data` acrescenta-o lá sozinho. Sem ilusões quanto ao que vale hoje:
@@ -115,14 +122,16 @@ Duas decisões que se leem no código e vale a pena dizer por extenso:
 
 ## Verificação
 
-`npm run verify` corre dezasseis verificações e devolve código de saída
-não-zero em qualquer falha. Quinze são binárias; só uma — a revisão à vista das
-oito capturas em `.verify/` — precisa de olho humano.
+`npm run verify` corre dezoito verificações e devolve código de saída
+não-zero em qualquer falha. Dezassete são binárias; só uma — a revisão à vista
+das oito capturas em `.verify/` — precisa de olho humano.
 
-Entre elas: contraste WCAG calculado a partir de `tokens.css` nos dois temas,
+Entre elas: contraste WCAG calculado a partir das três paletas de `tokens.css`,
 passagem completa com `javaScriptEnabled: false`, orçamento de 10 kB de
-JavaScript, zero pedidos a terceiros, e a confirmação de que os tamanhos
-publicados na listagem batem certo com os ficheiros em disco.
+JavaScript, zero pedidos a terceiros, a auditoria de acessibilidade com o
+axe-core sobre as oito rotas nos dois temas, a travessia da tabulação tecla a
+tecla, e a confirmação de que os tamanhos publicados na listagem batem certo
+com os ficheiros em disco.
 
 A verificação 16 falha enquanto houver conteúdo por confirmar — é o que impede
 o PR de sair de rascunho, em vez de um marcador `[POR PREENCHER]` no código.

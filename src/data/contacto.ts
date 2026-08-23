@@ -71,3 +71,18 @@ export const contacto = parse(Contacto, {
     },
   ],
 }, 'contacto')
+
+/**
+ * A idade num ano, derivada e não escrita.
+ *
+ * Vive aqui porque é aqui que vive o ano de nascimento de que ela sai, e
+ * porque tinha duas cópias: uma no `mandatos.ts`, que a derivava bem, e outra
+ * no `cabecalho.ts`, que escrevia «aos 19 anos» à letra nas quatro línguas. As
+ * duas dizem a mesma idade e falam do mesmo ato — a candidatura de 2005 —, e
+ * enquanto uma derivava e a outra não, mudar o ano de nascimento fazia a mesma
+ * página dizer duas idades diferentes.
+ *
+ * Vale porque todas as datas que passam por aqui são de outubro, depois do
+ * aniversário.
+ */
+export const idadeEm = (ano: number) => ano - Number(contacto.nascimento)

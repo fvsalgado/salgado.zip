@@ -20,7 +20,7 @@
 
   @page { size: A4; margin: 17mm 16mm 16mm; }
 
-  .vista, .totais__controlos, .tema, .shot, .salta, .rodape__ecra, .barra {
+  .totais__controlos, .tema, .shot, .salta, .rodape__ecra, .barra {
     display: none !important;
   }
 
@@ -122,24 +122,36 @@
      apresentação sessenta pixels para o primeiro projeto subir ao pé da folha
      1, e para as capas se partirem ao meio, com metade órfã no cimo da 4.
 
-     Ficou UMA quebra forçada, e não três. As outras duas foram tentativas
-     de arrumar à força o que a aritmética já arrumava sozinha, e cada uma
-     delas partia a voz em dois pedaços em folhas diferentes.
+     Ficaram DUAS quebras forçadas, e não três. A terceira era uma tentativa de
+     arrumar à força o que a aritmética já arrumava sozinha, e partia a voz em
+     dois pedaços em folhas diferentes. A segunda — a dos mandatos — entrou
+     depois, e está explicada em baixo, junto da regra.
 
-     A conta, medida e não suposta, com a caixa de texto a 998px:
+     (Este parágrafo dizia UMA. Escreveu-se quando era uma só, e a quebra dos
+     mandatos entrou por cima sem ninguém voltar aqui.)
 
-       cabeça 359 + tarja 78 + percurso 463 = 934  → folha 1, 64px de folga
-       projetos                              = 998  → folha 2, uma folha exata
-       capturas 347 + voz 464                = 811  → folha 3, 187px de folga
-       mandatos 202 + resto                  ≈ 570  → folha 4
+     A conta, medida com a caixa de texto a 673×998px, em `media: print`:
 
-     Ou seja: os mandatos não cabem na folha 3 por 15px, e por isso a voz fica
-     lá inteira — prosa, os quatro registos e as quatro capas — sem que nada
-     a force. [1, 0, 14, 0] imagens por folha: o retrato; os projetos em
+       cabeça 359 + tarja 78 + percurso 463 =  900  → folha 1,  98px de folga
+       projetos                             =  974  → folha 2,  24px de folga
+       capturas 347 + voz 473               =  820  → folha 3, 178px de folga
+       mandatos 334 + certificados 417
+         + idiomas 62 + colofão 122         =  935  → folha 4,  63px de folga
+
+     Ou seja: os mandatos não cabem no que sobra da folha 3 — pedem 334px e há
+     178 —, e por isso a voz fica lá inteira, prosa, os quatro registos e as
+     quatro capas. [1, 0, 14, 0] imagens por folha: o retrato; os projetos em
      texto; tudo o que é imagem na terceira; e a cauda em texto na quarta.
 
+     (Esta tabela esteve errada de duas maneiras ao mesmo tempo, e as duas
+     valem para quem vier a seguir. As PARCELAS envelheceram — os mandatos
+     passaram de dois para quatro e a secção de 202px para 334 — e as SOMAS
+     nunca fecharam: 359+78+463 dá 900 e estava escrito 934, o que fazia a
+     folga da folha 1 sair errada por 34px. Uma conta publicada tem de somar,
+     ou não é uma conta, é uma opinião com dígitos.)
+
      O `break-inside: avoid` na voz não muda a paginação de hoje: está lá para
-     o dia em que os projetos crescerem uma linha. A secção tem 464px e cabe
+     o dia em que os projetos crescerem uma linha. A secção tem 473px e cabe
      em qualquer folha, portanto ou fica onde está ou muda de folha inteira —
      o que nunca mais acontece é o que aconteceu antes, com as capas
      separadas da frase que nomeia os autores.
