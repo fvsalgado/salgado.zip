@@ -69,6 +69,34 @@ a:hover, a:focus-visible { color: var(--accent); text-decoration-color: currentC
   vertical-align: 0.1em;
 }
 
+/* Texto que só existe para quem ouve a página.
+
+   Serve o aviso da janela nova, e existe por causa de um erro que se cometeu
+   aqui: o aviso esteve num `aria-label`, e um `aria-label` não acrescenta ao
+   nome acessível — SUBSTITUI-O. As linhas de certificado ficaram a chamar-se
+   «Moral Foundations of Politics — abre numa janela nova», e quem ouve perdeu
+   o «Yale University» e o «2024» que quem vê lê na mesma linha. Num sítio que
+   publica uma declaração de acessibilidade, era o pior sítio para o ter.
+
+   Num `<span>` escondido o aviso SOMA-SE ao que lá está, e o nome acessível
+   passa a ser a linha inteira mais o aviso no fim. É também o que cumpre o
+   critério 2.5.3: tudo o que se vê continua dentro do que se ouve.
+
+   Escondido sem sair da árvore: `display: none` e `visibility: hidden` tiram-no
+   também a quem ouve, que é precisamente quem o precisa. Daí o retângulo de um
+   pixel recortado — o único jeito que esconde aos olhos e deixa ficar no nome. */
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* ── Estrutura ───────────────────────────────────────────────────────────── */
 .folha {
   max-width: var(--larg);

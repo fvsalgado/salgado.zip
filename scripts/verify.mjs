@@ -1039,19 +1039,47 @@ function imagensPorPagina(buf) {
       if (!/target="_blank"/.test(atributos)) problemas.push(`${onde}: sai do sítio sem target="_blank"`)
       if (!/\brel="[^"]*\bnoopener\b/.test(atributos)) problemas.push(`${onde}: sai do sítio sem rel="noopener"`)
 
-      const rotulo = (/\baria-label="([^"]*)"/.exec(atributos) ?? [])[1] ?? ''
-      if (!rotulo.includes(aviso)) {
-        problemas.push(`${onde}: o nome acessível não avisa da janela nova («${aviso}»)`)
-      }
-
-      /* O texto que se vê, sem as etiquetas e sem a própria seta. Vazio quer
-         dizer ligação de ícone — as três do rodapé, e mais nenhuma. */
+      /* O texto que se vê, sem as etiquetas, sem a seta e sem o que só o leitor
+         de ecrã ouve. Vazio quer dizer ligação de ícone — as três do rodapé, e
+         mais nenhuma. */
       const texto = dentroDela
         .replace(/<span class="seta-fora"[\s\S]*?<\/span>/g, '')
+        .replace(/<span class="so-leitor"[\s\S]*?<\/span>/g, '')
         .replace(/<[^>]*>/g, '')
         .trim()
       if (texto !== '' && !temSeta) problemas.push(`${onde}: sai do sítio, tem texto visível e não tem seta`)
       if (texto === '' && temSeta) problemas.push(`${onde}: é uma ligação de ícone e tem seta`)
+
+      /* O NOME ACESSÍVEL, montado como o browser o monta: se há `aria-label`,
+         é ele e mais nada; se não há, é o texto de dentro — o que se vê mais o
+         que só se ouve. É essa distinção que interessa aqui, porque um
+         `aria-label` não acrescenta ao nome: SUBSTITUI-O. */
+      const rotulo = (/\baria-label="([^"]*)"/.exec(atributos) ?? [])[1] ?? null
+      const escondido = /<span class="so-leitor">([^<]*)</.exec(dentroDela)?.[1] ?? ''
+      const nomeAcessivel = rotulo ?? `${texto} ${escondido}`
+      if (!nomeAcessivel.includes(aviso)) {
+        problemas.push(`${onde}: o nome acessível não avisa da janela nova («${aviso}»)`)
+      }
+
+      /* E o critério 2.5.3, escrito à custa de um erro cometido aqui.
+
+         Substituir o nome é legítimo quando o que lá se põe CONTÉM o que se vê:
+         é o que faz uma ligação cujo texto visível diz «visitar» e cujo nome
+         diz «visitar primeiraplateia.pt» — quem vê e quem ouve recebem a mesma
+         palavra, e quem ouve recebe mais. Deixa de ser legítimo quando o nome
+         deita fora alguma coisa que está na linha: as linhas de certificado
+         chamaram-se «Moral Foundations of Politics — abre numa janela nova» e
+         perderam o «Yale University» e o «2024» que quem vê lê ao lado. Esteve
+         assim em produção, publicado por um PR que era sobre acessibilidade.
+
+         Compara-se sem espaços repetidos, que o HTML construído traz aos molhos
+         entre as colunas e que ninguém vê nem ouve. */
+      const limpo = (s) => s.replace(/\s+/g, ' ').trim()
+      if (rotulo !== null && texto !== '' && !limpo(rotulo).includes(limpo(texto))) {
+        problemas.push(
+          `${onde}: o aria-label («${limpo(rotulo).slice(0, 44)}») não contém o texto que se vê («${limpo(texto).slice(0, 44)}»)`
+        )
+      }
     }
   }
 
