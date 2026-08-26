@@ -53,8 +53,8 @@ jobs:
       #
       # Esse olho está no PR, e só no PR. Numa corrida de `main` as mesmas
       # capturas já tinham sido vistas no PR que lá pôs o código, e ficavam a
-      # ocupar lugar sem ninguém as abrir: eram 44% do que este repositório
-      # gastava dos 0,5 GB que a conta inclui por ciclo.
+      # ocupar lugar sem ninguém as abrir — 54 artefactos e 128,61 MB, 44% de
+      # tudo o que este repositório tinha guardado.
       - uses: actions/upload-artifact@v4
         if: always() && github.event_name == 'pull_request'
         with:
@@ -69,7 +69,12 @@ jobs:
       # `upload-artifact` guarda um artefacto por corrida, não um por ramo. Um
       # PR com trinta e quatro envios deixava trinta e quatro cópias de 2,3 MB
       # atrás de si, e só a última tinha alguém à espera dela — as outras eram
-      # 98 MB de capturas de commits que já ninguém vai rever.
+      # 98 MB de capturas de commits que já ninguém vai rever, e um separador
+      # de artefactos onde encontrar a última dava trabalho.
+      #
+      # Nada disto é cobrado: em repositório público o Actions é grátis, e os
+      # 289 MB que estavam aqui não entram nos 0,5 GB da conta. É arrumação, e
+      # é a diferença entre pagar e não pagar no dia em que isto for privado.
       #
       # Corre depois do envio, e nunca apaga o artefacto desta corrida.
       # `continue-on-error` porque um PR vindo de um fork recebe um token só de
