@@ -44,7 +44,7 @@ build não consegue derivar não entra.
 | `npm run voz` | mede os mp3 de `public/voz/` para `src/generated/voz.json` |
 | `npm run preview` | serve o `dist/` em `localhost:4321` |
 | `npm run artifacts` | capturas, PDFs e `og.png` — precisa de browser |
-| `npm run verify` | as dezoito verificações |
+| `npm run verify` | as dezasseis verificações |
 
 `npm run artifacts` aceita `--sem-shots` (salta os sites externos) e
 `--so=<id>` (recaptura um só). Documentava-se aqui um terceiro,
@@ -122,8 +122,8 @@ Duas decisões que se leem no código e vale a pena dizer por extenso:
 
 ## Verificação
 
-`npm run verify` corre dezoito verificações e devolve código de saída
-não-zero em qualquer falha. Dezassete são binárias; só uma — a revisão à vista
+`npm run verify` corre dezasseis verificações e devolve código de saída
+não-zero em qualquer falha. Quinze são binárias; só uma — a revisão à vista
 das oito capturas em `.verify/` — precisa de olho humano.
 
 Entre elas: contraste WCAG calculado a partir das três paletas de `tokens.css`,
