@@ -12,6 +12,13 @@ concurrency:
   group: verify-${{ github.ref }}
   cancel-in-progress: true
 
+# O passo que limpa as capturas antigas apaga artefactos, e apagar artefactos
+# é escrita. Declarar aqui as duas permissões deixa explícito que a corrida não
+# precisa de mais nada do que ler o código e arrumar o que ela própria criou.
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -43,11 +50,50 @@ jobs:
 
       # As oito capturas ficam disponíveis no separador de artefactos da
       # execução: a verificação 15 é a única que precisa de olho humano.
+      #
+      # Esse olho está no PR, e só no PR. Numa corrida de `main` as mesmas
+      # capturas já tinham sido vistas no PR que lá pôs o código, e ficavam a
+      # ocupar lugar sem ninguém as abrir — 54 artefactos e 128,61 MB, 44% de
+      # tudo o que este repositório tinha guardado.
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         with:
           name: revisao-a-vista
           path: .verify/
-          retention-days: 14
+          # A revisão de um PR acontece em horas. Catorze dias apenas
+          # multiplicavam por catorze aquilo que a conta paga a cada momento.
+          retention-days: 5
           # .verify/ começa por ponto: sem isto o upload não encontra nada.
           include-hidden-files: true
+
+      # `upload-artifact` guarda um artefacto por corrida, não um por ramo. Um
+      # PR com trinta e quatro envios deixava trinta e quatro cópias de 2,3 MB
+      # atrás de si, e só a última tinha alguém à espera dela — as outras eram
+      # 98 MB de capturas de commits que já ninguém vai rever, e um separador
+      # de artefactos onde encontrar a última dava trabalho.
+      #
+      # Nada disto é cobrado: em repositório público o Actions é grátis, e os
+      # 289 MB que estavam aqui não entram nos 0,5 GB da conta. É arrumação, e
+      # é a diferença entre pagar e não pagar no dia em que isto for privado.
+      #
+      # Corre depois do envio, e nunca apaga o artefacto desta corrida.
+      # `continue-on-error` porque um PR vindo de um fork recebe um token só de
+      # leitura: aí a limpeza não acontece, e não é isso que há-de pôr o PR a
+      # vermelho.
+      - name: Apagar as capturas das corridas anteriores deste ramo
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?per_page=100" \
+            --jq ".artifacts[]
+                  | select(.name == \"revisao-a-vista\")
+                  | select(.expired == false)
+                  | select(.workflow_run.head_branch == \"$GITHUB_HEAD_REF\")
+                  | select(.workflow_run.id != $GITHUB_RUN_ID)
+                  | .id" \
+          | while read -r id; do
+              echo "a apagar as capturas $id"
+              gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$id"
+            done
