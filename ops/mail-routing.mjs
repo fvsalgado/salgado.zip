@@ -37,6 +37,8 @@ const DESTINOS = {
   'franciscasalgado.golf': 'birdie@franciscasalgado.golf',
   'fado.today': 'hello@fado.today',
   'travertina.casa': 'fabio@salgado.zip',
+  // a marca nova (5/11/2026): o fabio@stineta.pt cai na caixa de sempre
+  'stineta.pt': 'fabio@salgado.zip',
 }
 
 // Reencaminhamentos de endereço exacto, que ganham sempre ao padrão geral.
