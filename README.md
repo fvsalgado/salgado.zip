@@ -1,6 +1,8 @@
-# salgado.zip
+# stineta.pt
 
-Site pessoal de Fábio Salgado. Astro estático, sem CMS, sem cookies, sem publicidade.
+Site pessoal de Fábio Salgado, em https://stineta.pt. Chamou-se salgado.zip
+até 5/11/2026: o endereço antigo redirecciona para o novo, com o caminho, e o
+repositório guarda o nome antigo. Astro estático, sem CMS, sem cookies, sem publicidade.
 
 ## A ideia
 

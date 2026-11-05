@@ -60,10 +60,10 @@ export const colofaoDocumento = parse(z.array(Lang).min(1), [
     es: 'Compuesto en IBM Plex Serif e IBM Plex Mono, ambas de licencia abierta. Paginado en HTML, impuesto en A4 e impreso en PDF.',
   },
   {
-    pt: 'Tirado de salgado.zip, onde esta informação é mantida e verificada antes de cada publicação. A data desta tiragem está no rodapé de cada página, e o código QR da primeira leva ao original.',
-    en: 'Drawn from salgado.zip, where this information is maintained and checked before every release. The date of this impression is in the footer of every page, and the QR code on the first leads back to the original.',
-    fr: 'Tiré de salgado.zip, où cette information est tenue à jour et vérifiée avant chaque publication. La date de ce tirage figure au pied de chaque page, et le code QR de la première ramène à l’original.',
-    es: 'Sacado de salgado.zip, donde esta información se mantiene y se verifica antes de cada publicación. La fecha de esta tirada está al pie de cada página, y el código QR de la primera lleva al original.',
+    pt: 'Tirado de stineta.pt, onde esta informação é mantida e verificada antes de cada publicação. A data desta tiragem está no rodapé de cada página, e o código QR da primeira leva ao original.',
+    en: 'Drawn from stineta.pt, where this information is maintained and checked before every release. The date of this impression is in the footer of every page, and the QR code on the first leads back to the original.',
+    fr: 'Tiré de stineta.pt, où cette information est tenue à jour et vérifiée avant chaque publication. La date de ce tirage figure au pied de chaque page, et le code QR de la première ramène à l’original.',
+    es: 'Sacado de stineta.pt, donde esta información se mantiene y se verifica antes de cada publicación. La fecha de esta tirada está al pie de cada página, y el código QR de la primera lleva al original.',
   },
   {
     pt: 'Escrito e construído a meias com o Claude — Claude Code, da Anthropic —, entre outras ferramentas.',

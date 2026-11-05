@@ -20,7 +20,7 @@ import { nomeCV } from '../src/data/ficheiros.ts'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
 const pub = raiz + 'public/'
-const CANONICO = 'https://salgado.zip'
+const CANONICO = 'https://stineta.pt'
 const semShots = process.argv.includes('--sem-shots')
 /** `--so=onofriana` recaptura um site só, sem repetir os outros. */
 const so = process.argv.find((a) => a.startsWith('--so='))?.slice(5) ?? null
