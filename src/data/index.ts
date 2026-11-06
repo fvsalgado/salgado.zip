@@ -17,7 +17,7 @@ export type { Idioma, Lingua } from './idiomas.ts'
 /** Datas de modificação, do `git log`, congeladas em src/generated/stamps.json. */
 export const datas: Record<string, string> = stamps
 
-export const CANONICO = 'https://salgado.zip'
+export const CANONICO = 'https://stineta.pt'
 
 /**
  * Bytes e duração de cada gravação, medidos por scripts/voz.mjs sobre os

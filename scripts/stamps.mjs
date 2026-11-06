@@ -8,7 +8,7 @@
  * as datas referem-se ao commit anterior, que é o comportamento correto.
  */
 import { execFileSync } from 'node:child_process'
-import { writeFileSync, readFileSync, mkdirSync } from 'node:fs'
+import { writeFileSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
@@ -38,31 +38,8 @@ mkdirSync(raiz + 'src/generated', { recursive: true })
 writeFileSync(raiz + 'src/generated/stamps.json', JSON.stringify(stamps, null, 2) + '\n')
 console.log(`stamps: ${Object.keys(stamps).length} entradas`)
 
-/* O número de espetáculos do Primeira Plateia vem do próprio site, que o
-   publica no cabeçalho. Congelado aqui como as datas: lido da fonte quando
-   este script corre, nunca escrito à mão. Se a leitura falhar, fica o valor
-   anterior — um número antigo verdadeiro vale mais do que um atual inventado. */
-const numerosPath = raiz + 'src/generated/numeros.json'
-let numeros = {}
-try {
-  numeros = JSON.parse(readFileSync(numerosPath, 'utf8'))
-} catch {}
-try {
-  const r = await fetch('https://primeiraplateia.pt', { redirect: 'follow' })
-  const html = await r.text()
-  const ler = (rotulo) => {
-    const m = html.match(new RegExp('>([\\d\\s.,]{1,9})</span>\\s*(?:<[^>]+>)*\\s*' + rotulo, 'i'))
-    if (!m) return null
-    const n = parseInt(m[1].replace(/[^\d]/g, ''), 10)
-    return Number.isFinite(n) && n > 0 ? n : null
-  }
-  const esp = ler('espet[áa]culos')
-  const salas = ler('salas')
-  const concelhos = ler('concelhos')
-  if (esp) numeros.primeiraplateiaEspetaculos = esp
-  if (salas) numeros.primeiraplateiaSalas = salas
-  if (concelhos) numeros.primeiraplateiaConcelhos = concelhos
-  if (esp || salas || concelhos) numeros.lidoEm = stamps[alvos[0]] ?? null
-} catch {}
-writeFileSync(numerosPath, JSON.stringify(numeros, null, 2) + '\n')
-console.log(`numeros: espetáculos = ${numeros.primeiraplateiaEspetaculos ?? '—'}`)
+/* Lia-se aqui o número de espetáculos, de salas e de concelhos do
+   primeiraplateia.pt, para um numeros.json. Saiu a 6/11/2026: o endereço
+   redireciona para o coreto.org, que só publica as contagens da demonstração —
+   um território inventado —, e uma contagem inventada não entra num
+   currículo. A razão inteira está no topo do src/data/projetos.ts. */

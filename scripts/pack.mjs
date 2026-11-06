@@ -25,7 +25,7 @@ import { colofaoSite, codigoDoSite, licenca } from '../src/data/textos.ts'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
 const pub = raiz + 'public/'
-const CANONICO = 'https://salgado.zip'
+const CANONICO = 'https://stineta.pt'
 
 /** Data fixa vinda dos stamps: um .zip com a data de hoje mudaria a cada build. */
 function dataFixa() {

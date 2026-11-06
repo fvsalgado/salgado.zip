@@ -1,7 +1,7 @@
 import { Contacto, parse } from './schema.ts'
 
 export const contacto = parse(Contacto, {
-  email: 'fabio@salgado.zip',
+  email: 'fabio@stineta.pt',
   linkedin: 'https://www.linkedin.com/in/fvsalgado',
   concelho: {
     pt: 'Alfama, Lisboa · Ribeira Branca, Torres Novas',

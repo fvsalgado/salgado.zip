@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config'
 
 export default defineConfig({
-  site: 'https://salgado.zip',
+  site: 'https://stineta.pt',
   output: 'static',
   trailingSlash: 'always',
   build: { format: 'directory', inlineStylesheets: 'never' },

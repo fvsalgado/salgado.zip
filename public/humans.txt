@@ -1,7 +1,7 @@
 /* AUTOR */
 Fábio Salgado
 Alfama, Lisboa · Ribeira Branca, Torres Novas · natural da Nazaré
-https://salgado.zip
+https://stineta.pt
 
 /* SITE */
 Astro estático, sem CMS, sem cookies, sem publicidade.

@@ -30,7 +30,7 @@ import { projetos } from '../src/data/projetos.ts'
 import { leituras } from '../src/data/voz.ts'
 import { avisoJanelaNova } from '../src/data/textos.ts'
 
-const CANONICO = 'https://salgado.zip'
+const CANONICO = 'https://stineta.pt'
 
 const raiz = fileURLToPath(new URL('..', import.meta.url))
 const dist = raiz + 'dist/'

@@ -133,14 +133,18 @@
      A conta, medida com a caixa de texto a 673×998px, em `media: print`:
 
        cabeça 359 + tarja 78 + percurso 463 =  900  → folha 1,  98px de folga
-       projetos                             =  974  → folha 2,  24px de folga
-       capturas 347 + voz 473               =  820  → folha 3, 178px de folga
+       projetos 1152 — 998 na folha 2, e o resto passa à 3
+       projetos 154 + capturas 275 + voz 473 = 902  → folha 3,  96px de folga
        mandatos 334 + certificados 417
          + idiomas 62 + colofão 122         =  935  → folha 4,  63px de folga
 
+     (Medido a 6/11/2026, com oito projetos e as capturas quatro por fila.
+     Até aí os projetos cabiam na folha 2 — 974px — e as capturas, três por
+     fila, ocupavam 347.)
+
      Ou seja: os mandatos não cabem no que sobra da folha 3 — pedem 334px e há
-     178 —, e por isso a voz fica lá inteira, prosa, os quatro registos e as
-     quatro capas. [1, 0, 14, 0] imagens por folha: o retrato; os projetos em
+     96 —, e por isso a voz fica lá inteira, prosa, os quatro registos e as
+     quatro capas. [1, 0, 16, 0] imagens por folha: o retrato; os projetos em
      texto; tudo o que é imagem na terceira; e a cauda em texto na quarta.
 
      (Esta tabela esteve errada de duas maneiras ao mesmo tempo, e as duas
@@ -183,9 +187,10 @@
   /* ── As capturas ───────────────────────────────────────────────────────── */
   /* Sem quebra forçada: uma folha própria só para elas deixava a anterior a
      meio. Cada figura é que não parte. */
-  /* Três por linha: uma folha de contacto, não uma galeria. Poupa uma
-     linha de grelha e fecha o documento uma página mais cedo. */
-  .capturas { grid-template-columns: repeat(3, 1fr); gap: 5mm; }
+  /* Quatro por linha: uma folha de contacto, não uma galeria. Eram três até
+     6/11/2026; com oito projetos, a terceira fila de três empurrava a voz e o
+     documento ia a cinco folhas. Quatro fazem duas filas. */
+  .capturas { grid-template-columns: repeat(4, 1fr); gap: 4mm; }
   .captura img { border-color: var(--rule); }
   .captura figcaption { font-size: 8pt; margin-top: 1.2mm; }
 

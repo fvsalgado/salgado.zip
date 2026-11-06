@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Põe o DMARC e o TLS-RPT em pé nos seis domínios de correio.
+ * Põe o DMARC e o TLS-RPT em pé nos sete domínios de correio.
  *
  * O que existia antes: cada domínio tinha `_dmarc` como CNAME para o registo
  * partilhado da Purelymail (`dmarcroot.purelymail.com`). Esse registo é
@@ -9,11 +9,11 @@
  * cima: um CNAME não coexiste com um TXT no mesmo nome, por isso o CNAME é
  * apagado antes de o TXT ser escrito.
  *
- * Os relatórios dos seis domínios vão todos para uma caixa em salgado.zip.
+ * Os relatórios dos sete domínios vão todos para uma caixa em salgado.zip.
  * Como isso é entrega cruzada entre domínios, o RFC 7489 §7.1 exige que o
  * domínio que recebe publique uma autorização por cada domínio que reporta —
- * daí os cinco `<domínio>._report._dmarc` em salgado.zip. O salgado.zip não
- * se autoriza a si próprio, por isso são cinco e não seis.
+ * daí os seis `<domínio>._report._dmarc` em salgado.zip. O salgado.zip não
+ * se autoriza a si próprio, por isso são seis e não sete.
  *
  * Por omissão só mostra o plano. Escreve mesmo com `--aplicar`.
  *
@@ -44,6 +44,10 @@ const CAIXA = 'dmarc@salgado.zip'
 // remetentes legítimos alinham — subir antes disso rejeita correio bom.
 const POLITICA = 'none'
 
+// Um domínio novo, que nasceu só com a Purelymail a enviar, começa logo mais
+// apertado (5/11/2026): não há remetentes antigos por descobrir nos relatórios.
+const POLITICA_DE = { 'stineta.pt': 'quarantine' }
+
 const DOMINIOS = [
   'salgado.zip',
   'primeiraplateia.pt',
@@ -51,6 +55,7 @@ const DOMINIOS = [
   'franciscasalgado.golf',
   'fado.today',
   'travertina.casa',
+  'stineta.pt',
 ]
 
 // O domínio onde a caixa de relatórios vive, e que por isso publica as
@@ -78,7 +83,7 @@ const registos = async (dominio) => {
 // O que deve existir em cada domínio.
 const querido = (dominio) => {
   const lista = [
-    { nome: '_dmarc', tipo: 'TXT', valor: `v=DMARC1; p=${POLITICA}; rua=mailto:${CAIXA}` },
+    { nome: '_dmarc', tipo: 'TXT', valor: `v=DMARC1; p=${POLITICA_DE[dominio] ?? POLITICA}; rua=mailto:${CAIXA}` },
     { nome: '_smtp._tls', tipo: 'TXT', valor: `v=TLSRPTv1; rua=mailto:${CAIXA}` },
   ]
   if (dominio === ANFITRIAO) {
