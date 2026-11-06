@@ -21,7 +21,10 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    # Fixado, não `ubuntu-latest`: a 5/11/2026 o latest passou à 26.04 e o
+    # Playwright 1.56 recusa instalar o Chromium nela («does not support
+    # chromium on ubuntu26.04-x64»). Sobe quando o Playwright a suportar.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
