@@ -81,9 +81,10 @@ export const projetos = parse(Projeto.array().min(1), [
       es: 'fundador y creador · producto',
     },
     estado: 'ativo',
-    // O mês do primeiro commit do Coreto (26/08/2026), pelo `git log
-    // --reverse`. A linhagem, desde o EmCena.pt em 2016, diz-se no detalhe.
-    periodo: { inicio: '2026-08', fim: null },
+    // A linha que o Fábio fundou começa no EmCena.pt, em Novembro de 2016, e é
+    // essa a data (decisão dele, 6/11/2026). O código do Coreto é novo — o
+    // primeiro commit é de 26/08/2026 —, e a linhagem diz-se no detalhe.
+    periodo: { inicio: '2016-11', fim: null },
     // «Toda a programação cultural do seu território, numa agenda só.» abre a
     // linha nas quatro línguas e não se traduz: é a frase da casa — o título e
     // o h1 do coreto.org —, e uma frase da casa traduzida deixa de ser a frase
@@ -111,10 +112,10 @@ export const projetos = parse(Projeto.array().min(1), [
         // 26/08/2026), escrito depois de ler o dele, e o NOTES.md do Coreto
         // diz o que veio de lá — o motor de normalização e deduplicação. O
         // resto é o redirecionamento do endereço, verificado a 6/11/2026.
-        pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa, e em 2026 foi renomeado e relançado como Primeira Plateia, de âmbito nacional. O Coreto herdou-lhe o motor de normalização e deduplicação, e o endereço do Primeira Plateia leva hoje ao Coreto.',
-        en: 'Born in 2016 as EmCena.pt, a listings site for Lisbon theatre; renamed and relaunched in 2026 as Primeira Plateia, nationwide. Coreto inherited its normalisation and deduplication engine, and the Primeira Plateia address now leads to Coreto.',
-        fr: 'Né en 2016 sous le nom d’EmCena.pt, agenda du théâtre de Lisbonne ; renommé et relancé en 2026 sous le nom de Primeira Plateia, à l’échelle nationale. Le Coreto en a hérité le moteur de normalisation et de dédoublonnage, et l’adresse de Primeira Plateia mène aujourd’hui au Coreto.',
-        es: 'Nació en 2016 como EmCena.pt, agenda de teatro de Lisboa; en 2026 se renombró y relanzó como Primeira Plateia, de ámbito nacional. El Coreto heredó de él el motor de normalización y deduplicación, y la dirección de Primeira Plateia lleva hoy al Coreto.',
+        pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa, e em 2026 passou a Primeira Plateia, de âmbito nacional. O Coreto herdou-lhe o motor e o endereço.',
+        en: 'Born in 2016 as EmCena.pt, a listings site for Lisbon theatre; in 2026 it became Primeira Plateia, nationwide. Coreto inherited its engine and its address.',
+        fr: 'Né en 2016 sous le nom d’EmCena.pt, agenda du théâtre de Lisbonne ; en 2026 il devient Primeira Plateia, à l’échelle nationale. Le Coreto en a hérité le moteur et l’adresse.',
+        es: 'Nació en 2016 como EmCena.pt, agenda de teatro de Lisboa; en 2026 pasó a ser Primeira Plateia, de ámbito nacional. El Coreto heredó de él el motor y la dirección.',
       },
     ],
     stack: ['Next.js', 'Supabase', 'TypeScript'],
@@ -144,12 +145,6 @@ export const projetos = parse(Projeto.array().min(1), [
         en: 'Named after Maria Severa Onofriana. Four formats: Severa, Mariquinhas, Guitarradas and Vimioso.',
         fr: 'Le nom vient de Maria Severa Onofriana. Quatre formats : Severa, Mariquinhas, Guitarradas et Vimioso.',
         es: 'El nombre viene de Maria Severa Onofriana. Cuatro formatos: Severa, Mariquinhas, Guitarradas y Vimioso.',
-      },
-      {
-        pt: 'Representamos artistas e organizamos os concertos. Edição discográfica, pontualmente.',
-        en: 'We represent artists and put on the concerts. Record releases, now and then.',
-        fr: 'Nous représentons les artistes et montons les concerts. Édition discographique, ponctuellement.',
-        es: 'Representamos a los artistas y organizamos los conciertos. Edición discográfica, puntualmente.',
       },
       {
         pt: 'A curadoria artística é da Marta Rosa, minha companheira.',
@@ -261,10 +256,10 @@ export const projetos = parse(Projeto.array().min(1), [
         // O motivo entra; o dono não. Esta é a única ficha em que a regra de
         // despersonalização se aplica ao próprio autor: um motivo em primeira
         // pessoa é assinatura, mas «as vacinas dos meus animais» é morada.
-        pt: 'Fi-lo como resposta a um problema de autonomia: pôr obra, manutenção de equipamentos, compromissos dos animais — vacinas e afins — e domótica no mesmo sítio, e no telemóvel. Cada módulo funciona como uma aplicação; estão todos ligados.',
-        en: 'I made it as an answer to a problem of autonomy: putting building work, equipment upkeep, animal appointments — vaccines and the like — and home automation in one place, and on the phone. Each module works like an app; they are all connected.',
-        fr: 'Je l’ai fait en réponse à un problème d’autonomie : mettre les travaux, l’entretien des équipements, les rendez-vous des animaux — vaccins et compagnie — et la domotique au même endroit, et sur le téléphone. Chaque module fonctionne comme une application ; ils sont tous reliés.',
-        es: 'Lo hice como respuesta a un problema de autonomía: poner la obra, el mantenimiento de los equipos, los compromisos de los animales — vacunas y demás — y la domótica en el mismo sitio, y en el móvil. Cada módulo funciona como una aplicación; están todos conectados.',
+        pt: 'Fi-lo como resposta a um problema de autonomia: pôr obra, manutenção de equipamentos, compromissos dos animais — vacinas e afins — e domótica no mesmo sítio, e no telemóvel.',
+        en: 'I made it as an answer to a problem of autonomy: putting building work, equipment upkeep, animal appointments — vaccines and the like — and home automation in one place, and on the phone.',
+        fr: 'Je l’ai fait en réponse à un problème d’autonomie : mettre les travaux, l’entretien des équipements, les rendez-vous des animaux — vaccins et compagnie — et la domotique au même endroit, et sur le téléphone.',
+        es: 'Lo hice como respuesta a un problema de autonomía: poner la obra, el mantenimiento de los equipos, los compromisos de los animales — vacunas y demás — y la domótica en el mismo sitio, y en el móvil.',
       },
     ],
     stack: ['Vite', 'Supabase (RLS)', 'PWA offline-first'],
