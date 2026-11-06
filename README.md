@@ -162,9 +162,14 @@ dados existem, para quê, quanto tempo e quem lhes toca.
 
 ## Segurança e privacidade
 
-`vercel.json` serve uma CSP sem `'unsafe-inline'`: não há um único `<script>` ou
+`vercel.json` serve uma CSP sem `'unsafe-inline'` fora de `/cimt/`: não há um único `<script>` ou
 `<style>` inline no site, nem um atributo `style=`. O tema é aplicado antes do
 primeiro paint por `/tema.js`, síncrono e mesmo-origem.
+
+O caminho `/cimt/` e os seus subcaminhos são servidos por uma reescrita para
+`https://cimt-stineta-fvsalgado.vercel.app/`, mantendo o caminho depois de
+`/cimt/`. Ficam fora da CSP geral e levam `X-Robots-Tag: noindex, nofollow`,
+`Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff` e HSTS.
 
 Projetos privados entram na listagem pelo que fazem, sem endereço e sem
 captura. A verificação 7 confirma que não há `href`, `src` nem `"url"` a
