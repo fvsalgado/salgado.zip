@@ -1,33 +1,17 @@
 import { Projeto, parse } from './schema.ts'
-import { IDIOMAS, LINGUAS, type Idioma } from './idiomas.ts'
-import numeros from '../generated/numeros.json' with { type: 'json' }
 
 /**
- * O número de espetáculos vem do próprio primeiraplateia.pt, lido por
- * scripts/stamps.mjs e congelado em numeros.json. Publica-se por baixo,
- * arredondado à centena: «mais de 1 500» continua verdadeiro enquanto o
- * catálogo cresce, e nunca finge precisão que já não tem.
+ * Números, nesta listagem, não há — e não é esquecimento.
+ *
+ * A ficha do Primeira Plateia publicava as contagens do próprio site («mais de
+ * 1 500 espetáculos em cartaz, em 77 salas de 33 concelhos»), lidas pelo
+ * scripts/stamps.mjs e congeladas num numeros.json. O endereço passou a
+ * redirecionar para o coreto.org (decisão do Fábio, 5/11/2026), e o coreto.org
+ * não publica contagens comparáveis: as que lá estão são as da demonstração,
+ * que é um território inventado. Uma contagem de eventos inventados num
+ * currículo seria um número a fingir. Sem fonte, a linha sai sem números —
+ * que é o que esta casa faz a um número que não consegue derivar.
  */
-const n = numeros as {
-  primeiraplateiaEspetaculos?: number
-  primeiraplateiaSalas?: number
-  primeiraplateiaConcelhos?: number
-}
-/** Cada língua agrupa os milhares à sua maneira; nenhuma delas à mão. */
-const espetaculos = n.primeiraplateiaEspetaculos
-const centena =
-  espetaculos && espetaculos >= 100
-    ? (Object.fromEntries(
-        IDIOMAS.map((i) => [
-          i,
-          (Math.floor(espetaculos / 100) * 100).toLocaleString(LINGUAS[i].bcp47),
-        ])
-      ) as Record<Idioma, string>)
-    : null
-const cobertura =
-  n.primeiraplateiaSalas && n.primeiraplateiaConcelhos
-    ? { salas: n.primeiraplateiaSalas, concelhos: n.primeiraplateiaConcelhos }
-    : null
 
 /**
  * Regra de enquadramento: descreve-se o que o produto faz, não quem o usa.
@@ -38,11 +22,16 @@ const cobertura =
  * insinua um cliente que não existe.
  *
  * O `papel` separa as duas dimensões, porque não são a mesma coisa e a
- * distinção é o que interessa a quem lê: no Primeira Plateia e no Onofriana
- * ele funda e gere o projeto além de construir o produto; nos restantes
- * construiu o produto e mais nada. Sem contagem escrita aqui: o comentário
- * dizia «os outros três» quando já eram seis, e um comentário que conta mal
- * é pior do que um que não conta.
+ * distinção é o que interessa a quem lê: no Coreto, no Onofriana e no Em Cada
+ * Esquina ele funda e gere o projeto além de construir o produto; nos
+ * restantes construiu o produto e mais nada. Sem contagem escrita aqui: o
+ * comentário dizia «os outros três» quando já eram seis, e um comentário que
+ * conta mal é pior do que um que não conta.
+ *
+ * A ORDEM segue o papel: primeiro os projetos que ele fundou, depois os sítios
+ * feitos para outras pessoas, por fim os produtos de que é autor. Dentro de
+ * cada grupo, pela ordem em que entraram na listagem. O Coreto fica no lugar
+ * que era do Primeira Plateia.
  *
  * O próprio salgado.zip saiu da listagem a 19/08/2026. Uma ficha de projeto
  * dentro do projeto que a mostra é um espelho: quem está a ler a página já
@@ -80,8 +69,11 @@ const cobertura =
  */
 export const projetos = parse(Projeto.array().min(1), [
   {
-    id: 'primeiraplateia',
-    dominio: 'primeiraplateia.pt',
+    // Era a ficha do primeiraplateia.pt. Uma entrada e não duas: o endereço do
+    // Primeira Plateia redireciona para o coreto.org (308), e o repositório
+    // dele está arquivado e privado — a ligação ao código saiu por isso.
+    id: 'coreto',
+    dominio: 'coreto.org',
     papel: {
       pt: 'fundador e criador · produto',
       en: 'founder and maker · product',
@@ -89,70 +81,45 @@ export const projetos = parse(Projeto.array().min(1), [
       es: 'fundador y creador · producto',
     },
     estado: 'ativo',
-    periodo: { inicio: '2016-11', fim: null },
-    // «A Cultura no melhor lugar» abre a linha nas quatro línguas e não se
-    // traduz: é a frase da casa, e uma frase da casa traduzida deixa de ser a
-    // frase da casa — a mesma regra dos títulos das leituras em `voz.ts`.
-    //
-    // A cobertura nacional — todos os distritos e regiões autónomas — é facto
-    // confirmado pelo Fábio (18/08/2026); a homepage não expõe um contador de
-    // distritos que se possa ler à máquina, ao contrário dos três números.
+    // O mês do primeiro commit do Coreto (26/08/2026), pelo `git log
+    // --reverse`. A linhagem, desde o EmCena.pt em 2016, diz-se no detalhe.
+    periodo: { inicio: '2026-08', fim: null },
+    // «Toda a programação cultural do seu território, numa agenda só.» abre a
+    // linha nas quatro línguas e não se traduz: é a frase da casa — o título e
+    // o h1 do coreto.org —, e uma frase da casa traduzida deixa de ser a frase
+    // da casa. A mesma regra dos títulos das leituras em `voz.ts`. Entrou no
+    // lugar de «A Cultura no melhor lugar», que o coreto.org não usa.
     linha: {
-      pt:
-        centena && cobertura
-          ? `A Cultura no melhor lugar. A agenda cultural de Portugal num sítio só: mais de ${centena.pt} espetáculos em cartaz, em ${cobertura.salas} salas de ${cobertura.concelhos} concelhos — todos os distritos e regiões autónomas.`
-          : 'A Cultura no melhor lugar. A agenda cultural de Portugal num sítio só, de todos os distritos e regiões autónomas: teatros, salas de concerto, museus e cinemas.',
-      en:
-        centena && cobertura
-          ? `A Cultura no melhor lugar. Portugal's cultural agenda in one place: over ${centena.en} events on show, across ${cobertura.salas} venues in ${cobertura.concelhos} municipalities — every district and autonomous region.`
-          : "A Cultura no melhor lugar. Portugal's cultural agenda in one place, from every district and autonomous region: theatres, concert halls, museums and cinemas.",
-      fr:
-        centena && cobertura
-          ? `A Cultura no melhor lugar. L’agenda culturel du Portugal en un seul endroit : plus de ${centena.fr} spectacles à l’affiche, dans ${cobertura.salas} salles de ${cobertura.concelhos} communes — tous les districts et régions autonomes.`
-          : 'A Cultura no melhor lugar. L’agenda culturel du Portugal en un seul endroit, de tous les districts et régions autonomes : théâtres, salles de concert, musées et cinémas.',
-      es:
-        centena && cobertura
-          ? `A Cultura no melhor lugar. La agenda cultural de Portugal en un solo sitio: más de ${centena.es} espectáculos en cartel, en ${cobertura.salas} salas de ${cobertura.concelhos} municipios — todos los distritos y regiones autónomas.`
-          : 'A Cultura no melhor lugar. La agenda cultural de Portugal en un solo sitio, de todos los distritos y regiones autónomas: teatros, salas de conciertos, museos y cines.',
+      pt: 'Toda a programação cultural do seu território, numa agenda só. Recolhe uma vez por dia o que câmaras, teatros, bibliotecas e coletividades já publicam, e devolve-o em página, mapa, calendário, feed e numa caixa para outros sítios.',
+      en: 'Toda a programação cultural do seu território, numa agenda só. Once a day it gathers what councils, theatres, libraries and local associations already publish, and gives it back as a page, a map, a calendar, a feed and an embeddable widget.',
+      fr: 'Toda a programação cultural do seu território, numa agenda só. Une fois par jour, il recueille ce que les mairies, les théâtres, les bibliothèques et les associations publient déjà, et le restitue en page, carte, calendrier, flux et widget à intégrer.',
+      es: 'Toda a programação cultural do seu território, numa agenda só. Una vez al día recoge lo que ayuntamientos, teatros, bibliotecas y asociaciones ya publican, y lo devuelve como página, mapa, calendario, feed y un widget para otros sitios.',
     },
     detalhe: [
       {
-        // O tempo verbal é que faz a afirmação: «vivia». O que este projeto é
-        // está dito no passado do problema que resolveu.
+        // O motivo é o do projeto que veio a ser o Coreto, e fica como o Fábio
+        // o disse. O tempo verbal é que faz a afirmação: «vivia». O que este
+        // projeto é está dito no passado do problema que resolveu.
         pt: 'Fi-lo porque gosto de teatro e não conseguia saber o que estava em cena: a agenda nacional vivia espalhada pelo sítio de cada estrutura e de cada sala.',
         en: "I made it because I love theatre and could never find out what was on: the national listings used to live scattered across each company's and each venue's own site.",
         fr: 'Je l’ai fait parce que j’aime le théâtre et que je n’arrivais pas à savoir ce qui se jouait : l’agenda national vivait éparpillé sur le site de chaque compagnie et de chaque salle.',
         es: 'Lo hice porque me gusta el teatro y no conseguía saber qué había en cartel: la agenda nacional vivía dispersa por el sitio de cada estructura y de cada sala.',
       },
       {
-        pt: 'Filtros por dia, por entrada livre e por acessibilidade. Seguir artistas e salas. Newsletter semanal.',
-        en: 'Filter by day, by free admission and by accessibility. Follow artists and venues. Weekly newsletter.',
-        fr: 'Filtres par jour, par entrée libre et par accessibilité. Suivre des artistes et des salles. Infolettre hebdomadaire.',
-        es: 'Filtros por día, por entrada libre y por accesibilidad. Seguir a artistas y salas. Boletín semanal.',
-      },
-      {
-        pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa. Renomeado e relançado em 2026, agora de âmbito nacional.',
-        en: 'Born in 2016 as EmCena.pt, a listings site for Lisbon theatre. Renamed and relaunched in 2026, now nationwide.',
-        fr: 'Né en 2016 sous le nom d’EmCena.pt, agenda du théâtre de Lisbonne. Renommé et relancé en 2026, désormais à l’échelle nationale.',
-        es: 'Nació en 2016 como EmCena.pt, agenda de teatro de Lisboa. Renombrado y relanzado en 2026, ahora de ámbito nacional.',
-      },
-      {
-        pt: 'Um pipeline próprio recolhe e normaliza o cartaz, sala a sala; a revisão final passa por mim.',
-        en: 'A pipeline of my own collects and normalises the listings, venue by venue; the final pass is mine.',
-        fr: 'Un pipeline maison récolte et normalise l’affiche, salle par salle ; la relecture finale passe par moi.',
-        es: 'Un pipeline propio recoge y normaliza la cartelera, sala a sala; la revisión final pasa por mí.',
-      },
-      {
-        pt: 'Fundei-o, giro-o e construí-o.',
-        en: 'I founded it, I run it, I built it.',
-        fr: 'Je l’ai fondé, je le gère, je l’ai construit.',
-        es: 'Lo fundé, lo gestiono y lo construí.',
+        // O último passo diz só o que as fontes dão. O Coreto não é o Primeira
+        // Plateia com outro nome: é um código novo (o primeiro commit é de
+        // 26/08/2026), escrito depois de ler o dele, e o NOTES.md do Coreto
+        // diz o que veio de lá — o motor de normalização e deduplicação. O
+        // resto é o redirecionamento do endereço, verificado a 6/11/2026.
+        pt: 'Nasceu em 2016 como EmCena.pt, agenda de teatro de Lisboa, e em 2026 foi renomeado e relançado como Primeira Plateia, de âmbito nacional. O Coreto herdou-lhe o motor de normalização e deduplicação, e o endereço do Primeira Plateia leva hoje ao Coreto.',
+        en: 'Born in 2016 as EmCena.pt, a listings site for Lisbon theatre; renamed and relaunched in 2026 as Primeira Plateia, nationwide. Coreto inherited its normalisation and deduplication engine, and the Primeira Plateia address now leads to Coreto.',
+        fr: 'Né en 2016 sous le nom d’EmCena.pt, agenda du théâtre de Lisbonne ; renommé et relancé en 2026 sous le nom de Primeira Plateia, à l’échelle nationale. Le Coreto en a hérité le moteur de normalisation et de dédoublonnage, et l’adresse de Primeira Plateia mène aujourd’hui au Coreto.',
+        es: 'Nació en 2016 como EmCena.pt, agenda de teatro de Lisboa; en 2026 se renombró y relanzó como Primeira Plateia, de ámbito nacional. El Coreto heredó de él el motor de normalización y deduplicación, y la dirección de Primeira Plateia lleva hoy al Coreto.',
       },
     ],
-    stack: ['Next.js', 'Supabase', 'pipeline Python'],
-    url: 'https://primeiraplateia.pt',
-    codigo: 'https://github.com/fvsalgado/primeiraplateia',
-    shot: 'primeiraplateia.webp',
+    stack: ['Next.js', 'Supabase', 'TypeScript'],
+    url: 'https://coreto.org',
+    shot: 'coreto.webp',
   },
   {
     id: 'onofriana',
@@ -194,6 +161,40 @@ export const projetos = parse(Projeto.array().min(1), [
     stack: [],
     url: 'https://onofriana.pt',
     shot: 'onofriana.webp',
+  },
+  {
+    id: 'emcadaesquina',
+    dominio: 'emcadaesquina.app',
+    // «Um projeto de Fábio Salgado» é como o próprio sítio o assina, no rodapé
+    // e no «Sobre»: é ele o promotor, e é ele quem edita os textos. Por isso
+    // fundador, e não só autor do produto.
+    papel: {
+      pt: 'fundador e criador · produto',
+      en: 'founder and maker · product',
+      fr: 'fondateur et créateur · produit',
+      es: 'fundador y creador · producto',
+    },
+    estado: 'ativo',
+    // O mês do primeiro commit (2/10/2026), pelo `git log --reverse`.
+    periodo: { inicio: '2026-10', fim: null },
+    // A primeira frase é a descrição do próprio sítio, nas traduções dele.
+    linha: {
+      pt: 'Percursos a pé pela Lisboa da resistência à ditadura, do 25 de Abril e das mulheres que lutaram pela liberdade: lugares, pessoas e datas, cada facto com a sua fonte.',
+      en: 'Walking routes through the Lisbon of the resistance to the dictatorship, of 25 April and of the women who fought for freedom: places, people and dates, every fact with its source.',
+      fr: 'Parcours à pied dans la Lisbonne de la résistance à la dictature, du 25 Avril et des femmes qui se sont battues pour la liberté : lieux, personnes et dates, chaque fait avec sa source.',
+      es: 'Recorridos a pie por la Lisboa de la resistencia a la dictadura, del 25 de Abril y de las mujeres que lucharon por la libertad: lugares, personas y fechas, cada hecho con su fuente.',
+    },
+    detalhe: [
+      {
+        pt: 'As mulheres estão no centro da história: pelo menos metade das pessoas são mulheres, e quem o garante é um teste, não uma intenção.',
+        en: 'Women are at the centre of the story: at least half of the people are women, and a test guarantees it, not an intention.',
+        fr: 'Les femmes sont au centre de l’histoire : au moins la moitié des personnes sont des femmes, et c’est un test qui le garantit, pas une intention.',
+        es: 'Las mujeres están en el centro de la historia: al menos la mitad de las personas son mujeres, y lo garantiza una prueba, no una intención.',
+      },
+    ],
+    stack: ['Next.js', 'MapLibre + PMTiles', 'PWA offline-first'],
+    url: 'https://emcadaesquina.app',
+    shot: 'emcadaesquina.webp',
   },
   {
     id: 'franciscasalgado',
@@ -312,5 +313,39 @@ export const projetos = parse(Projeto.array().min(1), [
     stack: ['React', 'Vite'],
     url: null,
     shot: null,
+  },
+  {
+    id: 'paragem',
+    dominio: 'paragem.pt',
+    // O produto é dele — o nome, o código e o desenho, como diz o paragem.pt —,
+    // mas não há projeto que ele funde e gira por cima: o sítio de cada região
+    // publica-se em nome da autoridade de transportes, e nenhuma está em
+    // serviço. Autor do produto, como o Travertina e o POS Popular.
+    papel: { pt: 'autor do produto', en: 'product author', fr: 'auteur du produit', es: 'autor del producto' },
+    estado: 'ativo',
+    // O mês do primeiro commit, 19/09/2026, no repositório privado onde foi
+    // desenvolvido. O público nasceu a 22/09/2026 com histórico novo, no mesmo
+    // mês — e uma cópia rasa dele começa em outubro, que é a data errada.
+    periodo: { inicio: '2026-09', fim: null },
+    linha: {
+      pt: 'Os transportes de um território num sítio só, seja quem for que os gere: autocarros, comboios, transporte a pedido, bicicletas, expressos e táxis, com planeador de viagens e a página de cada paragem e de cada linha.',
+      en: "A territory's transport in one place, whoever runs it: buses, trains, demand-responsive transport, shared bikes, coaches and taxis, with a journey planner and a page for every stop and every line.",
+      fr: 'Les transports d’un territoire en un seul endroit, quel qu’en soit le gestionnaire : bus, trains, transport à la demande, vélos partagés, cars et taxis, avec un calculateur d’itinéraires et une page pour chaque arrêt et chaque ligne.',
+      es: 'Los transportes de un territorio en un solo sitio, los gestione quien los gestione: autobuses, trenes, transporte a demanda, bicicletas compartidas, autobuses exprés y taxis, con planificador de viajes y una página para cada parada y cada línea.',
+    },
+    detalhe: [
+      {
+        // Licenciado por região, e mais nada sobre quem o licencia: não há
+        // cliente, e a região com dados reais está publicada como proposta.
+        pt: 'Licencia-se por região, a cada autoridade de transportes, e uma região nova entra por declaração, sem código. As de demonstração, como demo.paragem.pt, são inventadas de fio a pavio.',
+        en: 'Licensed per region, to each transport authority; a new region comes in by declaration, without code. The demo regions, such as demo.paragem.pt, are invented from scratch.',
+        fr: 'Il se licencie par région, à chaque autorité organisatrice des transports, et une nouvelle région entre par déclaration, sans code. Celles de démonstration, comme demo.paragem.pt, sont inventées de toutes pièces.',
+        es: 'Se licencia por región, a cada autoridad de transporte, y una región nueva entra por declaración, sin código. Las de demostración, como demo.paragem.pt, están inventadas de principio a fin.',
+      },
+    ],
+    stack: ['Next.js', 'pipeline Python', 'OpenTripPlanner', 'MapLibre + PMTiles'],
+    url: 'https://paragem.pt',
+    codigo: 'https://github.com/fvsalgado/paragem',
+    shot: 'paragem.webp',
   },
 ], 'projetos')
