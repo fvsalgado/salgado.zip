@@ -57,6 +57,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/cimt/", "destination": "https://cimt-stineta-fvsalgado.vercel.app/" },
     { "source": "/cimt/:caminho*", "destination": "https://cimt-stineta-fvsalgado.vercel.app/:caminho*" }
   ]
 }
