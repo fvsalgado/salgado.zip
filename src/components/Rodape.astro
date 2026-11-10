@@ -16,6 +16,11 @@
  * extenso — as duas primeiras apontaram ao mesmo enquanto a acessibilidade foi
  * um campo da privacidade, e deixaram de o fazer quando ganhou nó próprio.
  *
+ * A assinatura fecha o rodapé, depois das coordenadas: «Stineta — software
+ * para regiões e comunidades.», com a marca à frente. É a mesma frase que
+ * assina os outros produtos, e aqui não leva ligação — a página onde está já é
+ * a da Stineta. Fica também no PDF impresso, por isso não leva `rodape__ecra`.
+ *
  * A hora de atualização saiu. Dizia a data do último commit de conteúdo, que é
  * informação sobre o repositório e não sobre quem lê — e o `lastmod` do
  * sitemap continua a dá-la a quem a usa mesmo, que são os motores de busca.
@@ -37,9 +42,11 @@
 import { contacto, ficheiros } from '../data'
 import type { Idioma } from '../data'
 import { coordenadas } from '../data/formato'
-import { codigoDoSite, perfilGithub, licenca } from '../data/textos.ts'
+import { codigoDoSite, perfilGithub, licenca, assinaturaStineta } from '../data/textos.ts'
+import { t } from '../data/formato'
 import Externo from './Externo.astro'
 import IconeContacto from './IconeContacto.astro'
+import MarcaStineta from './MarcaStineta.astro'
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props
@@ -119,4 +126,6 @@ const contactos = [
   {contacto.lugares.length > 0 && (
     <p class="rodape__lugares">{coordenadas(contacto.lugares)}</p>
   )}
+
+  <p class="rodape__assinatura"><MarcaStineta />Stineta — {t(assinaturaStineta, idioma)}</p>
 </footer>
