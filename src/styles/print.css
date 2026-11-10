@@ -142,6 +142,16 @@
      Até aí os projetos cabiam na folha 2 — 974px — e as capturas, três por
      fila, ocupavam 347.)
 
+     A 10/11/2026 o POS Popular ganhou captura e passaram a ser nove: a
+     terceira fila já não cabe nos 96px de folga da folha 3, e a voz, que não
+     se parte, passa inteira para a folha 4. Os mandatos continuam a abrir
+     folha, e por isso o documento tem CINCO folhas: o retrato; os projetos em
+     texto; o fim dos projetos com as capturas; a voz com os registos e as
+     capas; e a cauda em texto. Foi escolha do Fábio, contra a alternativa de
+     pôr cinco capturas por fila e ficar nas quatro folhas. A tabela de cima
+     não foi medida de novo ao píxel: vale como estava a 6/11, e o que mudou
+     está neste parágrafo.
+
      Ou seja: os mandatos não cabem no que sobra da folha 3 — pedem 334px e há
      96 —, e por isso a voz fica lá inteira, prosa, os quatro registos e as
      quatro capas. [1, 0, 16, 0] imagens por folha: o retrato; os projetos em
@@ -189,7 +199,9 @@
      meio. Cada figura é que não parte. */
   /* Quatro por linha: uma folha de contacto, não uma galeria. Eram três até
      6/11/2026; com oito projetos, a terceira fila de três empurrava a voz e o
-     documento ia a cinco folhas. Quatro fazem duas filas. */
+     documento ia a cinco folhas. Quatro fazem duas filas. Com nove (desde
+     10/11/2026) fazem três, e o documento vai a cinco folhas de propósito —
+     ver «Onde as folhas partem». */
   .capturas { grid-template-columns: repeat(4, 1fr); gap: 4mm; }
   .captura img { border-color: var(--rule); }
   .captura figcaption { font-size: 8pt; margin-top: 1.2mm; }

@@ -307,7 +307,13 @@ export const projetos = parse(Projeto.array().min(1), [
     ],
     stack: ['React', 'Vite'],
     url: null,
-    shot: null,
+    // A captura é do ecrã de venda com dados inventados (decisão do Fábio a
+    // 10/11/2026): uma associação, um operador, produtos e preços que não
+    // existem, e no cabeçalho uma marca de texto em vez do logótipo do
+    // cliente. Saiu da aplicação construída, com as respostas do Supabase
+    // servidas por um script, sem conta nenhuma e sem tocar no código do POS.
+    // Sem endereço, como manda a verificação 7.
+    shot: 'pos-popular.webp',
   },
   {
     id: 'paragem',
