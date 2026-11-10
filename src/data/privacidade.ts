@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { Lang, parse } from './schema.ts'
+import { contacto } from './contacto.ts'
 
 /**
  * O nó `privacidade/`.
@@ -31,6 +32,12 @@ import { Lang, parse } from './schema.ts'
 
 const Campo = z.object({ rotulo: Lang, texto: Lang })
 
+/* O endereço vem do contacto, e não escrito outra vez: dizia «o contacto está
+   no nó do contacto», que é a página a falar de si própria. Sem endereço não
+   há a quem pedir os direitos de baixo, e por isso o build pára. */
+const email = contacto.email
+if (email === null) throw new Error('privacidade: o responsável precisa do email do contacto')
+
 export const notaPrivacidade = parse(Lang, {
   pt: 'Sem cookies, sem publicidade e sem perfis. O que se segue é o que existe mesmo.',
   en: 'No cookies, no advertising, no profiles. What follows is what actually exists.',
@@ -42,10 +49,10 @@ export const privacidade = parse(Campo.array().min(1), [
   {
     rotulo: { pt: 'responsável', en: 'controller', fr: 'responsable', es: 'responsable' },
     texto: {
-      pt: 'Fábio Salgado, a título pessoal. O contacto está no nó do contacto.',
-      en: 'Fábio Salgado, in a personal capacity. The contact is in the contact node.',
-      fr: 'Fábio Salgado, à titre personnel. Le contact se trouve dans le nœud contact.',
-      es: 'Fábio Salgado, a título personal. El contacto está en el nodo de contacto.',
+      pt: `Fábio Salgado, a título pessoal: ${email}.`,
+      en: `Fábio Salgado, in a personal capacity: ${email}.`,
+      fr: `Fábio Salgado, à titre personnel : ${email}.`,
+      es: `Fábio Salgado, a título personal: ${email}.`,
     },
   },
   {

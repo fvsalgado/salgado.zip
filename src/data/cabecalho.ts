@@ -37,12 +37,11 @@ export const cabecalho = parse(Cabecalho, {
    * do PDF ao lado do retrato, o `summary` do resume.json (concatenadas) e o
    * LEIA-ME.txt do zip. Têm de se ler como um parágrafo, não como tópicos.
    *
-   * Pessoa, percurso, método — por esta ordem, e a ordem é o argumento. A
-   * versão anterior abria por «isto é um arquivo de trabalho»: punha o objeto
-   * à frente de quem o fez, e quem lia ficava a saber o que a página era antes
-   * de saber quem lá estava. Um arquivo continua a ser a moldura — é ela que
-   * deixa entrar a cronologia sem que a página se leia como candidatura — mas
-   * chega na terceira linha, depois do corpo e do percurso, não antes.
+   * Pessoa e percurso, por esta ordem. A versão anterior abria por «isto é um
+   * arquivo de trabalho»: punha o objeto à frente de quem o fez. Depois disso
+   * houve mais duas linhas — o arquivo, quem o mantém, e o Claude — e saíram
+   * as duas a 10/11/2026: falavam da página e não da pessoa. O Claude continua
+   * no colofão, que é o lugar dele.
    */
   linhas: [
     {
@@ -66,23 +65,6 @@ export const cabecalho = parse(Cabecalho, {
       en: 'Since then: a shop of my own, the counter and the stage of a small venue, four years in a Lisbon City Hall office, and today public affairs consulting. Somewhere in there I started building software, and more recently producing fado — without letting go of anything.',
       fr: 'Depuis lors : une boutique à moi, le comptoir et la scène d’une petite salle de spectacle, quatre ans dans un cabinet de la Mairie de Lisbonne, et aujourd’hui le conseil en affaires publiques. Entre-temps je me suis mis à construire des logiciels, et depuis peu à produire du fado — sans rien lâcher.',
       es: 'Desde entonces: una tienda propia, la barra y el escenario de una sala de espectáculos, cuatro años en un gabinete del Ayuntamiento de Lisboa, y hoy consultoría de asuntos públicos. Por el camino empecé a construir software, y hace poco a producir fado — sin soltar nada.',
-    },
-    {
-      // Antes dizia «o que não está confirmado não entra», que soa a regra de
-      // um sistema e não a uma pessoa: quem confirma sou eu, e a frase tem de
-      // dizer isso. O método detalhado vive no colofão, que é o lugar dele.
-      pt: 'Isto é o arquivo desse trabalho. Sou eu que o mantenho, e cada entrada diz o que é, quando foi e o que eu lá fiz.',
-      en: 'This is the archive of that work. I keep it myself, and every entry says what it is, when it was, and what I did there.',
-      fr: 'Ceci est l’archive de ce travail. C’est moi qui la tiens, et chaque entrée dit ce qu’elle est, quand c’était et ce que j’y ai fait.',
-      es: 'Este es el archivo de ese trabajo. Lo mantengo yo, y cada entrada dice qué es, cuándo fue y qué hice allí.',
-    },
-    {
-      // «isto» e não «este site»: a mesma linha sai em página e em PDF, e quem
-      // tem o papel na mão pode nem saber de onde o papel veio.
-      pt: 'Construo a meias com o Claude, entre outras ferramentas — isto incluído. Está tudo listado em baixo.',
-      en: 'I build together with Claude, among other tools — this included. Everything is listed below.',
-      fr: 'Je construis à deux avec Claude, parmi d’autres outils — ceci compris. Tout est listé ci-dessous.',
-      es: 'Construyo a medias con Claude, entre otras herramientas — esto incluido. Está todo listado abajo.',
     },
   ],
 }, 'cabecalho')

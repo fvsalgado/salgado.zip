@@ -272,9 +272,12 @@ const leiaMe = [
   // A conta é das que têm ficheiro, e não de `leituras.length`: as leituras em
   // palco também estão no nó e não pesam byte nenhum, portanto contá-las aqui
   // dizia que faltavam ao zip mais gravações do que as que existem.
-  `As ${Object.keys(medidasVoz).length} gravações do nó voz/ não vêm aqui dentro: são ${vozHoras} de som e imagem,`,
+  //
+  // A página deixou de mostrar o tamanho de cada gravação a 10/11/2026, e
+  // esta linha dizia «com o tamanho à vista»: o peso total fica dito aqui.
+  `As ${Object.keys(medidasVoz).length} gravações da secção voz/ não vêm aqui dentro: são ${vozHoras} de som e imagem,`,
   `${vozMB} MB, e quem quer o CV não quer o arquivo sonoro com ele.`,
-  `Estão em ${CANONICO}/, no nó voz/, uma a uma e com o tamanho à vista.`,
+  `Estão em ${CANONICO}/, uma a uma.`,
   '',
   'Gerado a partir da mesma fonte que o site. Nenhum número foi escrito à mão.',
   '',

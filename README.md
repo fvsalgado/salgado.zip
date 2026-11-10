@@ -19,9 +19,9 @@ O áudio do nó `voz/` corre no sentido contrário — não sai dos dados, é me
 por eles:
 
 ```
-public/voz/*.mp3  ──┬─►  src/generated/voz.json  ──►  duração, tamanho e
-public/voz/*.mp4  ──┘     statSync + mp3-ler +           dimensões na página
- onze gravações            mp4-ler                       e no LEIA-ME do .zip
+public/voz/*.mp3  ──┬─►  src/generated/voz.json  ──►  duração na página,
+public/voz/*.mp4  ──┘     statSync + mp3-ler +           duração e tamanho
+ onze gravações            mp4-ler                       no LEIA-ME do .zip
 ```
 
 A página existe em quatro línguas — português, inglês, francês e espanhol —, e

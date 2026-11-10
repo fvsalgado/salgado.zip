@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { Lang, parse } from './schema.ts'
+import { contacto } from './contacto.ts'
 
 /**
  * O nó `acessibilidade/`.
@@ -22,7 +23,9 @@ import { Lang, parse } from './schema.ts'
  * O texto público não conta rotas nem combinações da bancada: esses números
  * são contabilidade interna e envelhecem — já foram «vinte e oito» e «cento e
  * dez focáveis», e ambos ficaram errados na página em dias. Diz-se O QUE se
- * verifica; o quanto vive no verify.mjs, que é o sítio que não mente.
+ * verifica; o quanto vive no verify.mjs, que é o sítio que não mente. Desde
+ * 10/11/2026 di-lo também sem o vocabulário da bancada — a «árvore», o
+ * axe-core, as razões de contraste —, que é de quem a fez e não de quem lê.
  *
  * O que NÃO se afirma, e faz diferença: isto não é uma auditoria independente.
  * Foi feita por quem fez o sítio, e uma auditoria de terceiros é outra coisa.
@@ -30,6 +33,11 @@ import { Lang, parse } from './schema.ts'
  */
 
 const Campo = z.object({ rotulo: Lang, texto: Lang })
+
+/* O endereço vem do contacto, e não escrito outra vez: dizia «o endereço do nó
+   do contacto», que é a página a falar de si própria. */
+const email = contacto.email
+if (email === null) throw new Error('acessibilidade: a barreira precisa do email do contacto')
 
 export const notaAcessibilidade = parse(
   Lang,
@@ -48,19 +56,19 @@ export const acessibilidade = parse(
     {
       rotulo: { pt: 'o que se verifica sozinho', en: 'checked automatically', fr: 'vérifié automatiquement', es: 'lo que se verifica por sí solo' },
       texto: {
-        pt: 'Antes de cada publicação, uma bateria de verificações corre sobre todas as páginas, nos dois temas, com a árvore fechada e aberta, e bloqueia-a se encontrar alguma coisa: o axe-core de ponta a ponta, o contraste calculado a partir das cores, a árvore inteira a abrir e fechar sem JavaScript, as legendas dos vídeos conferidas contra a duração de cada um, o aviso de janela nova em todas as ligações que saem — na seta, para quem a vê, e no nome acessível, para quem não a vê —, e a página percorrida por tabulação, tecla a tecla, sem nenhum elemento a prender o foco.',
-        en: 'Before every release, a battery of checks runs over every page, in both themes, with the tree closed and open, and blocks it if anything turns up: axe-core end to end, contrast computed from the colours, the whole tree opening and closing with JavaScript off, the video captions checked against each film’s length, the new-window warning on every link that leaves the site — in the arrow, for those who see it, and in the accessible name, for those who do not — and the page walked by tabbing, key by key, with no element holding the focus.',
-        fr: 'Avant chaque publication, une batterie de vérifications parcourt toutes les pages, dans les deux thèmes, l’arbre fermé puis ouvert, et la bloque au moindre problème : axe-core de bout en bout, le contraste calculé à partir des couleurs, l’arbre entier qui s’ouvre et se ferme sans JavaScript, les sous-titres vérifiés contre la durée de chaque vidéo, l’avertissement de nouvelle fenêtre sur chaque lien qui sort du site — par la flèche, pour qui la voit, et par le nom accessible, pour qui ne la voit pas —, et la page parcourue à la tabulation, touche après touche, sans qu’aucun élément ne retienne le focus.',
-        es: 'Antes de cada publicación, una batería de verificaciones recorre todas las páginas, en los dos temas, con el árbol cerrado y abierto, y la bloquea si encuentra algo: axe-core de punta a punta, el contraste calculado a partir de los colores, el árbol entero abriéndose y cerrándose sin JavaScript, los subtítulos comprobados contra la duración de cada vídeo, el aviso de ventana nueva en cada enlace que sale del sitio — en la flecha, para quien la ve, y en el nombre accesible, para quien no —, y la página recorrida por tabulación, tecla a tecla, sin ningún elemento que retenga el foco.',
+        pt: 'Antes de cada publicação, verificações automáticas percorrem todas as páginas, nos dois temas, e travam a publicação se encontrarem um problema: contraste, navegação por teclado sem armadilhas de foco, legendas dos vídeos e o aviso nas ligações que abrem numa janela nova.',
+        en: 'Before every release, automated checks go through every page, in both themes, and stop the release if they find a problem: contrast, keyboard navigation with no focus traps, captions on the videos, and the warning on links that open in a new window.',
+        fr: 'Avant chaque publication, des vérifications automatiques parcourent toutes les pages, dans les deux thèmes, et bloquent la publication si elles trouvent un problème : contraste, navigation au clavier sans piège à focus, sous-titres des vidéos et l’avertissement sur les liens qui s’ouvrent dans une nouvelle fenêtre.',
+        es: 'Antes de cada publicación, unas verificaciones automáticas recorren todas las páginas, en los dos temas, y detienen la publicación si encuentran un problema: contraste, navegación por teclado sin trampas de foco, subtítulos de los vídeos y el aviso en los enlaces que se abren en una ventana nueva.',
       },
     },
     {
       rotulo: { pt: 'o que se mediu à mão', en: 'measured by hand', fr: 'mesuré à la main', es: 'lo que se midió a mano' },
       texto: {
-        pt: 'O que uma ferramenta não vê: refluxo a 320px sem barra horizontal, o espaçamento de texto da norma sem nada a cortar, todos os alvos pequenos com a folga de 24px que a norma pede, e o anel de foco a 11:1 no tema claro e 8,9:1 no escuro.',
-        en: 'What a tool cannot see: reflow at 320px with no horizontal bar, the standard’s text spacing with nothing clipped, every small target with the 24px separation the standard asks for, and the focus ring at 11:1 in the light theme and 8.9:1 in the dark.',
-        fr: 'Ce qu’un outil ne voit pas : la redistribution à 320px sans barre horizontale, l’espacement de texte de la norme sans rien de coupé, chaque petite cible avec l’écart de 24px exigé, et l’anneau de focus à 11:1 en thème clair et 8,9:1 en sombre.',
-        es: 'Lo que una herramienta no ve: reflujo a 320px sin barra horizontal, el espaciado de texto de la norma sin nada cortado, cada objetivo pequeño con la holgura de 24px que la norma pide, y el anillo de foco a 11:1 en el tema claro y 8,9:1 en el oscuro.',
+        pt: 'O que uma ferramenta não vê: a página a 320 px de largura sem barra horizontal, o espaçamento de texto da norma sem nada a cortar, alvos com a folga que a norma pede, e o foco sempre visível nos dois temas.',
+        en: 'What a tool cannot see: the page at 320 px wide with no horizontal bar, the standard’s text spacing with nothing clipped, targets with the spacing the standard asks for, and the focus always visible in both themes.',
+        fr: 'Ce qu’un outil ne voit pas : la page à 320 px de large sans barre horizontale, l’espacement de texte de la norme sans rien de coupé, des cibles avec l’écart que la norme exige, et le focus toujours visible dans les deux thèmes.',
+        es: 'Lo que una herramienta no ve: la página a 320 px de ancho sin barra horizontal, el espaciado de texto de la norma sin nada cortado, objetivos con la holgura que la norma pide, y el foco siempre visible en los dos temas.',
       },
     },
     {
@@ -75,19 +83,19 @@ export const acessibilidade = parse(
     {
       rotulo: { pt: 'o que isto não é', en: 'what this is not', fr: 'ce que ceci n’est pas', es: 'lo que esto no es' },
       texto: {
-        pt: 'Uma auditoria independente. Foi feita por quem fez o sítio, com ferramenta aberta e método descrito, e está toda no repositório para quem a quiser refazer ou desmentir. Uma auditoria de terceiros é outra coisa, e não a há.',
-        en: 'An independent audit. It was done by the person who built the site, with an open tool and a described method, and all of it is in the repository for anyone who wants to repeat it or prove it wrong. A third-party audit is a different thing, and there is none.',
-        fr: 'Un audit indépendant. Il a été fait par la personne qui a construit le site, avec un outil ouvert et une méthode décrite, et le tout est dans le dépôt pour qui voudrait le refaire ou le contredire. Un audit par un tiers est autre chose, et il n’y en a pas.',
-        es: 'Una auditoría independiente. La hizo quien hizo el sitio, con herramienta abierta y método descrito, y está entera en el repositorio para quien quiera repetirla o desmentirla. Una auditoría de terceros es otra cosa, y no la hay.',
+        pt: 'Uma auditoria independente: foi feita por quem fez o sítio. O método e os resultados estão no código, que é aberto.',
+        en: 'An independent audit: it was done by the person who built the site. The method and the results are in the code, which is open.',
+        fr: 'Un audit indépendant : il a été fait par la personne qui a construit le site. La méthode et les résultats sont dans le code, qui est ouvert.',
+        es: 'Una auditoría independiente: la hizo quien hizo el sitio. El método y los resultados están en el código, que es abierto.',
       },
     },
     {
       rotulo: { pt: 'se encontrares uma barreira', en: 'if you hit a barrier', fr: 'si vous rencontrez un obstacle', es: 'si encuentras una barrera' },
       texto: {
-        pt: 'Escreve para o endereço do nó do contacto. Diz o que estavas a tentar fazer e com que ferramenta; corrijo e digo-te quando estiver.',
-        en: 'Write to the address in the contact node. Say what you were trying to do and with what tool; I fix it and tell you when it is done.',
-        fr: 'Écrivez à l’adresse du nœud contact. Dites ce que vous tentiez de faire et avec quel outil ; je corrige et je vous préviens.',
-        es: 'Escribe a la dirección del nodo de contacto. Di qué intentabas hacer y con qué herramienta; lo corrijo y te aviso cuando esté.',
+        pt: `Escreve para ${email}. Diz o que estavas a tentar fazer e com que ferramenta; corrijo e digo-te quando estiver.`,
+        en: `Write to ${email}. Say what you were trying to do and with what tool; I fix it and tell you when it is done.`,
+        fr: `Écrivez à ${email}. Dites ce que vous tentiez de faire et avec quel outil ; je corrige et je vous préviens.`,
+        es: `Escribe a ${email}. Di qué intentabas hacer y con qué herramienta; lo corrijo y te aviso cuando esté.`,
       },
     },
   ],

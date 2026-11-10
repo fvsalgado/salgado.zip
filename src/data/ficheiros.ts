@@ -78,10 +78,10 @@ export const definicoes = [
     nome: 'salgado.zip',
     caminho: 'salgado.zip',
     descricao: {
-      pt: 'Tudo o que está acima, num arquivo. O domínio a cumprir o que promete.',
-      en: 'Everything above, in one archive. The domain doing what it says.',
-      fr: 'Tout ce qui précède, en une seule archive. Le domaine qui tient sa promesse.',
-      es: 'Todo lo anterior, en un solo archivo. El dominio cumpliendo lo que promete.',
+      pt: 'Tudo o que está acima, num só arquivo.',
+      en: 'Everything above, in one archive.',
+      fr: 'Tout ce qui précède, en une seule archive.',
+      es: 'Todo lo anterior, en un solo archivo.',
     },
   },
 ] satisfies ReadonlyArray<{ id: string; nome: string; caminho: string; descricao: Lang }>
