@@ -21,10 +21,14 @@
  * assina os outros produtos, e aqui não leva ligação — a página onde está já é
  * a da Stineta. Fica também no PDF impresso, por isso não leva `rodape__ecra`.
  *
- * Por baixo dela, o que quer dizer o nome — «stineta», palavra da Nazaré —,
- * como uma entrada de dicionário. É o único sítio onde se explica: os produtos
- * assinam só com a frase. Esta linha é só do ecrã (`rodape__ecra`), para o CV
- * impresso ficar como está.
+ * Por baixo dela, o verbete do nome, montado como uma entrada de dicionário:
+ * a palavra a cheio (`<dfn>`, que é o elemento de quem define um termo), a
+ * divisão silábica, a classe abreviada (`<abbr>` com o nome por extenso), a
+ * região em versaletes e a definição. É o único sítio onde o nome se explica:
+ * os produtos assinam só com a frase. A palavra é da Nazaré e vai marcada como
+ * português nas outras línguas; a divisão silábica fica escondida dos leitores
+ * de ecrã, que já leram a palavra. Esta linha é só do ecrã (`rodape__ecra`),
+ * para o CV impresso ficar como está.
  *
  * A hora de atualização saiu. Dizia a data do último commit de conteúdo, que é
  * informação sobre o repositório e não sobre quem lê — e o `lastmod` do
@@ -47,7 +51,7 @@
 import { contacto, ficheiros } from '../data'
 import type { Idioma } from '../data'
 import { coordenadas } from '../data/formato'
-import { codigoDoSite, perfilGithub, licenca, assinaturaStineta, significadoStineta } from '../data/textos.ts'
+import { codigoDoSite, perfilGithub, licenca, assinaturaStineta, verbeteStineta } from '../data/textos.ts'
 import { t } from '../data/formato'
 import Externo from './Externo.astro'
 import IconeContacto from './IconeContacto.astro'
@@ -133,5 +137,11 @@ const contactos = [
   )}
 
   <p class="rodape__assinatura"><MarcaStineta />Stineta — {t(assinaturaStineta, idioma)}</p>
-  <p class="rodape__significado rodape__ecra"><i lang={idioma === 'pt' ? undefined : 'pt'}>stineta</i>{t(significadoStineta, idioma)}</p>
+  <p class="verbete rodape__ecra">
+    <dfn class="verbete__palavra" lang={idioma === 'pt' ? undefined : 'pt'}>stineta</dfn>
+    <span class="verbete__silabas" aria-hidden="true">(sti·ne·ta)</span>
+    <abbr class="verbete__classe" title={t(verbeteStineta.classe, idioma)}>adj.</abbr>
+    <span class="verbete__regiao">{t(verbeteStineta.regiao, idioma)}</span>
+    {t(verbeteStineta.definicao, idioma)}
+  </p>
 </footer>

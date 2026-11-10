@@ -568,11 +568,29 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
   margin-top: 0.7rem;
   color: var(--ink);
 }
-/* O significado do nome, colado à assinatura (o `gap` do rodapé fica para
-   trás) e na cor suave do resto do rodapé: é uma nota sobre a linha de cima. */
-.rodape .rodape__significado {
-  margin-top: -0.25rem;
+/* O verbete do nome, colado à assinatura (o `gap` do rodapé fica para trás).
+   Em serifa, e não na mono do resto do rodapé: é a letra de um dicionário. A
+   palavra a cheio e em tinta, a divisão silábica e a classe na cor suave, a
+   região em versaletes — as marcas de um verbete, sem mais nada. */
+.rodape .verbete {
+  margin-top: -0.2rem;
   max-width: 34rem;
+  font-family: var(--serif);
+  font-size: var(--t-meta);
+  line-height: 1.5;
+}
+.verbete__palavra {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--ink);
+}
+.verbete__classe {
+  font-style: italic;
+  text-decoration: none;
+}
+.verbete__regiao {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
 }
 .marca-stineta {
   display: inline-block;

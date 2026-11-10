@@ -116,19 +116,35 @@ export const assinaturaStineta = parse(Lang, {
 }, 'textos.assinaturaStineta')
 
 /**
- * O que quer dizer «stineta», por baixo da assinatura e só neste site: os
- * produtos assinam com a frase igual em todo o lado, e é aqui que o nome se
- * explica. A palavra vai à parte, em itálico e marcada como português (é uma
- * palavra da Nazaré, não se traduz); isto é o resto da frase, a começar na
- * vírgula. Sem «atrevida», que é o terceiro sentido da palavra, por causa da
+ * O verbete de «stineta», por baixo da assinatura e só neste site: os produtos
+ * assinam com a frase igual em todo o lado, e é aqui que o nome se explica.
+ * Escreve-se como uma entrada de dicionário — a palavra, a divisão silábica, a
+ * classe, a região e a definição — e o componente monta-a (Rodape.astro). A
+ * palavra e a divisão não se traduzem; isto é o resto, na língua da página.
+ * Sem «atrevida», que é o terceiro sentido da palavra, por causa da
  * coincidência com a Atrevia (decisão de 10/11/2026).
  */
-export const significadoStineta = parse(Lang, {
-  pt: ', palavra da Nazaré: diz-se de quem não para quieto — inquieta, traquina.',
-  en: ', a word from Nazaré for someone who can’t sit still — restless, mischievous.',
-  fr: ', mot de Nazaré pour qui ne tient pas en place — remuante, espiègle.',
-  es: ', palabra de Nazaré para quien no se está quieto — inquieta, traviesa.',
-}, 'textos.significadoStineta')
+export const verbeteStineta = {
+  /** O nome por extenso da classe, para o `title` da abreviatura «adj.». */
+  classe: parse(Lang, {
+    pt: 'adjetivo',
+    en: 'adjective',
+    fr: 'adjectif',
+    es: 'adjetivo',
+  }, 'textos.verbeteStineta.classe'),
+  regiao: parse(Lang, {
+    pt: 'Nazaré',
+    en: 'Nazaré, Portugal',
+    fr: 'Nazaré, Portugal',
+    es: 'Nazaré, Portugal',
+  }, 'textos.verbeteStineta.regiao'),
+  definicao: parse(Lang, {
+    pt: 'que não para quieto; inquieto, traquina.',
+    en: 'who can’t sit still; restless, mischievous.',
+    fr: 'qui ne tient pas en place\u202f; remuant, espiègle.',
+    es: 'que no se está quieto; inquieto, travieso.',
+  }, 'textos.verbeteStineta.definicao'),
+}
 
 /** O código deste site é público: a prova do colofão está no repositório. */
 export const codigoDoSite = 'https://github.com/fvsalgado/salgado.zip'
