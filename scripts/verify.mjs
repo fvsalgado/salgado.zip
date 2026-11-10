@@ -793,53 +793,24 @@ function imagensPorPagina(buf) {
       problemas.push('o resume.json dentro do .zip não abre')
     }
   }
-  /* O contador de linhas: duas coisas distintas, e nenhuma era a que estava cá.
+  /* O contador de linhas saiu a 10/11/2026, com a frase do colofão que o
+     publicava: era ficha técnica, e a página deixou de a dar. Esta verificação
+     conferia que o número do `linhas.json` chegava à página; sem número na
+     página, e sem quem lesse o `linhas.json`, saíram os três — a frase, o
+     ficheiro e o `pack.mjs` que o escrevia. Fica o resto, que continua a
+     valer: o .zip abre, os tamanhos chegam à página, e o gerado está
+     commitado. */
 
-     O QUE ESTAVA: uma recontagem, aqui, comparada com o `linhas.json`. Parecia
-     uma verificação e eram duas cópias do mesmo algoritmo — o bloco de contagem
-     do `pack.mjs` está copiado à letra neste ficheiro — a correrem sobre os
-     mesmos ficheiros, com o `prebuild` a reescrever o `linhas.json` segundos
-     antes. Não podiam discordar. Provado: três linhas a mais num ficheiro de
-     dados, e verde à mesma desde que houvesse um build pelo meio, que há
-     sempre, porque é a verificação 1 que o corre.
+  /* O que está commitado é o que os geradores produzem.
 
-     O RISCO A SÉRIO, que isso escondia: o `pack.mjs` escreve o `linhas.json`
-     dentro de `if (!process.env.VERCEL)`. Em produção NÃO o reescreve — usa o
-     que está commitado. Quem mexa no código e publique sem correr o `pack`
-     publica um número errado, e era precisamente esse o caso que a recontagem
-     dizia cobrir e não cobria, porque se refrescava a si própria primeiro.
+     Esta é a que cobre a produção. Depois do build — que já correu, na
+     verificação 1, e que regenera tudo — nenhum ficheiro gerado e seguido por
+     git pode ficar por commeter: se ficou, o que o Vercel vai publicar está
+     velho.
 
-     Passam a ser duas asserções, cada uma com o seu trabalho. */
-
-  /* 1. O número chega à página. Compara-se o que a página imprime com o
-        `linhas.json` de onde ele sai — o que isto prova é o caminho do dado
-        até ao texto, e apanha o dia em que o componente deixar de o mostrar
-        ou passar a mostrar outro campo. */
-  {
-    const congeladas = JSON.parse(readFileSync(raiz + 'src/generated/linhas.json', 'utf8'))
-    const publicado = /([\d\u00a0.,\s]+)linhas de código em ([\d\u00a0.,\s]+)ficheiros/.exec(html('/'))
-    if (publicado === null) {
-      problemas.push('a página não publica a contagem de linhas — o padrão deixou de casar')
-    } else {
-      const numero = (t) => Number(t.replace(/[^\d]/g, ''))
-      if (numero(publicado[1]) !== congeladas.total || numero(publicado[2]) !== congeladas.ficheiros) {
-        problemas.push(
-          `a página publica ${numero(publicado[1])} linhas em ${numero(publicado[2])} ficheiros e o linhas.json diz ${congeladas.total} em ${congeladas.ficheiros}`
-        )
-      }
-    }
-  }
-
-  /* 2. O que está commitado é o que os geradores produzem.
-
-        Esta é a que cobre a produção. Depois do build — que já correu, na
-        verificação 1, e que regenera tudo — nenhum ficheiro gerado e seguido
-        por git pode ficar por commeter: se ficou, o que o Vercel vai publicar
-        está velho.
-
-        Em CI é falha, porque é o CI que guarda o que se publica. Na máquina de
-        quem trabalha é aviso: enquanto se edita, é normal e certo que o
-        `linhas.json` fique sujo — o que não pode é ir assim para o remoto. */
+     Em CI é falha, porque é o CI que guarda o que se publica. Na máquina de
+     quem trabalha é aviso: enquanto se edita, é normal e certo que um ficheiro
+     gerado fique sujo — o que não pode é ir assim para o remoto. */
   let porCommeter = null
   {
     let sujos = ''
@@ -865,9 +836,8 @@ function imagensPorPagina(buf) {
     }
   }
 
-  /* E os tamanhos, pela mesma razão e pelo mesmo caminho: lia-se o
-     `tamanhos.json`, que o `pack.mjs` escreve com o mesmo `statSync` que isto
-     usava para o conferir. Duas leituras do mesmo número não são uma
+  /* E os tamanhos chegam à página. Lia-se aqui o `tamanhos.json`, que o
+     `pack.mjs` escreve com o mesmo `statSync` que isto usava para o conferir. Duas leituras do mesmo número não são uma
      verificação. Confere-se contra a coluna que a página imprime, formatada
      como quem lê a vê. */
   const pagina = html('/')
@@ -898,7 +868,7 @@ function imagensPorPagina(buf) {
   }
 
   decide(
-    'o .zip abre, as linhas e os tamanhos chegam à página, e o que está gerado está commitado',
+    'o .zip abre, os tamanhos chegam à página, e o que está gerado está commitado',
     problemas,
     `${definicoes.length} ficheiros`
   )

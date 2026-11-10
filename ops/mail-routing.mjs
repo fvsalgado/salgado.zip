@@ -21,9 +21,8 @@
  * Sem PURELYMAIL_API_KEY imprime só o estado desejado. Com chave, compara com
  * o que lá está; escreve mesmo com `--aplicar`.
  *
- * Vive em ops/ pela mesma razão que o dns-mail.mjs: `scripts/*.mjs` conta para
- * o contador de linhas do colofão, e a verificação 12 falha se o total
- * congelado deixar de bater certo.
+ * Vive em ops/ pela mesma razão que o dns-mail.mjs: não é código do site, e
+ * não corre em nenhum build.
  */
 const APLICAR = process.argv.includes('--aplicar')
 const CHAVE = process.env.PURELYMAIL_API_KEY
