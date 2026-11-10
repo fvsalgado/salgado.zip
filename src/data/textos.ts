@@ -122,7 +122,7 @@ export const verbeteStineta = {
     es: 'Nazaré, Portugal',
   }, 'textos.verbeteStineta.regiao'),
   definicao: parse(Lang, {
-    pt: 'que não para quieto; inquieto, traquina.',
+    pt: 'que não sossega; inquieto, traquina.',
     en: 'who can’t sit still; restless, mischievous.',
     fr: 'qui ne tient pas en place\u202f; remuant, espiègle.',
     es: 'que no se está quieto; inquieto, travieso.',
