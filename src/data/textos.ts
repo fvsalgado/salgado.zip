@@ -86,15 +86,16 @@ export const avisoJanelaNova = parse(Lang, {
  * A assinatura da Stineta, sem o nome à frente: o nome não se traduz e vai
  * escrito no componente, ao lado da marca.
  *
- * É a mesma frase, palavra por palavra, que assina o Coreto, a Paragem, o POS
- * Popular e o Em Cada Esquina (decisão de 10/11/2026: igual em todo o lado).
- * Mudá-la aqui sem a mudar lá desfaz isso.
+ * «Stineta — software para a comunidade.» É a mesma frase, palavra por
+ * palavra, que assina o Coreto, a Paragem, o POS Popular e o Em Cada Esquina
+ * (decisão de 10/11/2026: igual em todo o lado, e com estas palavras desde
+ * esse dia). Mudá-la aqui sem a mudar lá desfaz isso.
  */
 export const assinaturaStineta = parse(Lang, {
-  pt: 'software para regiões e comunidades.',
-  en: 'software for regions and communities.',
-  fr: 'logiciels pour les régions et les communautés.',
-  es: 'software para regiones y comunidades.',
+  pt: 'software para a comunidade.',
+  en: 'software for the community.',
+  fr: 'logiciels pour la communauté.',
+  es: 'software para la comunidad.',
 }, 'textos.assinaturaStineta')
 
 /**
