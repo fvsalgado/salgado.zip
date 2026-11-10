@@ -278,6 +278,13 @@ export const projetos = parse(Projeto.array().min(1), [
     ],
     stack: ['Vite', 'Supabase (RLS)', 'PWA offline-first'],
     url: null,
+    // A captura é de 10/11/2026: a tesouraria da obra por capítulos e o
+    // escritório da Onofriana (eventos), com dados inventados — capítulos,
+    // clientes e salas que não existem. Saiu da aplicação construída, com as
+    // respostas do Supabase servidas por um script, sem conta nenhuma. A obra
+    // aparece já a descer, a partir do gráfico: o cartão de cima calcula o
+    // desvio contra o orçamento real da casa, que está no código, e com ele à
+    // vista o número verdadeiro saía por subtração.
     shot: 'travertina.webp',
   },
   {
