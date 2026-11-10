@@ -21,6 +21,11 @@
  * assina os outros produtos, e aqui não leva ligação — a página onde está já é
  * a da Stineta. Fica também no PDF impresso, por isso não leva `rodape__ecra`.
  *
+ * Por baixo dela, o que quer dizer o nome — «stineta», palavra da Nazaré —,
+ * como uma entrada de dicionário. É o único sítio onde se explica: os produtos
+ * assinam só com a frase. Esta linha é só do ecrã (`rodape__ecra`), para o CV
+ * impresso ficar como está.
+ *
  * A hora de atualização saiu. Dizia a data do último commit de conteúdo, que é
  * informação sobre o repositório e não sobre quem lê — e o `lastmod` do
  * sitemap continua a dá-la a quem a usa mesmo, que são os motores de busca.
@@ -42,7 +47,7 @@
 import { contacto, ficheiros } from '../data'
 import type { Idioma } from '../data'
 import { coordenadas } from '../data/formato'
-import { codigoDoSite, perfilGithub, licenca, assinaturaStineta } from '../data/textos.ts'
+import { codigoDoSite, perfilGithub, licenca, assinaturaStineta, significadoStineta } from '../data/textos.ts'
 import { t } from '../data/formato'
 import Externo from './Externo.astro'
 import IconeContacto from './IconeContacto.astro'
@@ -128,4 +133,5 @@ const contactos = [
   )}
 
   <p class="rodape__assinatura"><MarcaStineta />Stineta — {t(assinaturaStineta, idioma)}</p>
+  <p class="rodape__significado rodape__ecra"><i lang={idioma === 'pt' ? undefined : 'pt'}>stineta</i>{t(significadoStineta, idioma)}</p>
 </footer>

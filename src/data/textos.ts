@@ -115,6 +115,21 @@ export const assinaturaStineta = parse(Lang, {
   es: 'software para regiones y comunidades.',
 }, 'textos.assinaturaStineta')
 
+/**
+ * O que quer dizer «stineta», por baixo da assinatura e só neste site: os
+ * produtos assinam com a frase igual em todo o lado, e é aqui que o nome se
+ * explica. A palavra vai à parte, em itálico e marcada como português (é uma
+ * palavra da Nazaré, não se traduz); isto é o resto da frase, a começar na
+ * vírgula. Sem «atrevida», que é o terceiro sentido da palavra, por causa da
+ * coincidência com a Atrevia (decisão de 10/11/2026).
+ */
+export const significadoStineta = parse(Lang, {
+  pt: ', palavra da Nazaré: diz-se de quem não para quieto — inquieta, traquina.',
+  en: ', a word from Nazaré for someone who can’t sit still — restless, mischievous.',
+  fr: ', mot de Nazaré pour qui ne tient pas en place — remuante, espiègle.',
+  es: ', palabra de Nazaré para quien no se está quieto — inquieta, traviesa.',
+}, 'textos.significadoStineta')
+
 /** O código deste site é público: a prova do colofão está no repositório. */
 export const codigoDoSite = 'https://github.com/fvsalgado/salgado.zip'
 
