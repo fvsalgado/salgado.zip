@@ -32,7 +32,6 @@ interface Rotulos {
   acessibilidade: string
   ficheiros: string
   colofao: string
-  entradas: (n: number) => string
   /** Os totais da linha de cima. */
   contaProjetos: string
   contaLeituras: string
@@ -63,44 +62,58 @@ interface Rotulos {
   rubricaLbl: string
   publicado: string
   duracaoLbl: string
-  ficheiroLbl: string
   original: string
   ouvir: string
   ver: string
-  dimensoes: string
   ondeLbl: string
   imagensLbl: string
   transcricaoLbl: string
   organizaLbl: string
   quandoLbl: string
   paginaLbl: string
-  notaVoz: (leituras: number, videos: number, palcos: number) => string
+  /** Recebe o número das noites em palco, que sai dos dados. */
+  notaVoz: (palcos: number) => string
 }
+
+/**
+ * Os números pequenos por extenso, no feminino — contam noites, «soirées» e
+ * «noches». Acima de dez, algarismos.
+ */
+const EXTENSO: Record<Idioma, readonly string[]> = {
+  pt: ['zero', 'uma', 'duas', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove', 'dez'],
+  en: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'],
+  fr: ['zéro', 'une', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix'],
+  es: ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'],
+}
+const porExtenso = (i: Idioma, n: number) => EXTENSO[i][n] ?? String(n)
 
 const ROTULOS: Record<Idioma, Rotulos> = {
   pt: {
     projetos: 'projetos/', voz: 'voz/', percurso: 'percurso/', mandatos: 'mandatos/', formacao: 'certificados/',
     contacto: 'contacto/', privacidade: 'privacidade/', acessibilidade: 'acessibilidade/', ficheiros: 'ficheiros/', colofao: 'colofão/',
-    entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
     contaProjetos: 'projetos', contaLeituras: 'peças de voz', contaCargos: 'cargos', contaMandatos: 'mandatos',
     nascido: (ano) => `nascido em ${ano}`,
     abrirTudo: 'abrir tudo', fecharTudo: 'fechar tudo',
     tudoAberto: 'Tudo aberto.', tudoFechado: 'Tudo fechado.',
-    papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'endereço', acesso: 'acesso',
+    papel: 'papel', periodo: 'período', stack: 'tecnologia', endereco: 'endereço', acesso: 'acesso',
     privado: 'privado, atrás de autenticação', codigo: 'código', licenca: 'licença',
     onde: 'onde', deOnde: 'de onde', idiomas: 'idiomas',
     visitar: 'visitar', codigoAberto: 'código aberto',
     autor: 'autoria', rubricaLbl: 'rubrica', publicado: 'publicado', duracaoLbl: 'duração',
-    ficheiroLbl: 'ficheiro', original: 'no editor', ouvir: 'Ouvir', ver: 'Ver', dimensoes: 'imagem',
+    original: 'original', ouvir: 'Ouvir', ver: 'Ver',
     ondeLbl: 'onde', imagensLbl: 'imagens', transcricaoLbl: 'o que se ouve',
     organizaLbl: 'organização', quandoLbl: 'quando', paginaLbl: 'página',
-    /* «entradas em palco» e não «leituras»: das três, uma é peça montada e de
-       alinhamento próprio — o `voz.ts` diz por extenso porquê, e o dossiê já
-       respeitava a distinção («2 leituras em palco» mais «1 noite a solo»).
-       A página não respeitava, e ao chamar-lhe leitura atribuía a texto alheio
-       uma noite que é do Fábio. Agora as duas renderizações dizem o mesmo. */
-    notaVoz: (n, v, p) =>
-      `As ${n} leituras são os ficheiros originais do que o esquerda.net publicou — o feed do podcast já não os serve, e é por isso que vivem aqui. Os ${v} vídeos vieram da página do Transborda. Das ${p} entradas em palco não ficou gravação nenhuma — ficaram as imagens que houve, e a página de quem as acolheu ou escreveu sobre elas. A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.`,
+    /* «noites em palco», e não «leituras»: das três, uma é peça montada e de
+       alinhamento próprio — o `voz.ts` diz por extenso porquê —, e chamar-lhe
+       leitura atribuía a texto alheio uma noite que é do Fábio. A nota dizia
+       também de onde vieram os ficheiros e porque vivem aqui; isso é conversa
+       de arquivo, e saiu a 10/11/2026 (o README conta-o). */
+    notaVoz: (p) =>
+      `A voz é minha; os textos e as peças são de quem os fez, e cada entrada liga à origem.${
+        p === 0 ? '' : p === 1
+          ? ' Da noite em palco não ficou gravação — só as imagens que houve.'
+          : ` Das ${porExtenso('pt', p)} noites em palco não ficou gravação — só as imagens que houve.`
+      }`,
   },
   /* «mandates» era falso amigo e saiu. Em inglês, um *mandate* é a autoridade
      conferida — «a mandate for reform» —, não o cargo exercido: «4 mandates» na
@@ -111,59 +124,68 @@ const ROTULOS: Record<Idioma, Rotulos> = {
   en: {
     projetos: 'projects/', voz: 'voice/', percurso: 'career/', mandatos: 'office/', formacao: 'certificates/',
     contacto: 'contact/', privacidade: 'privacy/', acessibilidade: 'accessibility/', ficheiros: 'files/', colofao: 'colophon/',
-    entradas: (n) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
     contaProjetos: 'projects', contaLeituras: 'voice pieces', contaCargos: 'positions', contaMandatos: 'terms in office',
     nascido: (ano) => `born ${ano}`,
     abrirTudo: 'expand all', fecharTudo: 'collapse all',
     tudoAberto: 'Everything open.', tudoFechado: 'Everything closed.',
-    papel: 'role', periodo: 'period', stack: 'stack', endereco: 'address', acesso: 'access',
+    papel: 'role', periodo: 'period', stack: 'technology', endereco: 'address', acesso: 'access',
     privado: 'private, behind authentication', codigo: 'source', licenca: 'licence',
     onde: 'where', deOnde: 'from', idiomas: 'languages',
     visitar: 'visit', codigoAberto: 'open source',
     autor: 'author', rubricaLbl: 'series', publicado: 'published', duracaoLbl: 'length',
-    ficheiroLbl: 'file', original: 'at the publisher', ouvir: 'Listen to', ver: 'Watch', dimensoes: 'picture',
+    original: 'original', ouvir: 'Listen to', ver: 'Watch',
     ondeLbl: 'where', imagensLbl: 'pictures', transcricaoLbl: 'what is said',
     organizaLbl: 'organiser', quandoLbl: 'when', paginaLbl: 'page',
-    notaVoz: (n, v, p) =>
-      `The ${n} readings are the original files of what esquerda.net published — the podcast feed no longer serves them, which is why they live here. The ${v} films came from the Transborda page. Of the ${p} pieces performed on stage no recording survives — what is left are whatever pictures there were, and the page of whoever hosted them or wrote about them. The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.`,
+    notaVoz: (p) =>
+      `The voice is mine; the texts and the pieces belong to those who made them, and every entry links to its source.${
+        p === 0 ? '' : p === 1
+          ? ' Of the night on stage there is no recording — only whatever pictures there were.'
+          : ` Of the ${porExtenso('en', p)} nights on stage there is no recording — only whatever pictures there were.`
+      }`,
   },
   fr: {
     projetos: 'projets/', voz: 'voix/', percurso: 'parcours/', mandatos: 'mandats/', formacao: 'certificats/',
     contacto: 'contact/', privacidade: 'confidentialite/', acessibilidade: 'accessibilite/', ficheiros: 'fichiers/', colofao: 'colophon/',
-    entradas: (n) => `${n} ${n === 1 ? 'entrée' : 'entrées'}`,
     contaProjetos: 'projets', contaLeituras: 'pièces de voix', contaCargos: 'postes', contaMandatos: 'mandats',
     nascido: (ano) => `né en ${ano}`,
     abrirTudo: 'tout ouvrir', fecharTudo: 'tout fermer',
     tudoAberto: 'Tout est ouvert.', tudoFechado: 'Tout est fermé.',
-    papel: 'rôle', periodo: 'période', stack: 'stack', endereco: 'adresse', acesso: 'accès',
+    papel: 'rôle', periodo: 'période', stack: 'technologie', endereco: 'adresse', acesso: 'accès',
     privado: 'privé, derrière une authentification', codigo: 'code', licenca: 'licence',
     onde: 'où', deOnde: 'd’où', idiomas: 'langues',
     visitar: 'visiter', codigoAberto: 'code ouvert',
     autor: 'auteur', rubricaLbl: 'rubrique', publicado: 'publié', duracaoLbl: 'durée',
-    ficheiroLbl: 'fichier', original: 'chez l’éditeur', ouvir: 'Écouter', ver: 'Regarder', dimensoes: 'image',
+    original: 'original', ouvir: 'Écouter', ver: 'Regarder',
     ondeLbl: 'où', imagensLbl: 'images', transcricaoLbl: 'ce qui est dit',
     organizaLbl: 'organisation', quandoLbl: 'quand', paginaLbl: 'page',
-    notaVoz: (n, v, p) =>
-      `Les ${n} lectures sont les fichiers originaux de ce qu’esquerda.net a publié — le flux du podcast ne les sert plus, et c’est pour cela qu’ils vivent ici. Les ${v} vidéos viennent de la page de Transborda. Des ${p} pièces sur scène il ne reste aucun enregistrement — il reste les images qu’il y avait, et la page de qui les a accueillies ou qui en a parlé. La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.`,
+    notaVoz: (p) =>
+      `La voix est la mienne ; les textes et les pièces sont de ceux qui les ont faits, et chaque entrée renvoie à sa source.${
+        p === 0 ? '' : p === 1
+          ? ' De la soirée sur scène il ne reste aucun enregistrement — seulement les images qu’il y avait.'
+          : ` Des ${porExtenso('fr', p)} soirées sur scène il ne reste aucun enregistrement — seulement les images qu’il y avait.`
+      }`,
   },
   es: {
     projetos: 'proyectos/', voz: 'voz/', percurso: 'trayectoria/', mandatos: 'mandatos/', formacao: 'certificados/',
     contacto: 'contacto/', privacidade: 'privacidad/', acessibilidade: 'accesibilidad/', ficheiros: 'archivos/', colofao: 'colofón/',
-    entradas: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
     contaProjetos: 'proyectos', contaLeituras: 'piezas de voz', contaCargos: 'cargos', contaMandatos: 'mandatos',
     nascido: (ano) => `nacido en ${ano}`,
     abrirTudo: 'abrir todo', fecharTudo: 'cerrar todo',
     tudoAberto: 'Todo abierto.', tudoFechado: 'Todo cerrado.',
-    papel: 'papel', periodo: 'período', stack: 'stack', endereco: 'dirección', acesso: 'acceso',
+    papel: 'papel', periodo: 'período', stack: 'tecnología', endereco: 'dirección', acesso: 'acceso',
     privado: 'privado, tras autenticación', codigo: 'código', licenca: 'licencia',
     onde: 'dónde', deOnde: 'de dónde', idiomas: 'idiomas',
     visitar: 'visitar', codigoAberto: 'código abierto',
     autor: 'autoría', rubricaLbl: 'sección', publicado: 'publicado', duracaoLbl: 'duración',
-    ficheiroLbl: 'fichero', original: 'en el editor', ouvir: 'Escuchar', ver: 'Ver', dimensoes: 'imagen',
+    original: 'original', ouvir: 'Escuchar', ver: 'Ver',
     ondeLbl: 'dónde', imagensLbl: 'imágenes', transcricaoLbl: 'lo que se oye',
     organizaLbl: 'organización', quandoLbl: 'cuándo', paginaLbl: 'página',
-    notaVoz: (n, v, p) =>
-      `Las ${n} lecturas son los ficheros originales de lo que esquerda.net publicó — el feed del podcast ya no los sirve, y por eso viven aquí. Los ${v} vídeos vinieron de la página de Transborda. De las ${p} piezas en escena no quedó ninguna grabación — quedaron las imágenes que hubo, y la página de quien las acogió o escribió sobre ellas. La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.`,
+    notaVoz: (p) =>
+      `La voz es mía; los textos y las piezas son de quienes los hicieron, y cada entrada enlaza a su origen.${
+        p === 0 ? '' : p === 1
+          ? ' De la noche en escena no quedó grabación — solo las imágenes que hubo.'
+          : ` De las ${porExtenso('es', p)} noches en escena no quedó grabación — solo las imágenes que hubo.`
+      }`,
   },
 }
 const rot = ROTULOS[idioma]
@@ -220,7 +242,6 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
     nivel={2}
     nome={rot.projetos}
     aberto={true}
-    colunas={[{ classe: 'nota', valor: rot.entradas(projetos.length) }]}
   >
     <ul class="arvore arvore--filha" role="list">
       {
@@ -347,10 +368,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
         id="voz"
         nivel={2}
         nome={rot.voz}
-        colunas={[
-          { classe: 'nota', valor: rot.entradas(leituras.length) },
-          { classe: 'tam', valor: duracaoLonga(totalVoz) },
-        ]}
+        colunas={[{ classe: 'tam', valor: duracaoLonga(totalVoz) }]}
       >
         <ul class="arvore arvore--filha" role="list">
           {leituras.map((l) => {
@@ -515,27 +533,16 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
                 )}
                 <dt>{palco ? rot.quandoLbl : rot.publicado}</dt>
                 <dd>{dataCurta(l.data, idioma)}</dd>
-                {/* Duração, dimensões e ficheiro saem todos do voz.json, e o
-                    voz.json só conhece o que tem ficheiro. Numa leitura em
-                    palco estas três linhas não existem — em vez de existirem
-                    vazias, que seria prometer um número e não o dar. */}
+                {/* A duração sai do voz.json, e o voz.json só conhece o que tem
+                    ficheiro. Numa leitura em palco a linha não existe — em vez
+                    de existir vazia, que seria prometer um número e não o dar.
+                    O nome do ficheiro, o tamanho e as dimensões da imagem
+                    estiveram aqui e saíram a 10/11/2026: eram dados de
+                    arquivo, e o leitor logo acima já dá o som e a imagem. */}
                 {medidasVoz[l.id] && (
                   <>
                     <dt>{rot.duracaoLbl}</dt>
                     <dd>{duracao(medidasVoz[l.id].segundos)}</dd>
-                    {l.formato === 'video' && (
-                      <>
-                        <dt>{rot.dimensoes}</dt>
-                        <dd>{`${medidasVoz[l.id].largura}×${medidasVoz[l.id].altura}`}</dd>
-                      </>
-                    )}
-                    <dt>{rot.ficheiroLbl}</dt>
-                    <dd>
-                      <a href={`/voz/${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}`} download>
-                        {`${l.id}.${l.formato === 'video' ? 'mp4' : 'mp3'}`}
-                      </a>
-                      {` · ${tamanho(medidasVoz[l.id].bytes)}`}
-                    </dd>
                   </>
                 )}
                 {l.imagens.length > 0 && (
@@ -556,11 +563,7 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
           })}
         </ul>
         <p class="no__texto no__texto--nota">
-          {rot.notaVoz(
-            leituras.filter((l) => l.formato === 'audio').length,
-            leituras.filter((l) => l.formato === 'video').length,
-            leituras.filter((l) => l.formato === 'presencial').length
-          )}
+          {rot.notaVoz(leituras.filter((l) => l.formato === 'presencial').length)}
         </p>
       </Node>
     )
@@ -572,7 +575,6 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
         id="percurso"
         nivel={2}
         nome={rot.percurso}
-        colunas={[{ classe: 'nota', valor: rot.entradas(posicoes.length) }]}
       >
         <ul class="arvore arvore--filha" role="list">
           {posicoes.map((p) => (
@@ -639,7 +641,6 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
         id="mandatos"
         nivel={2}
         nome={rot.mandatos}
-        colunas={[{ classe: 'nota', valor: rot.entradas(mandatos.length) }]}
       >
         <ul class="arvore arvore--filha" role="list">
           {mandatos.map((m) => (
@@ -666,7 +667,6 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
         id="formacao"
         nivel={2}
         nome={rot.formacao}
-        colunas={[{ classe: 'nota', valor: rot.entradas(formacao.length) }]}
       >
         <ul class="arvore arvore--filha" role="list">
           {/* O nome do curso leva à credencial onde ela existe. Não à página do
@@ -762,7 +762,6 @@ const cvs = ficheiros.filter((f) => f.id === 'cv-pt' || f.id === 'cv-en')
         id="ficheiros"
         nivel={3}
         nome={rot.ficheiros}
-        colunas={[{ classe: 'nota', valor: rot.entradas(ficheiros.length) }]}
       >
         <ul class="arvore arvore--filha" role="list">
           {

@@ -74,10 +74,11 @@ const linhaAutor = palcosMeus.length
     : `${palcosMeus.length} ${palcosMeus.length > 1 ? 'noites' : 'noite'} a solo, de alinhamento próprio — ${ondeQuando(palcosMeus)}.`
   : null
 /* «Está tudo» e não «os ficheiros»: desde que há leituras em palco, nem tudo
-   o que o nó guarda é ficheiro, e a frase apontava para onde ir. */
+   o que a secção guarda é ficheiro, e a frase apontava para onde ir. Dizia
+   «no nó voz/», que é a palavra de quem fez a página e não de quem a lê. */
 const linhaFicheiros = en
   ? `It is all at ${CANONICO.replace('https://', '')}, under voz/.`
-  : `Está tudo em ${CANONICO.replace('https://', '')}, no nó voz/.`
+  : `Está tudo em ${CANONICO.replace('https://', '')}, na secção voz/.`
 
 /** O mesmo cargo derivado que a página mostra: quem tem o papel na mão também
  *  tem de saber o que ele faz hoje sem ir procurar à secção do percurso. */

@@ -1,33 +1,15 @@
 import { z } from 'zod'
 import { Lang, parse } from './schema.ts'
-import { LINGUAS, type Idioma } from './idiomas.ts'
-import linhas from '../generated/linhas.json' with { type: 'json' }
-
-/** Cada língua agrupa os milhares à sua maneira; nenhuma delas à mão. */
-const num = (i: Idioma) => (linhas as { total: number }).total.toLocaleString(LINGUAS[i].bcp47)
-const m = (linhas as { ficheiros: number }).ficheiros
 
 /**
  * O colofão do SÍTIO: como esta página é feita. É aqui que o Claude entra por
  * extenso — mostrado no artefacto, não afirmado em adjetivos.
  */
 export const colofaoSite = parse(z.array(Lang).min(1), [
-  /* Só o de que a página é feita. Dizia também «sem cookies e sem publicidade»
-     e que a medição é anónima — mas isso é o que a nota de privacidade abre a
-     dizer, DENTRO DO MESMO NÓ, três campos abaixo. O visitante lia a mesma
-     promessa duas vezes seguidas; cada casa fica com a sua parte. */
-  {
-    pt: 'Astro estático; tipografia IBM Plex, auto-alojada.',
-    en: 'Static Astro; IBM Plex type, self-hosted.',
-    fr: 'Astro statique ; typographie IBM Plex, auto-hébergée.',
-    es: 'Astro estático; tipografía IBM Plex, autoalojada.',
-  },
-  {
-    pt: `${num('pt')} linhas de código em ${m} ficheiros. Uma fonte de dados; a página, os PDF, o resume.json e o zip saem dela.`,
-    en: `${num('en')} lines of code across ${m} files. One data source; the page, the PDFs, the resume.json and the zip come out of it.`,
-    fr: `${num('fr')} lignes de code dans ${m} fichiers. Une seule source de données ; la page, les PDF, le resume.json et le zip en sortent.`,
-    es: `${num('es')} líneas de código en ${m} ficheros. Una sola fuente de datos; la página, los PDF, el resume.json y el zip salen de ella.`,
-  },
+  /* Ficou só a frase de quem o fez. Estavam aqui também a tecnologia («Astro
+     estático; tipografia IBM Plex») e a contagem de linhas de código, que
+     saíram a 10/11/2026: eram ficha técnica, e quem a quiser tem o código na
+     ligação logo abaixo. */
   {
     pt: 'Desenhado, escrito e construído a meias com o Claude — Claude Code, da Anthropic —, entre outras ferramentas.',
     en: 'Designed, written and built together with Claude — Claude Code, by Anthropic — among other tools.',

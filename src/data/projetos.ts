@@ -276,7 +276,7 @@ export const projetos = parse(Projeto.array().min(1), [
         es: 'Lo hice como respuesta a un problema de autonomía: poner la obra, el mantenimiento de los equipos, los compromisos de los animales — vacunas y demás — y la domótica en el mismo sitio, y en el móvil.',
       },
     ],
-    stack: ['Vite', 'Supabase (RLS)', 'PWA offline-first'],
+    stack: ['Vite', 'Supabase', 'PWA offline-first'],
     url: null,
     // A captura é de 10/11/2026: a tesouraria da obra por capítulos e o
     // escritório da Onofriana (eventos), com dados inventados — capítulos,
@@ -313,10 +313,10 @@ export const projetos = parse(Projeto.array().min(1), [
     // Data de criação do projeto na Vercel. Derivada, não inventada.
     periodo: { inicio: '2026-04', fim: null },
     linha: {
-      pt: 'Ponto de venda multi-tenant para eventos e angariação de fundos: comandas, mesas, cartão de consumo e talões de cozinha.',
-      en: 'Multi-tenant point of sale for events and fundraising: order slips, tables, consumption cards and kitchen tickets.',
-      fr: 'Point de vente multi-tenant pour événements et collectes de fonds : commandes, tables, carte de consommation et tickets de cuisine.',
-      es: 'Punto de venta multi-tenant para eventos y recaudación de fondos: comandas, mesas, tarjeta de consumo y tickets de cocina.',
+      pt: 'Ponto de venda para eventos e angariação de fundos, que várias organizações podem usar: comandas, mesas, cartão de consumo e talões de cozinha.',
+      en: 'Point of sale for events and fundraising, which several organisations can use: order slips, tables, consumption cards and kitchen tickets.',
+      fr: 'Point de vente pour événements et collectes de fonds, que plusieurs organisations peuvent utiliser : commandes, tables, carte de consommation et tickets de cuisine.',
+      es: 'Punto de venta para eventos y recaudación de fondos, que varias organizaciones pueden usar: comandas, mesas, tarjeta de consumo y tickets de cocina.',
     },
     detalhe: [
       {
@@ -359,10 +359,10 @@ export const projetos = parse(Projeto.array().min(1), [
       {
         // Licenciado por região, e mais nada sobre quem o licencia: não há
         // cliente, e a região com dados reais está publicada como proposta.
-        pt: 'Licencia-se por região, a cada autoridade de transportes, e uma região nova entra por declaração, sem código. As de demonstração, como demo.paragem.pt, são inventadas de fio a pavio.',
-        en: 'Licensed per region, to each transport authority; a new region comes in by declaration, without code. The demo regions, such as demo.paragem.pt, are invented from scratch.',
-        fr: 'Il se licencie par région, à chaque autorité organisatrice des transports, et une nouvelle région entre par déclaration, sans code. Celles de démonstration, comme demo.paragem.pt, sont inventées de toutes pièces.',
-        es: 'Se licencia por región, a cada autoridad de transporte, y una región nueva entra por declaración, sin código. Las de demostración, como demo.paragem.pt, están inventadas de principio a fin.',
+        pt: 'Licencia-se por região, a cada autoridade de transportes, e uma região nova entra sem escrever código. As de demonstração, como demo.paragem.pt, são inventadas de fio a pavio.',
+        en: 'Licensed per region, to each transport authority; a new region comes in without writing code. The demo regions, such as demo.paragem.pt, are invented from scratch.',
+        fr: 'Il se licencie par région, à chaque autorité organisatrice des transports, et une nouvelle région entre sans écrire de code. Celles de démonstration, comme demo.paragem.pt, sont inventées de toutes pièces.',
+        es: 'Se licencia por región, a cada autoridad de transporte, y una región nueva entra sin escribir código. Las de demostración, como demo.paragem.pt, están inventadas de principio a fin.',
       },
     ],
     stack: ['Next.js', 'pipeline Python', 'OpenTripPlanner', 'MapLibre + PMTiles'],

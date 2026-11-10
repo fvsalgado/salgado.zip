@@ -24,12 +24,10 @@
  * equipa, e sem ele a API responde 200 com uma lista vazia — o que parece
  * sucesso e não é.
  *
- * Vive em ops/ e não em scripts/ por uma razão mecânica, não estética: o
- * `scripts/pack.mjs` varre `scripts/*.mjs` para o contador de linhas do
- * colofão, e a verificação 12 reconta e falha se o total congelado em
- * `src/generated/linhas.json` deixar de bater certo. Um ficheiro operacional
- * em scripts/ inflacionaria o número publicado como se fosse código do site,
- * e partia o CI ao mesmo tempo.
+ * Vive em ops/ e não em scripts/ porque não é código do site: trata do DNS
+ * do correio, e não corre em nenhum build. (A razão primeira era mecânica — o
+ * contador de linhas do colofão varria `scripts/*.mjs` —, e o contador saiu a
+ * 10/11/2026. A separação ficou, porque continua certa.)
  */
 const APLICAR = process.argv.includes('--aplicar')
 
