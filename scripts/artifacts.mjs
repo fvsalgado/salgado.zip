@@ -133,7 +133,12 @@ if (semShots) {
   // deviceScaleFactor 1: a saída é 1440×900 de qualquer forma, e a 2 o PNG
   // intermédio passa dos 4 MB — o suficiente para o Chromium ficar sem memória
   // ao quarto site.
-  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 })
+  // `locale` em português de Portugal, que é a língua de origem de todos estes
+  // sites. Sem ele o Chromium anuncia-se em inglês, e o Em Cada Esquina abria
+  // com a faixa «This site is also available in English» por cima do topo —
+  // na captura lia-se como descuido. O cabeçalho Accept-Language vai com o
+  // pedido, também pelo relay.
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, locale: 'pt-PT' })
   await relay(ctx)
   for (const proj of comCaptura) {
     const p = await ctx.newPage()

@@ -171,9 +171,12 @@ O caminho `/cimt/` e os seus subcaminhos são servidos por uma reescrita para
 `/cimt/`. Ficam fora da CSP geral e levam `X-Robots-Tag: noindex, nofollow`,
 `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff` e HSTS.
 
-Projetos privados entram na listagem pelo que fazem, sem endereço e sem
-captura. A verificação 7 confirma que não há `href`, `src` nem `"url"` a
-apontar-lhes — no site, no `resume.json` e dentro do `.zip`.
+Projetos privados entram na listagem pelo que fazem e sem endereço. Podem ter
+captura, desde que mostre dados de demonstração e nunca registos reais — é o
+caso do Travertina e do POS Popular. A verificação 7 confirma que não há
+`href`, `src` nem `"url"` a apontar-lhes — no site, no `resume.json` e dentro
+do `.zip`. (Este parágrafo dizia «sem captura», e já não era verdade desde que
+o Travertina ganhou a sua, a 18/08/2026.)
 
 ## Licença
 

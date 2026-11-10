@@ -558,8 +558,23 @@ a.linha:hover .linha__nome { color: var(--accent); text-decoration: underline; t
 .icone { width: 1em; height: 1em; fill: currentColor; flex: none; }
 .icone--maior { width: 1.15rem; height: 1.15rem; }
 
-/* Os três lugares fecham o rodapé. */
+/* Os três lugares, e por baixo deles a assinatura. */
 .rodape__lugares { letter-spacing: 0.02em; }
+
+/* A assinatura em tinta cheia, separada das coordenadas por um pouco de ar:
+   é quem assina, não mais uma linha de informação. A marca tem a altura da
+   letra e assenta na linha de base, como se fosse um carácter. */
+.rodape .rodape__assinatura {
+  margin-top: 0.7rem;
+  color: var(--ink);
+}
+.marca-stineta {
+  display: inline-block;
+  height: 1.1em;
+  width: auto;
+  vertical-align: -0.2em;
+  margin-right: 0.28em;
+}
 /* ── Marca, totais, descrição visível ────────────────────────────────────── */
 .marca {
   font-family: var(--mono);

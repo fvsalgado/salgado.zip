@@ -1,0 +1,43 @@
+---
+/**
+ * A marca da Stineta: os dois cristais de sal-gema do favicon, a uma cor.
+ *
+ * É o mesmo desenho do `public/favicon.svg` — a mesma geometria isométrica,
+ * os mesmos cortes de 1,9 —, sem a placa por trás. No favicon os cortes levam
+ * a cor da placa; aqui não há placa, por isso são recortados com uma máscara e
+ * deixam ver o que estiver por baixo. Assim a marca segue a cor do texto à
+ * volta (`currentColor`) nos dois temas, sem uma regra por tema.
+ *
+ * O `viewBox` corta a margem da placa: fica só o desenho, para a marca ter a
+ * altura da letra ao lado e não a de um ícone de 32 px.
+ *
+ * A mesma marca assina os outros produtos — o Coreto, a Paragem, o POS Popular
+ * e o Em Cada Esquina —, com esta geometria copiada à letra, porque cada um
+ * vive no seu repositório. Mudar o desenho aqui é mudá-lo lá também.
+ *
+ * O `id` da máscara tem de ser único na página. Hoje a marca aparece uma vez,
+ * no rodapé; quem a puser num segundo sítio passa-lhe outro `id`.
+ */
+interface Props { id?: string }
+const { id = 'stineta-cortes' } = Astro.props
+---
+
+<svg class="marca-stineta" viewBox="4.3 4.1 21.3 26" aria-hidden="true" focusable="false">
+  <defs>
+    <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
+      <rect width="32" height="32" fill="#fff" />
+      <path
+        d="M4.59 14.2 13.6 19.4 22.61 14.2M13.6 19.4V29.8M15.92 7.1 20.6 9.8 25.28 7.1M20.6 9.8V15.2"
+        fill="none"
+        stroke="#000"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </mask>
+  </defs>
+  <g mask={`url(#${id})`} fill="currentColor">
+    <path d="M13.6 9 22.61 14.2V24.6L13.6 29.8 4.59 24.6V14.2Z" />
+    <path d="M20.6 4.4 25.28 7.1V12.5L20.6 15.2 15.92 12.5V7.1Z" />
+  </g>
+</svg>

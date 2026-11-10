@@ -100,6 +100,21 @@ export const avisoJanelaNova = parse(Lang, {
   es: 'abre en una ventana nueva',
 }, 'textos.avisoJanelaNova')
 
+/**
+ * A assinatura da Stineta, sem o nome à frente: o nome não se traduz e vai
+ * escrito no componente, ao lado da marca.
+ *
+ * É a mesma frase, palavra por palavra, que assina o Coreto, a Paragem, o POS
+ * Popular e o Em Cada Esquina (decisão de 10/11/2026: igual em todo o lado).
+ * Mudá-la aqui sem a mudar lá desfaz isso.
+ */
+export const assinaturaStineta = parse(Lang, {
+  pt: 'software para regiões e comunidades.',
+  en: 'software for regions and communities.',
+  fr: 'logiciels pour les régions et les communautés.',
+  es: 'software para regiones y comunidades.',
+}, 'textos.assinaturaStineta')
+
 /** O código deste site é público: a prova do colofão está no repositório. */
 export const codigoDoSite = 'https://github.com/fvsalgado/salgado.zip'
 

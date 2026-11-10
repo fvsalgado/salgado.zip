@@ -645,7 +645,7 @@ function imagensPorPagina(buf) {
   const registos = leituras.filter(
     (l) => l.formato === 'video' || (l.formato === 'presencial' && l.imagens.length > 0)
   ).length
-  const FOLHAS = 4
+  const FOLHAS = 5
   /* Os nomes trazem o mês da revisão e vêm das definições, não escritos aqui:
      uma verificação que abre um caminho fixo deixa de verificar o documento no
      dia em que o documento muda de nome — passa a verificar um fantasma. */
@@ -660,7 +660,7 @@ function imagensPorPagina(buf) {
     const buf = readFileSync(caminho)
     if (buf.subarray(0, 5).toString() !== '%PDF-') problemas.push(`${nome} não é um PDF`)
     const paginas = conta(buf, /\/Type\s*\/Page[^s]/g)
-    /* EXATAMENTE quatro. Estiveram aqui dois limites — «pelo menos 2» e «no
+    /* EXATAMENTE `FOLHAS`. Estiveram aqui dois limites — «pelo menos 2» e «no
        máximo 4» — e no meio deles cabia um documento de 3 folhas que passava
        verde enquanto o título prometia 4. Pior: tudo o que vem a seguir vive
        dentro de guardas `=== FOLHAS`, por isso um PDF de 3 folhas não só
@@ -668,11 +668,12 @@ function imagensPorPagina(buf) {
        nem os mandatos a abrir a última. Provado a sério, gerando os dois PDF
        com `scale: 0.45`: 3 folhas, tudo verde. */
     if (paginas !== FOLHAS) problemas.push(`${nome} tem ${paginas} página(s) e devia ter ${FOLHAS}`)
-    /* Quatro folhas, e é um teto. Não é gosto: é a diferença entre um documento
-       que se imprime numa folha A4 frente e verso duas vezes e um que obriga a
-       uma terceira quase vazia. O limite paga-se em desenho e ganha-se em
-       leitura, e sem uma verificação a defendê-lo o primeiro parágrafo que
-       alguém acrescentar empurra-o para cinco sem ninguém dar por isso.
+    /* Cinco folhas, e é um teto. Foram quatro até 10/11/2026: o POS Popular
+       ganhou captura, a terceira fila de capturas empurrou a voz inteira para
+       a folha 4, e o Fábio preferiu as cinco folhas a encolher as capturas
+       para cinco por fila. O número continua a ser um teto e não uma média:
+       sem uma verificação a defendê-lo, o primeiro parágrafo que alguém
+       acrescentar empurra o documento para seis sem ninguém dar por isso.
        Quem quiser passar daqui muda este número de propósito, não por descuido. */
     /* Onde é que cada imagem caiu. Uma quebra forçada e uma proibição de corte
        seguram a paginação: os projetos abrem folha, e a secção da voz não se
@@ -680,24 +681,28 @@ function imagensPorPagina(buf) {
        um parágrafo e ninguém dava por isso — foi exatamente o que aconteceu
        quando a apresentação encolheu sessenta pixels.
 
-       O que se exige é que TUDO o que é imagem caiba na penúltima folha: as
-       capturas que fecham os projetos, e logo a seguir a voz inteira, com os
-       registos e as capas. É a maneira de verificar, contando, aquilo que a
-       vista vê — uma folha com as imagens todas e a última só com texto. Se
-       um dia a voz se partir em duas folhas, as capas caem para a última e
-       esta conta acusa, que é exatamente o caso que se quer impedir.
+       O que se exige, com cinco folhas: as capturas todas na terceira, a
+       fechar os projetos; a voz inteira — registos e capas — na penúltima; e
+       nenhuma imagem na última. É a maneira de verificar, contando, aquilo que
+       a vista vê. Se um dia a voz se partir em duas folhas, as capas caem para
+       a última e esta conta acusa, que é exatamente o caso que se quer
+       impedir. (Com quatro folhas exigia-se TUDO o que é imagem na penúltima:
+       as capturas e a voz cabiam juntas na folha 3. Com nove capturas deixaram
+       de caber, a 10/11/2026.)
 
        Conta-se por página, sem descodificar nada: segue-se o /Resources de cada
        /Type /Page e contam-se os /XObject que são /Subtype /Image. O QR é
        vetorial e não entra. */
     const porPagina = imagensPorPagina(buf)
-    const penultima = esperadas + registos + capas
     if (porPagina === null) {
       problemas.push(`${nome}: não consegui ler a árvore de páginas para contar as imagens`)
     } else if (porPagina.length === FOLHAS) {
       if (porPagina[0] < 1) problemas.push(`${nome}: a primeira folha não leva o retrato`)
-      if (porPagina[FOLHAS - 2] < penultima) {
-        problemas.push(`${nome}: as ${esperadas} capturas, os ${registos} registos e as ${capas} capas deviam ficar todos na folha ${FOLHAS - 1}; encontrei ${porPagina[FOLHAS - 2]} imagens`)
+      if (porPagina[FOLHAS - 3] < esperadas) {
+        problemas.push(`${nome}: as ${esperadas} capturas deviam fechar os projetos na folha ${FOLHAS - 2}; encontrei ${porPagina[FOLHAS - 3]} imagens`)
+      }
+      if (porPagina[FOLHAS - 2] < registos + capas) {
+        problemas.push(`${nome}: a voz inteira — os ${registos} registos e as ${capas} capas — devia ficar na folha ${FOLHAS - 1}; encontrei ${porPagina[FOLHAS - 2]} imagens`)
       }
       if (porPagina[FOLHAS - 1] > 0) {
         problemas.push(`${nome}: a última folha é a da cauda em texto e apareceram-lhe ${porPagina[FOLHAS - 1]} imagens — a voz partiu-se`)
@@ -763,7 +768,7 @@ function imagensPorPagina(buf) {
       }
     }
   }
-  decide('os dois documentos abrem, com retrato e capturas, em 4 folhas', problemas)
+  decide(`os dois documentos abrem, com retrato e capturas, em ${FOLHAS} folhas`, problemas)
 }
 
 /* ══ 12. O .zip e os tamanhos publicados ════════════════════════════════ */

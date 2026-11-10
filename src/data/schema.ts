@@ -58,7 +58,10 @@ export const Projeto = z.object({
    * passatempos culturais".
    */
   stack: z.array(z.string().min(1)).default([]),
-  /** `null` em projetos privados. Sem ligação, sem captura. */
+  /**
+   * `null` em projetos privados: sem ligação. A captura (`shot`) é outra coisa
+   * e pode existir num projeto privado, desde que mostre dados de demonstração.
+   */
   url: HttpsUrl.nullable(),
   /** Repositório público, quando o código é aberto. */
   codigo: HttpsUrl.nullable().default(null),

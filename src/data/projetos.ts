@@ -91,10 +91,10 @@ export const projetos = parse(Projeto.array().min(1), [
     // da casa. A mesma regra dos títulos das leituras em `voz.ts`. Entrou no
     // lugar de «A Cultura no melhor lugar», que o coreto.org não usa.
     linha: {
-      pt: 'Toda a programação cultural do seu território, numa agenda só. Recolhe uma vez por dia o que câmaras, teatros, bibliotecas e coletividades já publicam, e devolve-o em página, mapa, calendário, feed e numa caixa para outros sítios.',
-      en: 'Toda a programação cultural do seu território, numa agenda só. Once a day it gathers what councils, theatres, libraries and local associations already publish, and gives it back as a page, a map, a calendar, a feed and an embeddable widget.',
-      fr: 'Toda a programação cultural do seu território, numa agenda só. Une fois par jour, il recueille ce que les mairies, les théâtres, les bibliothèques et les associations publient déjà, et le restitue en page, carte, calendrier, flux et widget à intégrer.',
-      es: 'Toda a programação cultural do seu território, numa agenda só. Una vez al día recoge lo que ayuntamientos, teatros, bibliotecas y asociaciones ya publican, y lo devuelve como página, mapa, calendario, feed y un widget para otros sitios.',
+      pt: 'Toda a programação cultural do seu território, numa agenda só. Recolhe uma vez por dia o que câmaras, teatros, bibliotecas e coletividades já publicam, e devolve-o numa agenda com o endereço, a cor e o logótipo de quem a promove: página, mapa, calendário, feed e uma caixa para outros sítios.',
+      en: 'Toda a programação cultural do seu território, numa agenda só. Once a day it gathers what councils, theatres, libraries and local associations already publish, and gives it back as an agenda with the address, colour and logo of whoever runs it: a page, a map, a calendar, a feed and an embeddable widget.',
+      fr: 'Toda a programação cultural do seu território, numa agenda só. Une fois par jour, il recueille ce que les mairies, les théâtres, les bibliothèques et les associations publient déjà, et le restitue dans un agenda à l’adresse, aux couleurs et au logo de qui le porte : page, carte, calendrier, flux et widget à intégrer.',
+      es: 'Toda a programação cultural do seu território, numa agenda só. Una vez al día recoge lo que ayuntamientos, teatros, bibliotecas y asociaciones ya publican, y lo devuelve en una agenda con la dirección, el color y el logotipo de quien la promueve: página, mapa, calendario, feed y un widget para otros sitios.',
     },
     detalhe: [
       {
@@ -134,10 +134,10 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2026-07', fim: null },
     linha: {
-      pt: 'Fado: curadoria, produção e programação de espetáculos.',
-      en: 'Fado: curation, production and programming.',
-      fr: 'Fado : curation, production et programmation de spectacles.',
-      es: 'Fado: curaduría, producción y programación de espectáculos.',
+      pt: 'Fado: curadoria, produção e programação de espetáculos, e uma editora de edições curtas e numeradas.',
+      en: 'Fado: curation, production and programming, and a label for short, numbered editions.',
+      fr: 'Fado : curation, production et programmation de spectacles, et un label d’éditions courtes et numérotées.',
+      es: 'Fado: curaduría, producción y programación de espectáculos, y un sello de ediciones cortas y numeradas.',
     },
     detalhe: [
       {
@@ -145,6 +145,14 @@ export const projetos = parse(Projeto.array().min(1), [
         en: 'Named after Maria Severa Onofriana. Four formats: Severa, Mariquinhas, Guitarradas and Vimioso.',
         fr: 'Le nom vient de Maria Severa Onofriana. Quatre formats : Severa, Mariquinhas, Guitarradas et Vimioso.',
         es: 'El nombre viene de Maria Severa Onofriana. Cuatro formatos: Severa, Mariquinhas, Guitarradas y Vimioso.',
+      },
+      {
+        // A editora e a primeira edição, como as dizem o onofriana.pt e o
+        // martarosa.pt (lidos a 10/11/2026).
+        pt: 'A primeira edição é o CD «entretanto», da Marta Rosa: ONOF 001, novembro de 2026.',
+        en: 'The first release is Marta Rosa’s CD “entretanto”: ONOF 001, November 2026.',
+        fr: 'La première édition est le CD « entretanto » de Marta Rosa : ONOF 001, novembre 2026.',
+        es: 'La primera edición es el CD «entretanto», de Marta Rosa: ONOF 001, noviembre de 2026.',
       },
       {
         pt: 'A curadoria artística é da Marta Rosa, minha companheira.',
@@ -160,9 +168,9 @@ export const projetos = parse(Projeto.array().min(1), [
   {
     id: 'emcadaesquina',
     dominio: 'emcadaesquina.app',
-    // «Um projeto de Fábio Salgado» é como o próprio sítio o assina, no rodapé
-    // e no «Sobre»: é ele o promotor, e é ele quem edita os textos. Por isso
-    // fundador, e não só autor do produto.
+    // O sítio assinava «Um projeto de Fábio Salgado», no rodapé e no «Sobre»;
+    // desde 10/11/2026 assina como Stineta, que é dele. É ele o promotor e quem
+    // edita os textos. Por isso fundador, e não só autor do produto.
     papel: {
       pt: 'fundador e criador · produto',
       en: 'founder and maker · product',
@@ -185,6 +193,12 @@ export const projetos = parse(Projeto.array().min(1), [
         en: 'Women are at the centre of the story: at least half of the people are women, and a test guarantees it, not an intention.',
         fr: 'Les femmes sont au centre de l’histoire : au moins la moitié des personnes sont des femmes, et c’est un test qui le garantit, pas une intention.',
         es: 'Las mujeres están en el centro de la historia: al menos la mitad de las personas son mujeres, y lo garantiza una prueba, no una intención.',
+      },
+      {
+        pt: 'Em quatro línguas, e funciona sem rede.',
+        en: 'In four languages, and it works offline.',
+        fr: 'En quatre langues, et il fonctionne sans réseau.',
+        es: 'En cuatro idiomas, y funciona sin conexión.',
       },
     ],
     stack: ['Next.js', 'MapLibre + PMTiles', 'PWA offline-first'],
@@ -222,10 +236,10 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'ativo',
     periodo: { inicio: '2026', fim: null },
     linha: {
-      pt: 'O sítio de uma fadista que escreve o que canta: agenda, discografia, press kit e booking.',
-      en: 'The site of a fado singer who writes what she sings: calendar, discography, press kit and booking.',
-      fr: 'Le site d’une chanteuse de fado qui écrit ce qu’elle chante : agenda, discographie, dossier de presse et booking.',
-      es: 'El sitio de una fadista que escribe lo que canta: agenda, discografía, press kit y contratación.',
+      pt: 'O sítio de uma fadista que escreve o que canta: discografia, vídeos, kit de imprensa, a venda do CD e booking, com videochamada marcada no próprio sítio.',
+      en: 'The site of a fado singer who writes what she sings: discography, videos, press kit, CD sales and booking, with video calls scheduled on the site itself.',
+      fr: 'Le site d’une chanteuse de fado qui écrit ce qu’elle chante : discographie, vidéos, dossier de presse, vente du CD et booking, avec des appels vidéo réservés sur le site même.',
+      es: 'El sitio de una fadista que escribe lo que canta: discografía, vídeos, press kit, venta del CD y contratación, con videollamadas reservadas en el propio sitio.',
     },
     detalhe: [
       {
@@ -246,10 +260,10 @@ export const projetos = parse(Projeto.array().min(1), [
     estado: 'privado',
     periodo: { inicio: '2026', fim: null },
     linha: {
-      pt: 'Uma casa gerida como uma empresa: agenda e tarefas, contactos e contratos, carteira e cash-flow, crédito, consumos, impostos, compras e transportes.',
-      en: 'A house run like a company: calendar and tasks, contacts and contracts, wallet and cash flow, credit, utilities, taxes, shopping and transport.',
-      fr: 'Une maison gérée comme une entreprise : agenda et tâches, contacts et contrats, portefeuille et trésorerie, crédit, consommations, impôts, courses et transports.',
-      es: 'Una casa gestionada como una empresa: agenda y tareas, contactos y contratos, cartera y flujo de caja, crédito, consumos, impuestos, compras y transportes.',
+      pt: 'Uma casa gerida como uma empresa — a obra, a agenda, os contactos e os contratos, a carteira, o crédito e os impostos — e, na mesma aplicação, o escritório da Onofriana: eventos, propostas, artistas e a editora.',
+      en: 'A house run like a company — the building work, the calendar, contacts and contracts, the wallet, credit and taxes — and, in the same app, the Onofriana back office: events, proposals, artists and the label.',
+      fr: 'Une maison gérée comme une entreprise — les travaux, l’agenda, les contacts et les contrats, le portefeuille, le crédit et les impôts — et, dans la même application, le bureau de l’Onofriana : événements, propositions, artistes et le label.',
+      es: 'Una casa gestionada como una empresa — la obra, la agenda, los contactos y los contratos, la cartera, el crédito y los impuestos — y, en la misma aplicación, la oficina de la Onofriana: eventos, propuestas, artistas y el sello.',
     },
     detalhe: [
       {
@@ -264,6 +278,13 @@ export const projetos = parse(Projeto.array().min(1), [
     ],
     stack: ['Vite', 'Supabase (RLS)', 'PWA offline-first'],
     url: null,
+    // A captura é de 10/11/2026: a tesouraria da obra por capítulos e o
+    // escritório da Onofriana (eventos), com dados inventados — capítulos,
+    // clientes e salas que não existem. Saiu da aplicação construída, com as
+    // respostas do Supabase servidas por um script, sem conta nenhuma. A obra
+    // aparece já a descer, a partir do gráfico: o cartão de cima calcula o
+    // desvio contra o orçamento real da casa, que está no código, e com ele à
+    // vista o número verdadeiro saía por subtração.
     shot: 'travertina.webp',
   },
   {
@@ -274,10 +295,10 @@ export const projetos = parse(Projeto.array().min(1), [
     // Data de registo do domínio, via RDAP. Derivada, não inventada.
     periodo: { inicio: '2026-05', fim: null },
     linha: {
-      pt: 'Venda de experiências de fado em Lisboa: seis casas, escolhidas por quem vive em Alfama.',
-      en: 'Selling fado experiences in Lisbon: six houses, chosen by someone who lives in Alfama.',
-      fr: 'Vente d’expériences de fado à Lisbonne : six maisons, choisies par quelqu’un qui vit à Alfama.',
-      es: 'Venta de experiencias de fado en Lisboa: seis casas, elegidas por quien vive en Alfama.',
+      pt: 'O fado em Lisboa, escolhido por quem vive em Alfama: as experiências que recomendo, reserva de mesa numa casa do bairro, um guia em PDF e artigos.',
+      en: 'Fado in Lisbon, chosen by someone who lives in Alfama: the experiences I recommend, table booking at a house in the neighbourhood, a PDF guide and articles.',
+      fr: 'Le fado à Lisbonne, choisi par quelqu’un qui vit à Alfama : les expériences que je recommande, la réservation d’une table dans une maison du quartier, un guide en PDF et des articles.',
+      es: 'El fado en Lisboa, elegido por quien vive en Alfama: las experiencias que recomiendo, reserva de mesa en una casa del barrio, una guía en PDF y artículos.',
     },
     detalhe: [],
     stack: [],
@@ -305,9 +326,15 @@ export const projetos = parse(Projeto.array().min(1), [
         es: 'Nació de una necesidad real: una organización comunitaria necesitaba controlar su facturación desde dentro. Está en uso, y queda disponible para otras.',
       },
     ],
-    stack: ['React', 'Vite'],
+    stack: ['React', 'Vite', 'Supabase', 'PWA'],
     url: null,
-    shot: null,
+    // A captura é do ecrã de venda com dados inventados (decisão do Fábio a
+    // 10/11/2026): uma associação, um operador, produtos e preços que não
+    // existem, e no cabeçalho uma marca de texto em vez do logótipo do
+    // cliente. Saiu da aplicação construída, com as respostas do Supabase
+    // servidas por um script, sem conta nenhuma e sem tocar no código do POS.
+    // Sem endereço, como manda a verificação 7.
+    shot: 'pos-popular.webp',
   },
   {
     id: 'paragem',
@@ -323,10 +350,10 @@ export const projetos = parse(Projeto.array().min(1), [
     // mês — e uma cópia rasa dele começa em outubro, que é a data errada.
     periodo: { inicio: '2026-09', fim: null },
     linha: {
-      pt: 'Os transportes de um território num sítio só, seja quem for que os gere: autocarros, comboios, transporte a pedido, bicicletas, expressos e táxis, com planeador de viagens e a página de cada paragem e de cada linha.',
-      en: "A territory's transport in one place, whoever runs it: buses, trains, demand-responsive transport, shared bikes, coaches and taxis, with a journey planner and a page for every stop and every line.",
-      fr: 'Les transports d’un territoire en un seul endroit, quel qu’en soit le gestionnaire : bus, trains, transport à la demande, vélos partagés, cars et taxis, avec un calculateur d’itinéraires et une page pour chaque arrêt et chaque ligne.',
-      es: 'Los transportes de un territorio en un solo sitio, los gestione quien los gestione: autobuses, trenes, transporte a demanda, bicicletas compartidas, autobuses exprés y taxis, con planificador de viajes y una página para cada parada y cada línea.',
+      pt: 'Os transportes de um território num sítio só, seja quem for que os gere: autocarros, comboios, transporte a pedido, bicicletas, expressos e táxis, com planeador de viagens, a página de cada paragem e de cada linha, e um painel onde a equipa da região publica os avisos.',
+      en: "A territory's transport in one place, whoever runs it: buses, trains, demand-responsive transport, shared bikes, coaches and taxis, with a journey planner, a page for every stop and every line, and a panel where the region's team publishes service alerts.",
+      fr: 'Les transports d’un territoire en un seul endroit, quel qu’en soit le gestionnaire : bus, trains, transport à la demande, vélos partagés, cars et taxis, avec un calculateur d’itinéraires, une page pour chaque arrêt et chaque ligne, et un panneau où l’équipe de la région publie les avis.',
+      es: 'Los transportes de un territorio en un solo sitio, los gestione quien los gestione: autobuses, trenes, transporte a demanda, bicicletas compartidas, autobuses exprés y taxis, con planificador de viajes, una página para cada parada y cada línea, y un panel donde el equipo de la región publica los avisos.',
     },
     detalhe: [
       {
