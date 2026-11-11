@@ -2,64 +2,85 @@
 /**
  * Põe as regras de encaminhamento da Purelymail no estado desejado.
  *
- * O problema que isto resolve: uma regra de catch-all *pura* (`catchall:true`)
- * corresponde a todos os endereços do domínio, incluindo os que pertencem a
- * caixas a sério. A documentação da Purelymail é explícita — «the routing rule
- * takes precedence and moves the email away from the mailbox». Na prática, com
- * um catch-all puro, qualquer caixa nova nasce morta: o correio dela é
- * desviado antes de lá chegar, e nada no painel diz que isso está a acontecer.
+ * O CORREIO EM DUAS CAIXAS (11/11/2026). Cada site divulga o seu endereço, e
+ * tudo vem dar a uma de duas caixas:
+ *   - fado@onofriana.pt — a Onofriana, a Marta Rosa e o fado.today;
+ *   - fabio@stineta.pt  — a Stineta, o Coreto, a Paragem, o Em Cada Esquina,
+ *     a Primeira Plateia, o salgado.zip e o resto do travertina.casa.
+ * Ficam de fora a casa@travertina.casa (o automatismo da Casa Travertina), a
+ * dmarc@salgado.zip (os relatórios do dns-mail.mjs) e a da Francisca. Uma
+ * região licenciada do Coreto que queira caixa própria terá-a no domínio dela.
  *
- * O tipo certo é «qualquer endereço excepto endereços de user válidos», que na
- * API é o mesmo `prefix:true` + `matchUser:''` mas com `catchall:false`.
+ * DOIS TIPOS DE REGRA DE DOMÍNIO, e a versão anterior deste script tinha-os
+ * trocados. Medido a 11/11/2026, com correio a sério para cada caso:
+ *   - `catchall:false` (`prefix:true`, `matchUser:''`) apanha TODOS os
+ *     endereços do domínio, incluindo os das caixas: a regra ganha à caixa;
+ *   - `catchall:true` apanha só os endereços que NÃO são caixa.
+ * Por isso cada domínio diz o que quer (`soSemCaixa`), em vez de o script
+ * «corrigir» todos para o mesmo — que era o que a versão anterior fazia, e
+ * teria desviado a caixa dos relatórios e a do automatismo.
  *
  * Não existe endpoint de actualização — só `createRoutingRule` e
  * `deleteRoutingRule`. Converter uma regra é apagar e recriar, por essa ordem:
- * criar primeiro deixaria duas regras a competir pelo mesmo padrão. A janela
- * sem regra afecta apenas endereços desconhecidos; as caixas reais continuam a
- * receber. Se a criação falhar, o original é reposto.
+ * criar primeiro deixaria duas regras a competir pelo mesmo padrão. Se a
+ * criação falhar, o original é reposto. Regras que não estão aqui ficam em
+ * paz, e as caixas a mais só se mostram: nada aqui apaga uma caixa.
  *
  * Sem PURELYMAIL_API_KEY imprime só o estado desejado. Com chave, compara com
  * o que lá está; escreve mesmo com `--aplicar`.
  *
- * Vive em ops/ pela mesma razão que o dns-mail.mjs: não é código do site, e
- * não corre em nenhum build.
+ * Vive em ops/ pela mesma razão que o dns-mail.mjs: não é código do site.
  */
 const APLICAR = process.argv.includes('--aplicar')
 const CHAVE = process.env.PURELYMAIL_API_KEY
 
-// Para onde vai o correio que não bate certo com nenhuma caixa do domínio.
-// O travertina.casa não tem caixa própria, por isso cai no salgado.zip.
-const DESTINOS = {
-  'salgado.zip': 'fabio@salgado.zip',
-  'primeiraplateia.pt': 'fabio@primeiraplateia.pt',
-  'martarosa.pt': 'book@martarosa.pt',
-  'franciscasalgado.golf': 'birdie@franciscasalgado.golf',
-  'fado.today': 'hello@fado.today',
-  'travertina.casa': 'fabio@salgado.zip',
-  // a marca nova (5/11/2026): o fabio@stineta.pt cai na caixa de sempre
-  'stineta.pt': 'fabio@salgado.zip',
+const ONOFRIANA = 'fado@onofriana.pt'
+const STINETA = 'fabio@stineta.pt'
+const CASA = 'casa@travertina.casa'
+
+// Para onde vai o correio de cada domínio. `soSemCaixa` = só os endereços que
+// não são caixa (catchall:true): o domínio tem uma caixa que tem de continuar
+// a receber.
+const DOMINIOS = {
+  'onofriana.pt': { para: ONOFRIANA },
+  'onofreana.pt': { para: ONOFRIANA },
+  'martarosa.pt': { para: ONOFRIANA },
+  'fado.today': { para: ONOFRIANA },
+  'stineta.pt': { para: STINETA },
+  'coreto.org': { para: STINETA },
+  'paragem.pt': { para: STINETA },
+  'emcadaesquina.app': { para: STINETA },
+  'primeiraplateia.pt': { para: STINETA },
+  // a dmarc@salgado.zip é caixa e recebe os relatórios
+  'salgado.zip': { para: STINETA, soSemCaixa: true },
+  // a casa@travertina.casa é caixa e é o automatismo
+  'travertina.casa': { para: STINETA, soSemCaixa: true },
+  'franciscasalgado.golf': { para: 'birdie@franciscasalgado.golf' },
 }
 
-// Reencaminhamentos de endereço exacto, que ganham sempre ao padrão geral.
-const EXACTAS = [
-  { dominio: 'martarosa.pt', user: 'fabio', para: 'book@martarosa.pt' },
-]
+// Endereços exactos, que ganham sempre à regra do domínio.
+const EXACTAS = ['compras', 'documentos', 'facturas', 'faturas', 'notas', 'papeis', 'tarefas']
+  .map((user) => ({ dominio: 'travertina.casa', user, para: CASA }))
+
+// As caixas que devem existir. As outras mostram-se, para se apagarem no painel.
+const CAIXAS = [ONOFRIANA, STINETA, CASA, 'dmarc@salgado.zip', 'birdie@franciscasalgado.golf', 'fvsalgado@purelymail.com']
 
 const querido = [
-  ...Object.entries(DESTINOS).map(([dominio, para]) => ({
-    dominio, prefix: true, matchUser: '', para, catchall: false,
+  ...Object.entries(DOMINIOS).map(([dominio, { para, soSemCaixa = false }]) => ({
+    dominio, prefix: true, matchUser: '', para, catchall: soSemCaixa,
   })),
   ...EXACTAS.map(({ dominio, user, para }) => ({
     dominio, prefix: false, matchUser: user, para, catchall: false,
   })),
 ]
 
+const tipo = (catchall, prefix) => (!prefix ? '' : catchall ? '   [só sem caixa]' : '   [todos, caixas incluídas]')
 const rotulo = (r) =>
-  (r.prefix ? `*@${r.dominio}` : `${r.matchUser}@${r.dominio}`).padEnd(28) + '-> ' + r.para
+  (r.prefix ? `*@${r.dominio}` : `${r.matchUser}@${r.dominio}`).padEnd(28) + '-> ' + r.para + tipo(r.catchall, r.prefix)
 
 if (!CHAVE) {
   console.log('Sem PURELYMAIL_API_KEY: só o estado desejado.\n')
-  for (const r of querido) console.log('  ' + rotulo(r) + '   [excepto users válidos]')
+  for (const r of querido) console.log('  ' + rotulo(r))
   console.log(`\n${querido.length} regras desejadas. Define PURELYMAIL_API_KEY para comparares.`)
   process.exit(0)
 }
@@ -109,20 +130,30 @@ for (const r of criar) console.log('  + ' + rotulo(r))
 
 console.log(`\nA CONVERTER (${converter.length})`)
 for (const c of converter) {
-  const motivo = c.de.catchall ? 'catch-all puro -> excepto users válidos' : 'destino diferente'
-  console.log(`  ~ ${rotulo(c.para)}   (${motivo}; era ${c.de.targetAddresses.join(',')})`)
+  const motivo = c.de.catchall !== c.para.catchall ? `era${tipo(c.de.catchall, c.de.prefix)}` : 'destino diferente'
+  console.log(`  ~ ${rotulo(c.para)}   (${motivo}; ia para ${c.de.targetAddresses.join(',')})`)
 }
 
 console.log(`\nNÃO PREVISTAS, deixadas em paz (${sobram.length})`)
 for (const r of sobram) {
   const alvo = r.prefix ? `*@${r.domainName}` : `${r.matchUser}@${r.domainName}`
-  console.log(`  ? ${alvo.padEnd(28)}-> ${r.targetAddresses.join(',')}${r.catchall ? '  [CATCH-ALL PURO]' : ''}`)
+  console.log(`  ? ${alvo.padEnd(28)}-> ${r.targetAddresses.join(',')}${tipo(r.catchall, r.prefix)}`)
 }
 
 // As caixas sem método de recuperação são um risco silencioso: perdida a
 // palavra-passe, não há caminho de volta. A API aceita `resetMethods` no
 // modifyUser, responde success, e não escreve nada — só o painel web o faz.
 const users = (await api('listUser')).result.users
+const aMais = users.filter((u) => !CAIXAS.includes(u))
+const emFalta = CAIXAS.filter((u) => !users.includes(u))
+if (aMais.length) {
+  console.log(`\nCAIXAS A MAIS (${aMais.length}) — o correio delas já vai para outra; apagam-se no painel`)
+  for (const u of aMais) console.log('  - ' + u)
+}
+if (emFalta.length) {
+  console.log(`\nCAIXAS EM FALTA (${emFalta.length})`)
+  for (const u of emFalta) console.log('  ! ' + u)
+}
 const semRecuperacao = []
 for (const u of users) {
   const d = (await api('getUser', { userName: u })).result
@@ -181,7 +212,7 @@ for (const r of criar) {
 
 const fim = await listar()
 console.log(`\n${'='.repeat(72)}`)
-console.log(`Regras no fim: ${fim.length}   catch-all puros: ${fim.filter((r) => r.catchall).length}`)
+console.log(`Regras no fim: ${fim.length}   só sem caixa: ${fim.filter((r) => r.catchall).length}`)
 if (falhas.length) {
   console.log(`\n${falhas.length} falha(s):`)
   console.log(JSON.stringify(falhas, null, 2))
